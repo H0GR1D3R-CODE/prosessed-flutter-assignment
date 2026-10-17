@@ -46,3 +46,16 @@ app.*.map.json
 
 # Widget Preview related
 .widget_preview/
+
+# Signing material and local configuration: never commit these
+*.jks
+*.keystore
+key.properties
+android/key.properties
+.env
+.env.*
+local.properties
+
+# Test output
+coverage/
+*.lcov

@@ -1,0 +1,9 @@
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.ttf binary
+*.jar binary
+*.apk binary
+*.mp4 binary
+*.bat text eol=crlf
