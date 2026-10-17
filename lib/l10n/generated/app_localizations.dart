@@ -421,6 +421,690 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Me'**
   String get navProfile;
+
+  /// No description provided for @shopGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi, {name}'**
+  String shopGreeting(String name);
+
+  /// No description provided for @themeToggleToDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to dark theme'**
+  String get themeToggleToDark;
+
+  /// No description provided for @themeToggleToLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to light theme'**
+  String get themeToggleToLight;
+
+  /// No description provided for @shopSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search products'**
+  String get shopSearchHint;
+
+  /// No description provided for @shopClearSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear search'**
+  String get shopClearSearch;
+
+  /// No description provided for @shopResultsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 product} other{{count} products}}'**
+  String shopResultsCount(int count);
+
+  /// No description provided for @shopSortLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get shopSortLabel;
+
+  /// No description provided for @sortSheetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get sortSheetTitle;
+
+  /// No description provided for @sortRelevance.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured'**
+  String get sortRelevance;
+
+  /// No description provided for @sortPriceLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: low to high'**
+  String get sortPriceLow;
+
+  /// No description provided for @sortPriceHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: high to low'**
+  String get sortPriceHigh;
+
+  /// No description provided for @sortRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Top rated'**
+  String get sortRating;
+
+  /// No description provided for @sortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Name: A to Z'**
+  String get sortTitle;
+
+  /// No description provided for @categoryAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get categoryAll;
+
+  /// No description provided for @categoriesFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Categories didn’t load'**
+  String get categoriesFailed;
+
+  /// No description provided for @shopOfflineBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re offline. Showing the products from your last visit.'**
+  String get shopOfflineBanner;
+
+  /// No description provided for @shopEmptySearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No matches for “{query}”'**
+  String shopEmptySearchTitle(String query);
+
+  /// No description provided for @shopEmptySearchMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Try a shorter word, or browse a category.'**
+  String get shopEmptySearchMessage;
+
+  /// No description provided for @shopEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to show'**
+  String get shopEmptyTitle;
+
+  /// No description provided for @shopEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another category or sort order.'**
+  String get shopEmptyMessage;
+
+  /// No description provided for @shopLoadMoreFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t load more products'**
+  String get shopLoadMoreFailed;
+
+  /// No description provided for @shopEndOfList.
+  ///
+  /// In en, this message translates to:
+  /// **'You’ve seen all {total} products'**
+  String shopEndOfList(int total);
+
+  /// No description provided for @shopRefreshFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t refresh. Showing what you already have.'**
+  String get shopRefreshFailed;
+
+  /// No description provided for @wishlistAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Save {title}'**
+  String wishlistAdd(String title);
+
+  /// No description provided for @wishlistRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {title} from saved'**
+  String wishlistRemove(String title);
+
+  /// No description provided for @productReviewsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No reviews} =1{1 review} other{{count} reviews}}'**
+  String productReviewsCount(int count);
+
+  /// No description provided for @productYouSave.
+  ///
+  /// In en, this message translates to:
+  /// **'You save {amount}'**
+  String productYouSave(String amount);
+
+  /// No description provided for @productAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About this product'**
+  String get productAbout;
+
+  /// No description provided for @productDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Details'**
+  String get productDetails;
+
+  /// No description provided for @specBrand.
+  ///
+  /// In en, this message translates to:
+  /// **'Brand'**
+  String get specBrand;
+
+  /// No description provided for @specSku.
+  ///
+  /// In en, this message translates to:
+  /// **'SKU'**
+  String get specSku;
+
+  /// No description provided for @specCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get specCategory;
+
+  /// No description provided for @specWeight.
+  ///
+  /// In en, this message translates to:
+  /// **'Weight'**
+  String get specWeight;
+
+  /// No description provided for @specWarranty.
+  ///
+  /// In en, this message translates to:
+  /// **'Warranty'**
+  String get specWarranty;
+
+  /// No description provided for @specShipping.
+  ///
+  /// In en, this message translates to:
+  /// **'Shipping'**
+  String get specShipping;
+
+  /// No description provided for @specReturns.
+  ///
+  /// In en, this message translates to:
+  /// **'Returns'**
+  String get specReturns;
+
+  /// No description provided for @specMinOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum order'**
+  String get specMinOrder;
+
+  /// No description provided for @productReviewsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get productReviewsTitle;
+
+  /// No description provided for @productNoReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet'**
+  String get productNoReviews;
+
+  /// No description provided for @addToCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to cart'**
+  String get addToCart;
+
+  /// No description provided for @addToCartWithPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to cart · {price}'**
+  String addToCartWithPrice(String price);
+
+  /// No description provided for @addedToCart.
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity, plural, =1{Added {title}} other{Added {quantity} × {title}}}'**
+  String addedToCart(int quantity, String title);
+
+  /// No description provided for @cartLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'That’s all we have: {limit} of {title} are in your cart.'**
+  String cartLimitReached(int limit, String title);
+
+  /// No description provided for @viewCart.
+  ///
+  /// In en, this message translates to:
+  /// **'View cart'**
+  String get viewCart;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @cartTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart'**
+  String get cartTitle;
+
+  /// No description provided for @cartItemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}}'**
+  String cartItemCount(int count);
+
+  /// No description provided for @cartEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart is empty'**
+  String get cartEmptyTitle;
+
+  /// No description provided for @cartEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add something you like and it will wait for you here.'**
+  String get cartEmptyMessage;
+
+  /// No description provided for @cartStartShopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Start shopping'**
+  String get cartStartShopping;
+
+  /// No description provided for @cartRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {title}'**
+  String cartRemove(String title);
+
+  /// No description provided for @cartRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed {title}'**
+  String cartRemoved(String title);
+
+  /// No description provided for @cartSubtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get cartSubtotal;
+
+  /// No description provided for @cartDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get cartDiscount;
+
+  /// No description provided for @cartTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get cartTotal;
+
+  /// No description provided for @cartCheckout.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get cartCheckout;
+
+  /// No description provided for @cartSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn’t save your cart on this device'**
+  String get cartSaveFailed;
+
+  /// No description provided for @checkoutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Checkout'**
+  String get checkoutTitle;
+
+  /// No description provided for @checkoutDeliverTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Deliver to'**
+  String get checkoutDeliverTo;
+
+  /// No description provided for @checkoutNoAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'No address on file'**
+  String get checkoutNoAddress;
+
+  /// No description provided for @checkoutPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get checkoutPayment;
+
+  /// No description provided for @checkoutPaymentNote.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a demo order. Nothing is charged and nothing is shipped.'**
+  String get checkoutPaymentNote;
+
+  /// No description provided for @checkoutSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order summary'**
+  String get checkoutSummary;
+
+  /// No description provided for @checkoutPlaceOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'Place order'**
+  String get checkoutPlaceOrder;
+
+  /// No description provided for @checkoutPlaceOrderWithTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Place order · {total}'**
+  String checkoutPlaceOrderWithTotal(String total);
+
+  /// No description provided for @checkoutFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Order not placed'**
+  String get checkoutFailed;
+
+  /// No description provided for @orderPlacedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Order placed'**
+  String get orderPlacedTitle;
+
+  /// No description provided for @orderPlacedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{id} is confirmed.'**
+  String orderPlacedMessage(int id);
+
+  /// No description provided for @orderPlacedDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 item} other{{count} items}} · {total}'**
+  String orderPlacedDetail(int count, String total);
+
+  /// No description provided for @orderPlacedDemoNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo order: DummyJSON confirms it but doesn’t store it.'**
+  String get orderPlacedDemoNote;
+
+  /// No description provided for @orderContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue shopping'**
+  String get orderContinue;
+
+  /// No description provided for @savedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get savedTitle;
+
+  /// No description provided for @savedEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing saved yet'**
+  String get savedEmptyTitle;
+
+  /// No description provided for @savedEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the heart on a product to keep it here.'**
+  String get savedEmptyMessage;
+
+  /// No description provided for @savedBrowse.
+  ///
+  /// In en, this message translates to:
+  /// **'Browse products'**
+  String get savedBrowse;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile'**
+  String get profileTitle;
+
+  /// No description provided for @profileEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get profileEmail;
+
+  /// No description provided for @profilePhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get profilePhone;
+
+  /// No description provided for @profileAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get profileAddress;
+
+  /// No description provided for @profileAppearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get profileAppearance;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @profileLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get profileLanguage;
+
+  /// No description provided for @languageSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get languageSystem;
+
+  /// No description provided for @languageEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get languageEnglish;
+
+  /// No description provided for @languageHindi.
+  ///
+  /// In en, this message translates to:
+  /// **'हिन्दी'**
+  String get languageHindi;
+
+  /// No description provided for @profileDevTools.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer tools'**
+  String get profileDevTools;
+
+  /// No description provided for @profileDevToolsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Try the error scenarios'**
+  String get profileDevToolsNote;
+
+  /// No description provided for @labTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error lab'**
+  String get labTitle;
+
+  /// No description provided for @labIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Trigger the failures this app is built to survive. Every button runs a real request.'**
+  String get labIntro;
+
+  /// No description provided for @labServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error'**
+  String get labServerError;
+
+  /// No description provided for @labServerErrorNote.
+  ///
+  /// In en, this message translates to:
+  /// **'GET /http/500'**
+  String get labServerErrorNote;
+
+  /// No description provided for @labNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found'**
+  String get labNotFound;
+
+  /// No description provided for @labNotFoundNote.
+  ///
+  /// In en, this message translates to:
+  /// **'GET /products/9999'**
+  String get labNotFoundNote;
+
+  /// No description provided for @labSlow.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow network'**
+  String get labSlow;
+
+  /// No description provided for @labSlowNote.
+  ///
+  /// In en, this message translates to:
+  /// **'GET /products?delay=3000. The loader stays until the answer arrives.'**
+  String get labSlowNote;
+
+  /// No description provided for @labTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timeout'**
+  String get labTimeout;
+
+  /// No description provided for @labTimeoutNote.
+  ///
+  /// In en, this message translates to:
+  /// **'A 5 s delay against a 2 s limit.'**
+  String get labTimeoutNote;
+
+  /// No description provided for @labExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Expired access token'**
+  String get labExpired;
+
+  /// No description provided for @labExpiredNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoils the access token, then calls /auth/me. The app refreshes it and retries.'**
+  String get labExpiredNote;
+
+  /// No description provided for @labRejectedRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected refresh token'**
+  String get labRejectedRefresh;
+
+  /// No description provided for @labRejectedRefreshNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoils both tokens. The refresh is refused with 403 and you are signed out.'**
+  String get labRejectedRefreshNote;
+
+  /// No description provided for @labOffline.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet: switch on airplane mode, then pull down to refresh on the Shop tab.'**
+  String get labOffline;
+
+  /// No description provided for @labRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Run'**
+  String get labRun;
+
+  /// No description provided for @labRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running…'**
+  String get labRunning;
+
+  /// No description provided for @labRecovered.
+  ///
+  /// In en, this message translates to:
+  /// **'Recovered: /auth/me answered after an automatic token refresh.'**
+  String get labRecovered;
+
+  /// No description provided for @labSlowDone.
+  ///
+  /// In en, this message translates to:
+  /// **'The slow response arrived after {seconds} s.'**
+  String labSlowDone(String seconds);
+
+  /// No description provided for @labHandled.
+  ///
+  /// In en, this message translates to:
+  /// **'Handled: the app turned that into a friendly state.'**
+  String get labHandled;
+
+  /// No description provided for @labClose.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get labClose;
+
+  /// No description provided for @shopPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you shopping for?'**
+  String get shopPrompt;
+
+  /// No description provided for @shopWelcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get shopWelcome;
+
+  /// No description provided for @productGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo {current} of {total}'**
+  String productGallery(int current, int total);
+
+  /// No description provided for @errorGoHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to the shop'**
+  String get errorGoHome;
 }
 
 class _AppLocalizationsDelegate

@@ -88,5 +88,264 @@
   "navShop": "Shop",
   "navSaved": "Saved",
   "navCart": "Cart",
-  "navProfile": "Me"
+  "navProfile": "Me",
+  "shopGreeting": "Hi, {name}",
+  "@shopGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "themeToggleToDark": "Switch to dark theme",
+  "themeToggleToLight": "Switch to light theme",
+  "shopSearchHint": "Search products",
+  "shopClearSearch": "Clear search",
+  "shopResultsCount": "{count, plural, =1{1 product} other{{count} products}}",
+  "@shopResultsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shopSortLabel": "Sort",
+  "sortSheetTitle": "Sort by",
+  "sortRelevance": "Featured",
+  "sortPriceLow": "Price: low to high",
+  "sortPriceHigh": "Price: high to low",
+  "sortRating": "Top rated",
+  "sortTitle": "Name: A to Z",
+  "categoryAll": "All",
+  "categoriesFailed": "Categories didn’t load",
+  "shopOfflineBanner": "You’re offline. Showing the products from your last visit.",
+  "shopEmptySearchTitle": "No matches for “{query}”",
+  "@shopEmptySearchTitle": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "shopEmptySearchMessage": "Try a shorter word, or browse a category.",
+  "shopEmptyTitle": "Nothing to show",
+  "shopEmptyMessage": "Try another category or sort order.",
+  "shopLoadMoreFailed": "Couldn’t load more products",
+  "shopEndOfList": "You’ve seen all {total} products",
+  "@shopEndOfList": {
+    "placeholders": {
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "shopRefreshFailed": "Couldn’t refresh. Showing what you already have.",
+  "wishlistAdd": "Save {title}",
+  "@wishlistAdd": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "wishlistRemove": "Remove {title} from saved",
+  "@wishlistRemove": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "productReviewsCount": "{count, plural, =0{No reviews} =1{1 review} other{{count} reviews}}",
+  "@productReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "productYouSave": "You save {amount}",
+  "@productYouSave": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "productAbout": "About this product",
+  "productDetails": "Details",
+  "specBrand": "Brand",
+  "specSku": "SKU",
+  "specCategory": "Category",
+  "specWeight": "Weight",
+  "specWarranty": "Warranty",
+  "specShipping": "Shipping",
+  "specReturns": "Returns",
+  "specMinOrder": "Minimum order",
+  "productReviewsTitle": "Reviews",
+  "productNoReviews": "No reviews yet",
+  "addToCart": "Add to cart",
+  "addToCartWithPrice": "Add to cart · {price}",
+  "@addToCartWithPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "addedToCart": "{quantity, plural, =1{Added {title}} other{Added {quantity} × {title}}}",
+  "@addedToCart": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cartLimitReached": "That’s all we have: {limit} of {title} are in your cart.",
+  "@cartLimitReached": {
+    "placeholders": {
+      "limit": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "viewCart": "View cart",
+  "back": "Back",
+  "cartTitle": "Your cart",
+  "cartItemCount": "{count, plural, =1{1 item} other{{count} items}}",
+  "@cartItemCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cartEmptyTitle": "Your cart is empty",
+  "cartEmptyMessage": "Add something you like and it will wait for you here.",
+  "cartStartShopping": "Start shopping",
+  "cartRemove": "Remove {title}",
+  "@cartRemove": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cartRemoved": "Removed {title}",
+  "@cartRemoved": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "cartSubtotal": "Subtotal",
+  "cartDiscount": "Discount",
+  "cartTotal": "Total",
+  "cartCheckout": "Checkout",
+  "cartSaveFailed": "Couldn’t save your cart on this device",
+  "checkoutTitle": "Checkout",
+  "checkoutDeliverTo": "Deliver to",
+  "checkoutNoAddress": "No address on file",
+  "checkoutPayment": "Payment",
+  "checkoutPaymentNote": "This is a demo order. Nothing is charged and nothing is shipped.",
+  "checkoutSummary": "Order summary",
+  "checkoutPlaceOrder": "Place order",
+  "checkoutPlaceOrderWithTotal": "Place order · {total}",
+  "@checkoutPlaceOrderWithTotal": {
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "checkoutFailed": "Order not placed",
+  "orderPlacedTitle": "Order placed",
+  "orderPlacedMessage": "Order #{id} is confirmed.",
+  "@orderPlacedMessage": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "orderPlacedDetail": "{count, plural, =1{1 item} other{{count} items}} · {total}",
+  "@orderPlacedDetail": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "orderPlacedDemoNote": "Demo order: DummyJSON confirms it but doesn’t store it.",
+  "orderContinue": "Continue shopping",
+  "savedTitle": "Saved",
+  "savedEmptyTitle": "Nothing saved yet",
+  "savedEmptyMessage": "Tap the heart on a product to keep it here.",
+  "savedBrowse": "Browse products",
+  "profileTitle": "Your profile",
+  "profileEmail": "Email",
+  "profilePhone": "Phone",
+  "profileAddress": "Address",
+  "profileAppearance": "Appearance",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "profileLanguage": "Language",
+  "languageSystem": "Device",
+  "languageEnglish": "English",
+  "languageHindi": "हिन्दी",
+  "profileDevTools": "Developer tools",
+  "profileDevToolsNote": "Try the error scenarios",
+  "labTitle": "Error lab",
+  "labIntro": "Trigger the failures this app is built to survive. Every button runs a real request.",
+  "labServerError": "Server error",
+  "labServerErrorNote": "GET /http/500",
+  "labNotFound": "Not found",
+  "labNotFoundNote": "GET /products/9999",
+  "labSlow": "Slow network",
+  "labSlowNote": "GET /products?delay=3000. The loader stays until the answer arrives.",
+  "labTimeout": "Request timeout",
+  "labTimeoutNote": "A 5 s delay against a 2 s limit.",
+  "labExpired": "Expired access token",
+  "labExpiredNote": "Spoils the access token, then calls /auth/me. The app refreshes it and retries.",
+  "labRejectedRefresh": "Rejected refresh token",
+  "labRejectedRefreshNote": "Spoils both tokens. The refresh is refused with 403 and you are signed out.",
+  "labOffline": "No internet: switch on airplane mode, then pull down to refresh on the Shop tab.",
+  "labRun": "Run",
+  "labRunning": "Running…",
+  "labRecovered": "Recovered: /auth/me answered after an automatic token refresh.",
+  "labSlowDone": "The slow response arrived after {seconds} s.",
+  "@labSlowDone": {
+    "placeholders": {
+      "seconds": {
+        "type": "String"
+      }
+    }
+  },
+  "labHandled": "Handled: the app turned that into a friendly state.",
+  "labClose": "Close",
+  "shopPrompt": "What are you shopping for?",
+  "shopWelcome": "Welcome",
+  "productGallery": "Photo {current} of {total}",
+  "@productGallery": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "errorGoHome": "Back to the shop"
 }
