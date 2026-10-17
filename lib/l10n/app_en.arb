@@ -1,0 +1,57 @@
+{
+  "@@locale": "en",
+  "appName": "ShopSphere",
+  "retry": "Try again",
+  "goBack": "Go back",
+  "cancel": "Cancel",
+  "undo": "Undo",
+  "errorNetworkTitle": "You're offline",
+  "errorNetworkMessage": "Check your connection, then try again.",
+  "errorTimeoutTitle": "That took too long",
+  "errorTimeoutMessage": "The store didn't answer in time. Try again in a moment.",
+  "errorServerTitle": "The store hit a snag",
+  "errorServerMessage": "Something went wrong on the server. Try again in a moment.",
+  "errorNotFoundTitle": "Nothing here",
+  "errorNotFoundMessage": "We couldn't find what you were looking for.",
+  "errorBadRequestTitle": "Request not accepted",
+  "errorBadRequestMessage": "The store couldn't process that request.",
+  "errorSessionTitle": "Session ended",
+  "errorSessionMessage": "Sign in again to keep shopping.",
+  "errorParseTitle": "Unexpected response",
+  "errorParseMessage": "The store sent something the app couldn't read.",
+  "errorCacheTitle": "Storage problem",
+  "errorCacheMessage": "The app couldn't read or save data on this device.",
+  "errorUnknownTitle": "Something went wrong",
+  "errorUnknownMessage": "An unexpected error occurred. Try again.",
+  "invalidCredentials": "Invalid username or password",
+  "loading": "Loading",
+  "decreaseQuantity": "Decrease quantity",
+  "increaseQuantity": "Increase quantity",
+  "quantity": "Quantity",
+  "inStock": "In stock",
+  "lowStock": "Only {count} left",
+  "@lowStock": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "outOfStock": "Out of stock",
+  "discountOff": "{percent}% off",
+  "@discountOff": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "ratingOutOf": "Rated {rating} out of 5",
+  "@ratingOutOf": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  }
+}
