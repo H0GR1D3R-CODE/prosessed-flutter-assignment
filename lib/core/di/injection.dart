@@ -9,10 +9,32 @@ import 'package:shopsphere/core/network/session.dart';
 import 'package:shopsphere/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:shopsphere/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:shopsphere/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:shopsphere/features/auth/domain/entities/user.dart';
 import 'package:shopsphere/features/auth/domain/repositories/auth_repository.dart';
 import 'package:shopsphere/features/auth/domain/usecases/auth_usecases.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/login_cubit.dart';
+import 'package:shopsphere/features/cart/data/datasources/cart_data_sources.dart';
+import 'package:shopsphere/features/cart/data/repositories/cart_repository_impl.dart';
+import 'package:shopsphere/features/cart/domain/repositories/cart_repository.dart';
+import 'package:shopsphere/features/cart/domain/usecases/cart_usecases.dart';
+import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
+import 'package:shopsphere/features/cart/presentation/bloc/checkout_cubit.dart';
+import 'package:shopsphere/features/products/data/datasources/product_local_data_source.dart';
+import 'package:shopsphere/features/products/data/datasources/product_remote_data_source.dart';
+import 'package:shopsphere/features/products/data/repositories/product_repository_impl.dart';
+import 'package:shopsphere/features/products/domain/repositories/product_repository.dart';
+import 'package:shopsphere/features/products/domain/usecases/product_usecases.dart';
+import 'package:shopsphere/features/products/presentation/bloc/categories_cubit.dart';
+import 'package:shopsphere/features/products/presentation/bloc/product_details_cubit.dart';
+import 'package:shopsphere/features/products/presentation/bloc/product_list_cubit.dart';
+import 'package:shopsphere/features/profile/presentation/bloc/profile_cubit.dart';
+import 'package:shopsphere/features/settings/data/settings_repository_impl.dart';
+import 'package:shopsphere/features/settings/domain/settings.dart';
+import 'package:shopsphere/features/settings/presentation/bloc/settings_cubit.dart';
+import 'package:shopsphere/features/wishlist/data/wishlist_repository_impl.dart';
+import 'package:shopsphere/features/wishlist/domain/wishlist.dart';
+import 'package:shopsphere/features/wishlist/presentation/bloc/wishlist_cubit.dart';
 
 /// The service locator. Widgets and cubits ask it for collaborators; they never construct them.
 final GetIt sl = GetIt.instance;
@@ -64,6 +86,11 @@ Future<void> configureDependencies({
   );
 
   _registerAuth();
+  _registerProducts();
+  _registerCart();
+  _registerWishlist();
+  _registerSettings();
+  _registerProfile();
 }
 
 void _registerAuth() {
@@ -97,4 +124,107 @@ void _registerAuth() {
       ),
     )
     ..registerFactory(() => LoginCubit(sl<LoginUseCase>()));
+}
+
+void _registerProducts() {
+  sl
+    ..registerLazySingleton<ProductRemoteDataSource>(
+      () => ProductRemoteDataSourceImpl(sl<ApiClient>()),
+    )
+    ..registerLazySingleton<ProductLocalDataSource>(
+      () => PrefsProductLocalDataSource(sl<SharedPreferences>()),
+    )
+    ..registerLazySingleton<ProductRepository>(
+      () => ProductRepositoryImpl(
+        remote: sl<ProductRemoteDataSource>(),
+        local: sl<ProductLocalDataSource>(),
+      ),
+    )
+    ..registerFactory(() => GetProductsUseCase(sl<ProductRepository>()))
+    ..registerFactory(() => GetCategoriesUseCase(sl<ProductRepository>()))
+    ..registerFactory(() => GetProductDetailsUseCase(sl<ProductRepository>()))
+    ..registerFactory(
+      () => ProductListCubit(getProducts: sl<GetProductsUseCase>()),
+    )
+    ..registerFactory(() => CategoriesCubit(sl<GetCategoriesUseCase>()))
+    ..registerFactoryParam<ProductDetailsCubit, int, void>(
+      (productId, _) => ProductDetailsCubit(
+        productId: productId,
+        getProduct: sl<GetProductDetailsUseCase>(),
+      ),
+    );
+}
+
+void _registerCart() {
+  sl
+    ..registerLazySingleton<CartLocalDataSource>(
+      () => PrefsCartLocalDataSource(sl<SharedPreferences>()),
+    )
+    ..registerLazySingleton<CartRemoteDataSource>(
+      () => CartRemoteDataSourceImpl(sl<ApiClient>()),
+    )
+    ..registerLazySingleton<CartRepository>(
+      () => CartRepositoryImpl(
+        local: sl<CartLocalDataSource>(),
+        remote: sl<CartRemoteDataSource>(),
+      ),
+    )
+    ..registerFactory(() => LoadCartUseCase(sl<CartRepository>()))
+    ..registerFactory(() => AddToCartUseCase(sl<CartRepository>()))
+    ..registerFactory(() => UpdateCartQuantityUseCase(sl<CartRepository>()))
+    ..registerFactory(() => RemoveFromCartUseCase(sl<CartRepository>()))
+    ..registerFactory(() => RestoreCartItemUseCase(sl<CartRepository>()))
+    ..registerFactory(() => ClearCartUseCase(sl<CartRepository>()))
+    ..registerFactory(() => PlaceOrderUseCase(sl<CartRepository>()))
+    ..registerFactory(CalculateCartTotalsUseCase.new)
+    ..registerLazySingleton<CartCubit>(
+      () => CartCubit(
+        load: sl<LoadCartUseCase>(),
+        add: sl<AddToCartUseCase>(),
+        updateQuantity: sl<UpdateCartQuantityUseCase>(),
+        remove: sl<RemoveFromCartUseCase>(),
+        restore: sl<RestoreCartItemUseCase>(),
+        clear: sl<ClearCartUseCase>(),
+      ),
+    )
+    ..registerFactory(
+      () => CheckoutCubit(
+        placeOrder: sl<PlaceOrderUseCase>(),
+        cartCubit: sl<CartCubit>(),
+      ),
+    );
+}
+
+void _registerWishlist() {
+  sl
+    ..registerLazySingleton<WishlistRepository>(
+      () => WishlistRepositoryImpl(sl<SharedPreferences>()),
+    )
+    ..registerFactory(() => LoadWishlistUseCase(sl<WishlistRepository>()))
+    ..registerFactory(() => ToggleWishlistUseCase(sl<WishlistRepository>()))
+    ..registerLazySingleton<WishlistCubit>(
+      () => WishlistCubit(
+        load: sl<LoadWishlistUseCase>(),
+        toggle: sl<ToggleWishlistUseCase>(),
+      ),
+    );
+}
+
+void _registerSettings() {
+  sl
+    ..registerLazySingleton<SettingsRepository>(
+      () => SettingsRepositoryImpl(sl<SharedPreferences>()),
+    )
+    ..registerLazySingleton<SettingsCubit>(
+      () => SettingsCubit(sl<SettingsRepository>()),
+    );
+}
+
+void _registerProfile() {
+  sl.registerFactoryParam<ProfileCubit, User?, void>(
+    (knownUser, _) => ProfileCubit(
+      getCurrentUser: sl<GetCurrentUserUseCase>(),
+      knownUser: knownUser,
+    ),
+  );
 }
