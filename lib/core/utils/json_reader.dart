@@ -3,13 +3,17 @@ import 'package:shopsphere/core/error/exceptions.dart';
 /// Casts a decoded JSON value to an object, or throws a [ParseException].
 Map<String, dynamic> asJsonMap(Object? raw, {String context = 'response'}) {
   if (raw is Map<String, dynamic>) return raw;
-  throw ParseException('Expected a JSON object for $context, got ${raw.runtimeType}');
+  throw ParseException(
+    'Expected a JSON object for $context, got ${raw.runtimeType}',
+  );
 }
 
 /// Casts a decoded JSON value to a list, or throws a [ParseException].
 List<Object?> asJsonList(Object? raw, {String context = 'response'}) {
   if (raw is List<Object?>) return raw;
-  throw ParseException('Expected a JSON array for $context, got ${raw.runtimeType}');
+  throw ParseException(
+    'Expected a JSON array for $context, got ${raw.runtimeType}',
+  );
 }
 
 /// Typed, null-aware access to a decoded JSON object.
@@ -77,6 +81,9 @@ extension JsonReader on Map<String, dynamic> {
     if (value is! List<Object?>) {
       throw ParseException('"$key" should be a list, got ${value.runtimeType}');
     }
-    return [for (final item in value) if (item is String) item];
+    return [
+      for (final item in value)
+        if (item is String) item,
+    ];
   }
 }
