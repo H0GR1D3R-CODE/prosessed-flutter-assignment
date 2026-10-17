@@ -55,6 +55,30 @@ class ProductModel {
     );
   }
 
+  factory ProductModel.fromEntity(Product product) {
+    return ProductModel(
+      id: product.id,
+      title: product.title,
+      description: product.description,
+      category: product.category,
+      brand: product.brand,
+      price: product.price,
+      discountPercentage: product.discountPercentage,
+      rating: product.rating,
+      stock: product.stock,
+      thumbnail: product.thumbnail,
+      images: product.images,
+      tags: product.tags,
+      sku: product.sku,
+      weight: product.weight,
+      warrantyInformation: product.warrantyInformation,
+      shippingInformation: product.shippingInformation,
+      returnPolicy: product.returnPolicy,
+      availabilityStatus: product.availabilityStatus,
+      minimumOrderQuantity: product.minimumOrderQuantity,
+    );
+  }
+
   final int id;
   final String title;
   final String description;
