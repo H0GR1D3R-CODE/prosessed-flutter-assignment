@@ -6,6 +6,7 @@ import 'package:shopsphere/core/presentation/failure_copy.dart';
 import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/widgets/buttons.dart';
+import 'package:shopsphere/core/widgets/inline_banner.dart';
 import 'package:shopsphere/core/widgets/orb_backdrop.dart';
 import 'package:shopsphere/core/widgets/wordmark.dart';
 import 'package:shopsphere/features/auth/domain/validation/credential_validator.dart';
@@ -224,10 +225,9 @@ class _FormPanel extends StatelessWidget {
               ),
               if (sessionExpired && failure == null) ...[
                 Gap.hl,
-                _Banner(
+                InlineBanner(
                   icon: Icons.lock_clock_rounded,
                   message: l10n.sessionEndedNotice,
-                  tone: _BannerTone.info,
                 ),
               ],
               Gap.hxl,
@@ -287,12 +287,11 @@ class _FormPanel extends StatelessWidget {
                     ? const SizedBox(width: double.infinity)
                     : Padding(
                         padding: const EdgeInsets.only(top: Gap.l),
-                        child: _Banner(
-                          icon: Icons.error_outline_rounded,
+                        child: InlineBanner(
+                          tone: BannerTone.error,
                           message: failure is InvalidCredentialsFailure
                               ? l10n.invalidCredentials
                               : FailureCopy.of(context, failure).message,
-                          tone: _BannerTone.error,
                         ),
                       ),
               ),
@@ -322,62 +321,6 @@ class _FormPanel extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-enum _BannerTone { info, error }
-
-class _Banner extends StatelessWidget {
-  const _Banner({
-    required this.icon,
-    required this.message,
-    required this.tone,
-  });
-
-  final IconData icon;
-  final String message;
-  final _BannerTone tone;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final isError = tone == _BannerTone.error;
-    final background = isError
-        ? colors.errorContainer
-        : colors.surfaceContainerLowest;
-    final foreground = isError ? colors.onErrorContainer : colors.onSurface;
-    return Semantics(
-      liveRegion: true,
-      container: true,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: Radii.brM,
-          border: Border.all(
-            color: isError ? colors.error : colors.outlineVariant,
-            width: 1.5,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(Gap.m),
-          child: Row(
-            children: [
-              Icon(icon, color: isError ? colors.error : foreground),
-              Gap.wm,
-              Expanded(
-                child: Text(
-                  message,
-                  style: context.text.bodyMedium?.copyWith(
-                    color: foreground,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
