@@ -32,20 +32,28 @@ class DebugLogInterceptor extends Interceptor {
   }
 
   @override
-  void onResponse(Response<Object?> response, ResponseInterceptorHandler handler) {
+  void onResponse(
+    Response<Object?> response,
+    ResponseInterceptorHandler handler,
+  ) {
     _log(response.requestOptions, '${response.statusCode}');
     handler.next(response);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    _log(err.requestOptions, err.response?.statusCode?.toString() ?? err.type.name);
+    _log(
+      err.requestOptions,
+      err.response?.statusCode?.toString() ?? err.type.name,
+    );
     handler.next(err);
   }
 
   void _log(RequestOptions options, String outcome) {
     final started = options.extra[_startedKey] as int?;
-    final took = started == null ? '' : ' ${DateTime.now().millisecondsSinceEpoch - started} ms';
+    final took = started == null
+        ? ''
+        : ' ${DateTime.now().millisecondsSinceEpoch - started} ms';
     debugPrint('[http] ${options.method} ${options.uri.path} -> $outcome$took');
   }
 }

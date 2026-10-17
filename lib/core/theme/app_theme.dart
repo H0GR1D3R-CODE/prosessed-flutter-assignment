@@ -96,7 +96,11 @@ abstract final class AppTheme {
       visualDensity: VisualDensity.standard,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       splashFactory: InkSparkle.splashFactory,
-      dividerTheme: DividerThemeData(color: scheme.outlineVariant, thickness: 1, space: 1),
+      dividerTheme: DividerThemeData(
+        color: scheme.outlineVariant,
+        thickness: 1,
+        space: 1,
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
@@ -118,7 +122,9 @@ abstract final class AppTheme {
           backgroundColor: scheme.primary,
           foregroundColor: scheme.onPrimary,
           disabledBackgroundColor: scheme.surfaceContainerHighest,
-          disabledForegroundColor: scheme.onSurfaceVariant.withValues(alpha: 0.7),
+          disabledForegroundColor: scheme.onSurfaceVariant.withValues(
+            alpha: 0.7,
+          ),
           minimumSize: const Size(64, 56),
           padding: const EdgeInsets.symmetric(horizontal: 28),
           shape: stadium,
@@ -153,11 +159,17 @@ abstract final class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: scheme.surfaceContainerLowest,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
+        ),
         hintStyle: text.bodyLarge?.copyWith(color: scheme.onSurfaceVariant),
         labelStyle: text.bodyLarge?.copyWith(color: scheme.onSurfaceVariant),
         floatingLabelStyle: text.labelLarge?.copyWith(color: scheme.onSurface),
-        errorStyle: text.bodySmall?.copyWith(color: scheme.error, fontWeight: FontWeight.w600),
+        errorStyle: text.bodySmall?.copyWith(
+          color: scheme.error,
+          fontWeight: FontWeight.w600,
+        ),
         prefixIconColor: scheme.onSurfaceVariant,
         suffixIconColor: scheme.onSurfaceVariant,
         border: _outline(scheme.outlineVariant, 1.5),
@@ -188,7 +200,10 @@ abstract final class AppTheme {
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         iconTheme: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
-          return IconThemeData(size: 24, color: selected ? shop.onVolt : scheme.onSurfaceVariant);
+          return IconThemeData(
+            size: 24,
+            color: selected ? shop.onVolt : scheme.onSurfaceVariant,
+          );
         }),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
@@ -206,16 +221,26 @@ abstract final class AppTheme {
         minWidth: 84,
         labelType: NavigationRailLabelType.all,
         selectedIconTheme: IconThemeData(size: 24, color: shop.onVolt),
-        unselectedIconTheme: IconThemeData(size: 24, color: scheme.onSurfaceVariant),
-        selectedLabelTextStyle: text.labelMedium?.copyWith(color: scheme.onSurface, fontWeight: FontWeight.w700),
-        unselectedLabelTextStyle: text.labelMedium?.copyWith(color: scheme.onSurfaceVariant),
+        unselectedIconTheme: IconThemeData(
+          size: 24,
+          color: scheme.onSurfaceVariant,
+        ),
+        selectedLabelTextStyle: text.labelMedium?.copyWith(
+          color: scheme.onSurface,
+          fontWeight: FontWeight.w700,
+        ),
+        unselectedLabelTextStyle: text.labelMedium?.copyWith(
+          color: scheme.onSurfaceVariant,
+        ),
       ),
       bottomSheetTheme: BottomSheetThemeData(
         backgroundColor: scheme.surfaceContainerLowest,
         surfaceTintColor: Colors.transparent,
         showDragHandle: true,
         dragHandleColor: scheme.outlineVariant,
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(Radii.xl))),
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(Radii.xl)),
+        ),
         clipBehavior: Clip.antiAlias,
       ),
       dialogTheme: DialogThemeData(
@@ -228,8 +253,13 @@ abstract final class AppTheme {
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
         backgroundColor: scheme.inverseSurface,
-        contentTextStyle: text.bodyMedium?.copyWith(color: scheme.onInverseSurface, fontWeight: FontWeight.w600),
-        actionTextColor: scheme.brightness == Brightness.light ? shop.volt : const Color(0xFF3A47F5),
+        contentTextStyle: text.bodyMedium?.copyWith(
+          color: scheme.onInverseSurface,
+          fontWeight: FontWeight.w600,
+        ),
+        actionTextColor: scheme.brightness == Brightness.light
+            ? shop.volt
+            : const Color(0xFF3A47F5),
         shape: const RoundedRectangleBorder(borderRadius: Radii.brM),
         insetPadding: const EdgeInsets.all(Gap.l),
         elevation: 0,
@@ -242,13 +272,19 @@ abstract final class AppTheme {
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.selected) ? shop.onVolt : scheme.onSurfaceVariant,
+          (states) => states.contains(WidgetState.selected)
+              ? shop.onVolt
+              : scheme.onSurfaceVariant,
         ),
         trackColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.selected) ? shop.volt : scheme.surfaceContainerHighest,
+          (states) => states.contains(WidgetState.selected)
+              ? shop.volt
+              : scheme.surfaceContainerHighest,
         ),
         trackOutlineColor: WidgetStateProperty.resolveWith(
-          (states) => states.contains(WidgetState.selected) ? shop.onVolt : scheme.outline,
+          (states) => states.contains(WidgetState.selected)
+              ? shop.onVolt
+              : scheme.outline,
         ),
       ),
       listTileTheme: ListTileThemeData(
@@ -258,7 +294,10 @@ abstract final class AppTheme {
         shape: const RoundedRectangleBorder(borderRadius: Radii.brM),
       ),
       tooltipTheme: TooltipThemeData(
-        decoration: BoxDecoration(color: scheme.inverseSurface, borderRadius: Radii.brS),
+        decoration: BoxDecoration(
+          color: scheme.inverseSurface,
+          borderRadius: Radii.brS,
+        ),
         textStyle: text.labelMedium?.copyWith(color: scheme.onInverseSurface),
       ),
     );

@@ -33,7 +33,10 @@ AppException _fromStatus(Response<Object?>? response) {
     400 => BadRequestException(message),
     401 || 403 => UnauthorizedException(statusCode: status, message: message),
     404 => NotFoundException(message),
-    final int code when code >= 500 => ServerException(statusCode: code, message: message),
+    final int code when code >= 500 => ServerException(
+      statusCode: code,
+      message: message,
+    ),
     _ => ServerException(statusCode: status, message: message),
   };
 }

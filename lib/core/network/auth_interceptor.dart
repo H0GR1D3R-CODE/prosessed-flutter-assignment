@@ -33,7 +33,10 @@ class AuthInterceptor extends QueuedInterceptor {
   final Dio _replay;
 
   @override
-  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     if (options.extra[requiresAuthKey] == true) {
       final token = await _store.readAccessToken();
       if (token != null) {
@@ -45,22 +48,30 @@ class AuthInterceptor extends QueuedInterceptor {
   }
 
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     final request = err.requestOptions;
-    final isExpiredToken = err.response?.statusCode == 401 &&
+    final isExpiredToken =
+        err.response?.statusCode == 401 &&
         request.extra[requiresAuthKey] == true &&
         request.extra[_replayedKey] != true;
     if (!isExpiredToken) return handler.next(err);
 
     final String? token;
     try {
-      token = await _freshToken(sentWith: request.extra[_sentTokenKey] as String?);
+      token = await _freshToken(
+        sentWith: request.extra[_sentTokenKey] as String?,
+      );
     } on UnauthorizedException {
       _events.expire();
       return handler.next(err);
     } on AppException catch (error) {
       // The refresh could not even be attempted (offline, timeout): report that, and keep the session.
-      return handler.reject(DioException(requestOptions: request, error: error));
+      return handler.reject(
+        DioException(requestOptions: request, error: error),
+      );
     }
 
     if (token == null) {
@@ -73,7 +84,9 @@ class AuthInterceptor extends QueuedInterceptor {
     try {
       handler.resolve(await _replay.fetch<Object?>(request));
     } on DioException catch (error) {
-      handler.reject(DioException(requestOptions: request, error: mapDioException(error)));
+      handler.reject(
+        DioException(requestOptions: request, error: mapDioException(error)),
+      );
     }
   }
 
@@ -86,7 +99,10 @@ class AuthInterceptor extends QueuedInterceptor {
     if (refreshToken == null) return null;
 
     final pair = await _refresh(refreshToken);
-    await _store.saveTokens(accessToken: pair.accessToken, refreshToken: pair.refreshToken);
+    await _store.saveTokens(
+      accessToken: pair.accessToken,
+      refreshToken: pair.refreshToken,
+    );
     return pair.accessToken;
   }
 }

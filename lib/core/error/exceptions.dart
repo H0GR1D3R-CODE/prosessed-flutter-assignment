@@ -40,7 +40,8 @@ final class BadRequestException extends AppException {
 
 /// HTTP 401 or 403 on a protected request.
 final class UnauthorizedException extends AppException {
-  const UnauthorizedException({this.statusCode, String? message}) : super(message);
+  const UnauthorizedException({this.statusCode, String? message})
+    : super(message);
 
   final int? statusCode;
 }

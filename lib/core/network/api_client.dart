@@ -18,11 +18,20 @@ class ApiClient {
     bool authenticated = false,
     Duration? receiveTimeout,
   }) async {
-    final data = await _send('GET', path, query: query, authenticated: authenticated, receiveTimeout: receiveTimeout);
+    final data = await _send(
+      'GET',
+      path,
+      query: query,
+      authenticated: authenticated,
+      receiveTimeout: receiveTimeout,
+    );
     return asJsonMap(data, context: path);
   }
 
-  Future<List<Object?>> getList(String path, {Map<String, Object?>? query}) async {
+  Future<List<Object?>> getList(
+    String path, {
+    Map<String, Object?>? query,
+  }) async {
     final data = await _send('GET', path, query: query);
     return asJsonList(data, context: path);
   }
@@ -32,7 +41,12 @@ class ApiClient {
     Object? body,
     bool authenticated = false,
   }) async {
-    final data = await _send('POST', path, body: body, authenticated: authenticated);
+    final data = await _send(
+      'POST',
+      path,
+      body: body,
+      authenticated: authenticated,
+    );
     return asJsonMap(data, context: path);
   }
 

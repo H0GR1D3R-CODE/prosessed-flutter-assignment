@@ -11,10 +11,32 @@ abstract final class AppTypography {
 
   /// Builds the text theme with [color] as the default ink.
   static TextTheme textTheme(Color color) {
-    TextStyle display_(double size, FontWeight weight, {double height = 1.15, double spacing = -0.4}) =>
-        TextStyle(fontFamily: display, fontSize: size, fontWeight: weight, height: height, letterSpacing: spacing, color: color);
-    TextStyle body_(double size, FontWeight weight, {double height = 1.4, double spacing = 0}) =>
-        TextStyle(fontFamily: body, fontSize: size, fontWeight: weight, height: height, letterSpacing: spacing, color: color);
+    TextStyle display_(
+      double size,
+      FontWeight weight, {
+      double height = 1.15,
+      double spacing = -0.4,
+    }) => TextStyle(
+      fontFamily: display,
+      fontSize: size,
+      fontWeight: weight,
+      height: height,
+      letterSpacing: spacing,
+      color: color,
+    );
+    TextStyle body_(
+      double size,
+      FontWeight weight, {
+      double height = 1.4,
+      double spacing = 0,
+    }) => TextStyle(
+      fontFamily: body,
+      fontSize: size,
+      fontWeight: weight,
+      height: height,
+      letterSpacing: spacing,
+      color: color,
+    );
 
     return TextTheme(
       displayLarge: display_(44, FontWeight.w700, height: 1.05, spacing: -1.2),
@@ -36,7 +58,11 @@ abstract final class AppTypography {
   }
 
   /// Prices: Unbounded, with figures that keep their width so a column of prices lines up.
-  static TextStyle price(Color color, {double size = 16, FontWeight weight = FontWeight.w600}) {
+  static TextStyle price(
+    Color color, {
+    double size = 16,
+    FontWeight weight = FontWeight.w600,
+  }) {
     return TextStyle(
       fontFamily: display,
       fontSize: size,

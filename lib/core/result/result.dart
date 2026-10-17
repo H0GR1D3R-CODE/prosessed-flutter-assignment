@@ -32,14 +32,14 @@ sealed class Result<T> {
   bool get isSuccess => this is Success<T>;
 
   T? get valueOrNull => switch (this) {
-        Success<T>(:final value) => value,
-        Fail<T>() => null,
-      };
+    Success<T>(:final value) => value,
+    Fail<T>() => null,
+  };
 
   Failure? get failureOrNull => switch (this) {
-        Success<T>() => null,
-        Fail<T>(:final failure) => failure,
-      };
+    Success<T>() => null,
+    Fail<T>(:final failure) => failure,
+  };
 }
 
 final class Success<T> extends Result<T> {

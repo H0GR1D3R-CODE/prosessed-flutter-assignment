@@ -26,7 +26,10 @@ extension AppExceptionToFailure on AppException {
     return switch (this) {
       NetworkException() => NetworkFailure(message),
       RequestTimeoutException() => TimeoutFailure(message),
-      final ServerException e => ServerFailure(statusCode: e.statusCode, detail: message),
+      final ServerException e => ServerFailure(
+        statusCode: e.statusCode,
+        detail: message,
+      ),
       NotFoundException() => NotFoundFailure(message),
       BadRequestException() => BadRequestFailure(message),
       UnauthorizedException() => SessionExpiredFailure(message),

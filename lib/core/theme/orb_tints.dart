@@ -21,16 +21,49 @@ class OrbTint {
 /// Every product sits on an orb. The orb's colour comes from its category, so a screen of
 /// mixed products reads as a set of colour families instead of a wall of white cutouts.
 abstract final class OrbTints {
-  static const OrbTint peach = OrbTint(light: Color(0xFFFFD9C2), deep: Color(0xFFFF9D6E));
-  static const OrbTint mint = OrbTint(light: Color(0xFFC9F4DE), deep: Color(0xFF6FD6A4));
-  static const OrbTint lilac = OrbTint(light: Color(0xFFE3D9FF), deep: Color(0xFFA48FFF));
-  static const OrbTint butter = OrbTint(light: Color(0xFFFFEFB8), deep: Color(0xFFFFCF4D));
-  static const OrbTint sky = OrbTint(light: Color(0xFFCDE9FF), deep: Color(0xFF72B9FF));
-  static const OrbTint rose = OrbTint(light: Color(0xFFFFD0DF), deep: Color(0xFFFF8CAD));
-  static const OrbTint sage = OrbTint(light: Color(0xFFDDEBC6), deep: Color(0xFFA3CB72));
-  static const OrbTint clay = OrbTint(light: Color(0xFFEFDACB), deep: Color(0xFFCFA283));
+  static const OrbTint peach = OrbTint(
+    light: Color(0xFFFFD9C2),
+    deep: Color(0xFFFF9D6E),
+  );
+  static const OrbTint mint = OrbTint(
+    light: Color(0xFFC9F4DE),
+    deep: Color(0xFF6FD6A4),
+  );
+  static const OrbTint lilac = OrbTint(
+    light: Color(0xFFE3D9FF),
+    deep: Color(0xFFA48FFF),
+  );
+  static const OrbTint butter = OrbTint(
+    light: Color(0xFFFFEFB8),
+    deep: Color(0xFFFFCF4D),
+  );
+  static const OrbTint sky = OrbTint(
+    light: Color(0xFFCDE9FF),
+    deep: Color(0xFF72B9FF),
+  );
+  static const OrbTint rose = OrbTint(
+    light: Color(0xFFFFD0DF),
+    deep: Color(0xFFFF8CAD),
+  );
+  static const OrbTint sage = OrbTint(
+    light: Color(0xFFDDEBC6),
+    deep: Color(0xFFA3CB72),
+  );
+  static const OrbTint clay = OrbTint(
+    light: Color(0xFFEFDACB),
+    deep: Color(0xFFCFA283),
+  );
 
-  static const List<OrbTint> _all = [peach, mint, lilac, butter, sky, rose, sage, clay];
+  static const List<OrbTint> _all = [
+    peach,
+    mint,
+    lilac,
+    butter,
+    sky,
+    rose,
+    sage,
+    clay,
+  ];
 
   static const Map<String, OrbTint> _byCategory = {
     'beauty': rose,
