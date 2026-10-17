@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Release builds need this explicitly: the debug and profile manifests add it, the main one does not. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:label="shopsphere"
+        android:label="ShopSphere"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
