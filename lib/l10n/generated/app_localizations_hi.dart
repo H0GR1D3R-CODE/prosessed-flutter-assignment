@@ -118,4 +118,74 @@ class AppLocalizationsHi extends AppLocalizations {
   String ratingOutOf(String rating) {
     return '5 में से $rating रेटिंग';
   }
+
+  @override
+  String get loginHeadline => 'वापसी पर स्वागत है';
+
+  @override
+  String get loginSubhead =>
+      'स्टोर में नया क्या है, यह देखने के लिए साइन इन करें।';
+
+  @override
+  String get usernameLabel => 'उपयोगकर्ता नाम';
+
+  @override
+  String get passwordLabel => 'पासवर्ड';
+
+  @override
+  String get showPassword => 'पासवर्ड दिखाएँ';
+
+  @override
+  String get hidePassword => 'पासवर्ड छिपाएँ';
+
+  @override
+  String get signIn => 'साइन इन करें';
+
+  @override
+  String get signOut => 'साइन आउट करें';
+
+  @override
+  String get signOutConfirmTitle => 'ShopSphere से साइन आउट करें?';
+
+  @override
+  String get signOutConfirmMessage =>
+      'आपकी कार्ट अगली बार के लिए इस डिवाइस पर बनी रहेगी।';
+
+  @override
+  String get usernameEmpty => 'अपना उपयोगकर्ता नाम दर्ज करें';
+
+  @override
+  String usernameTooShort(int min) {
+    return 'उपयोगकर्ता नाम में कम से कम $min अक्षर होने चाहिए';
+  }
+
+  @override
+  String get passwordEmpty => 'अपना पासवर्ड दर्ज करें';
+
+  @override
+  String passwordTooShort(int min) {
+    return 'पासवर्ड में कम से कम $min अक्षर होने चाहिए';
+  }
+
+  @override
+  String get useDemoAccount => 'डेमो खाता इस्तेमाल करें';
+
+  @override
+  String get demoAccountNote => 'टेस्ट लॉगिन: emilys / emilyspass';
+
+  @override
+  String get sessionEndedNotice =>
+      'आपका सत्र समाप्त हो गया। जारी रखने के लिए दोबारा साइन इन करें।';
+
+  @override
+  String get navShop => 'शॉप';
+
+  @override
+  String get navSaved => 'सेव किए';
+
+  @override
+  String get navCart => 'कार्ट';
+
+  @override
+  String get navProfile => 'मैं';
 }

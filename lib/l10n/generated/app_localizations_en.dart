@@ -119,4 +119,73 @@ class AppLocalizationsEn extends AppLocalizations {
   String ratingOutOf(String rating) {
     return 'Rated $rating out of 5';
   }
+
+  @override
+  String get loginHeadline => 'Welcome back';
+
+  @override
+  String get loginSubhead => 'Sign in to see what\'s new in the store.';
+
+  @override
+  String get usernameLabel => 'Username';
+
+  @override
+  String get passwordLabel => 'Password';
+
+  @override
+  String get showPassword => 'Show password';
+
+  @override
+  String get hidePassword => 'Hide password';
+
+  @override
+  String get signIn => 'Sign in';
+
+  @override
+  String get signOut => 'Sign out';
+
+  @override
+  String get signOutConfirmTitle => 'Sign out of ShopSphere?';
+
+  @override
+  String get signOutConfirmMessage =>
+      'Your cart stays on this device for next time.';
+
+  @override
+  String get usernameEmpty => 'Enter your username';
+
+  @override
+  String usernameTooShort(int min) {
+    return 'Username needs at least $min characters';
+  }
+
+  @override
+  String get passwordEmpty => 'Enter your password';
+
+  @override
+  String passwordTooShort(int min) {
+    return 'Password needs at least $min characters';
+  }
+
+  @override
+  String get useDemoAccount => 'Use the demo account';
+
+  @override
+  String get demoAccountNote => 'Test login: emilys / emilyspass';
+
+  @override
+  String get sessionEndedNotice =>
+      'Your session ended. Sign in again to continue.';
+
+  @override
+  String get navShop => 'Shop';
+
+  @override
+  String get navSaved => 'Saved';
+
+  @override
+  String get navCart => 'Cart';
+
+  @override
+  String get navProfile => 'Me';
 }

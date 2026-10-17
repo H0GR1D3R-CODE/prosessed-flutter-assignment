@@ -53,5 +53,40 @@
         "type": "String"
       }
     }
-  }
+  },
+  "loginHeadline": "Welcome back",
+  "loginSubhead": "Sign in to see what's new in the store.",
+  "usernameLabel": "Username",
+  "passwordLabel": "Password",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "signIn": "Sign in",
+  "signOut": "Sign out",
+  "signOutConfirmTitle": "Sign out of ShopSphere?",
+  "signOutConfirmMessage": "Your cart stays on this device for next time.",
+  "usernameEmpty": "Enter your username",
+  "usernameTooShort": "Username needs at least {min} characters",
+  "@usernameTooShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "passwordEmpty": "Enter your password",
+  "passwordTooShort": "Password needs at least {min} characters",
+  "@passwordTooShort": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "useDemoAccount": "Use the demo account",
+  "demoAccountNote": "Test login: emilys / emilyspass",
+  "sessionEndedNotice": "Your session ended. Sign in again to continue.",
+  "navShop": "Shop",
+  "navSaved": "Saved",
+  "navCart": "Cart",
+  "navProfile": "Me"
 }

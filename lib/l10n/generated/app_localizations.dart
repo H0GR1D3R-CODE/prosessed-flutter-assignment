@@ -295,6 +295,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Rated {rating} out of 5'**
   String ratingOutOf(String rating);
+
+  /// No description provided for @loginHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back'**
+  String get loginHeadline;
+
+  /// No description provided for @loginSubhead.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in to see what\'s new in the store.'**
+  String get loginSubhead;
+
+  /// No description provided for @usernameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get usernameLabel;
+
+  /// No description provided for @passwordLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get passwordLabel;
+
+  /// No description provided for @showPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get showPassword;
+
+  /// No description provided for @hidePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get hidePassword;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signIn;
+
+  /// No description provided for @signOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOut;
+
+  /// No description provided for @signOutConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out of ShopSphere?'**
+  String get signOutConfirmTitle;
+
+  /// No description provided for @signOutConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Your cart stays on this device for next time.'**
+  String get signOutConfirmMessage;
+
+  /// No description provided for @usernameEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your username'**
+  String get usernameEmpty;
+
+  /// No description provided for @usernameTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Username needs at least {min} characters'**
+  String usernameTooShort(int min);
+
+  /// No description provided for @passwordEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your password'**
+  String get passwordEmpty;
+
+  /// No description provided for @passwordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'Password needs at least {min} characters'**
+  String passwordTooShort(int min);
+
+  /// No description provided for @useDemoAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Use the demo account'**
+  String get useDemoAccount;
+
+  /// No description provided for @demoAccountNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Test login: emilys / emilyspass'**
+  String get demoAccountNote;
+
+  /// No description provided for @sessionEndedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Your session ended. Sign in again to continue.'**
+  String get sessionEndedNotice;
+
+  /// No description provided for @navShop.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop'**
+  String get navShop;
+
+  /// No description provided for @navSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get navSaved;
+
+  /// No description provided for @navCart.
+  ///
+  /// In en, this message translates to:
+  /// **'Cart'**
+  String get navCart;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Me'**
+  String get navProfile;
 }
 
 class _AppLocalizationsDelegate
