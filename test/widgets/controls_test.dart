@@ -90,6 +90,21 @@ void main() {
       }
     });
 
+    testWidgets('the compact variant keeps 48 dp buttons too', (tester) async {
+      await pumpApp(
+        tester,
+        Center(
+          child: QuantityStepper(value: 2, dense: true, onChanged: (_) {}),
+        ),
+      );
+
+      for (final tooltip in [en.increaseQuantity, en.decreaseQuantity]) {
+        final size = tester.getSize(find.byTooltip(tooltip));
+        expect(size.width, greaterThanOrEqualTo(48));
+        expect(size.height, greaterThanOrEqualTo(48));
+      }
+    });
+
     testWidgets('screen readers get a value and increase/decrease actions', (
       tester,
     ) async {

@@ -18,7 +18,7 @@ class QuantityStepper extends StatelessWidget {
   final int min;
   final int max;
 
-  /// A tighter variant for list rows.
+  /// A tighter variant for list rows: a narrower number and smaller icons, same 48 dp buttons.
   final bool dense;
 
   @override
@@ -26,7 +26,8 @@ class QuantityStepper extends StatelessWidget {
     final l10n = context.l10n;
     final canDecrease = value > min;
     final canIncrease = value < max;
-    final side = dense ? 40.0 : 48.0;
+    // Every button is a full 48 dp target; dense only tightens the number and the icons.
+    const side = 48.0;
 
     return Semantics(
       container: true,
@@ -49,8 +50,11 @@ class QuantityStepper extends StatelessWidget {
               IconButton(
                 tooltip: l10n.decreaseQuantity,
                 onPressed: canDecrease ? () => onChanged(value - 1) : null,
-                icon: const Icon(Icons.remove_rounded),
-                constraints: BoxConstraints.tightFor(width: side, height: side),
+                icon: Icon(Icons.remove_rounded, size: dense ? 20 : 24),
+                constraints: const BoxConstraints.tightFor(
+                  width: side,
+                  height: side,
+                ),
               ),
               SizedBox(
                 width: dense ? 28 : 36,
@@ -76,8 +80,11 @@ class QuantityStepper extends StatelessWidget {
               IconButton(
                 tooltip: l10n.increaseQuantity,
                 onPressed: canIncrease ? () => onChanged(value + 1) : null,
-                icon: const Icon(Icons.add_rounded),
-                constraints: BoxConstraints.tightFor(width: side, height: side),
+                icon: Icon(Icons.add_rounded, size: dense ? 20 : 24),
+                constraints: const BoxConstraints.tightFor(
+                  width: side,
+                  height: side,
+                ),
               ),
             ],
           ),
