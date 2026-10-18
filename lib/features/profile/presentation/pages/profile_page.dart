@@ -184,11 +184,11 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLowest,
-        borderRadius: Radii.brXl,
-      ),
+    // A Material rather than a DecoratedBox, so a ListTile inside can paint its ink splash.
+    return Material(
+      color: context.colors.surfaceContainerLowest,
+      borderRadius: Radii.brXl,
+      clipBehavior: Clip.antiAlias,
       child: Padding(padding: padding, child: child),
     );
   }
