@@ -107,11 +107,6 @@ class SpecList extends StatelessWidget {
       if (product.brand != null) (l10n.specBrand, product.brand!),
       (l10n.specCategory, Formatters.slugToTitle(product.category)),
       if (product.sku != null) (l10n.specSku, product.sku!),
-      if (product.weight != null)
-        (
-          l10n.specWeight,
-          product.weight!.toStringAsFixed(product.weight! % 1 == 0 ? 0 : 1),
-        ),
       if (product.warrantyInformation != null)
         (l10n.specWarranty, product.warrantyInformation!),
       if (product.shippingInformation != null)

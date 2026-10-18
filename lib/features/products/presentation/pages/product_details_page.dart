@@ -269,6 +269,7 @@ class _PurchaseBarState extends State<_PurchaseBar> {
                 children: [
                   if (product.isAvailable) ...[
                     QuantityStepper(
+                      dense: true,
                       value: _quantity,
                       max: product.maxOrderQuantity,
                       onChanged: (value) {
