@@ -31,9 +31,15 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // No keystore is committed, so the release build is signed with the debug key. That is
+            // fine for sideloading this assignment; a Play Store release needs a real upload key.
             signingConfig = signingConfigs.getByName("debug")
+
+            // R8 shrinking broke the release build on a device: shared_preferences_android threw
+            // NoSuchMethodError at start-up, leaving the app on the splash screen. The release build
+            // keeps all code instead, which costs size but not behaviour.
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }
