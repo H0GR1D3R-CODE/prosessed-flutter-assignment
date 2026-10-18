@@ -9,6 +9,10 @@ import 'package:shopsphere/features/dev_tools/domain/error_lab.dart';
 class ErrorLabRepositoryImpl implements ErrorLabRepository {
   const ErrorLabRepositoryImpl({required this._client, required this._tokens});
 
+  /// A spoiled access token has to contain no dots: DummyJSON answers 401 to those, which starts
+  /// the refresh, but answers 500 ("invalid token") to anything shaped like a JWT.
+  static const String _spoiledAccessToken = 'expired-access-token';
+
   final ApiClient _client;
   final TokenStore _tokens;
 
@@ -51,7 +55,7 @@ class ErrorLabRepositoryImpl implements ErrorLabRepository {
         // Keep the real refresh token, spoil the access token: the first call gets a 401, the
         // interceptor refreshes, and the retried call succeeds.
         await _tokens.saveTokens(
-          accessToken: 'expired.access.token',
+          accessToken: _spoiledAccessToken,
           refreshToken: await _tokens.readRefreshToken() ?? 'missing',
         );
         await _client.getMap(Endpoints.me, authenticated: true);
@@ -59,8 +63,8 @@ class ErrorLabRepositoryImpl implements ErrorLabRepository {
         // Spoil both: the 401 triggers a refresh, the refresh is refused with 403, and the
         // session ends.
         await _tokens.saveTokens(
-          accessToken: 'expired.access.token',
-          refreshToken: 'rejected.refresh.token',
+          accessToken: _spoiledAccessToken,
+          refreshToken: 'rejected-refresh-token',
         );
         await _client.getMap(Endpoints.me, authenticated: true);
     }

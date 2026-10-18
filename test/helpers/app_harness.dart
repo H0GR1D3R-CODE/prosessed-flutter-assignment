@@ -91,11 +91,16 @@ class FakeShopApi {
     if (path == '/auth/me') {
       final bearer = '${options.headers['Authorization']}';
       final valid = {'Bearer fake-access-token', 'Bearer new-access-token'};
-      return meStatus == 200 && valid.contains(bearer)
-          ? FakeAdapter.json(200, fixtureJson('me'))
-          : FakeAdapter.json(meStatus == 200 ? 401 : meStatus, {
-              'message': 'Token Expired!',
-            });
+      if (meStatus == 200 && valid.contains(bearer)) {
+        return FakeAdapter.json(200, fixtureJson('me'));
+      }
+      // Like the real server: a token shaped like a JWT but not valid is a 500, not a 401.
+      if (meStatus == 200 && bearer.substring('Bearer '.length).contains('.')) {
+        return FakeAdapter.json(500, {'message': 'invalid token'});
+      }
+      return FakeAdapter.json(meStatus == 200 ? 401 : meStatus, {
+        'message': 'Invalid/Expired Token!',
+      });
     }
     if (path == '/auth/refresh') {
       final body = options.data as Map<String, dynamic>;
