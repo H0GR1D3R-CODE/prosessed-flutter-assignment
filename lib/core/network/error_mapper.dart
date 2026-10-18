@@ -8,10 +8,21 @@ AppException mapDioException(DioException error) {
 
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
+      return RequestTimeoutException(
+        _timeoutDetail('connect', error.requestOptions.connectTimeout),
+      );
     case DioExceptionType.sendTimeout:
+      return RequestTimeoutException(
+        _timeoutDetail('send', error.requestOptions.sendTimeout),
+      );
     case DioExceptionType.receiveTimeout:
+      return RequestTimeoutException(
+        _timeoutDetail('receive', error.requestOptions.receiveTimeout),
+      );
     case DioExceptionType.transformTimeout:
-      return RequestTimeoutException(error.message);
+      return const RequestTimeoutException(
+        'Reading the response took too long',
+      );
     case DioExceptionType.connectionError:
     case DioExceptionType.badCertificate:
       return NetworkException(error.message);
@@ -24,6 +35,19 @@ AppException mapDioException(DioException error) {
       // On the web, a failed XHR (offline, blocked) surfaces as an unknown error.
       return NetworkException(error.message ?? wrapped?.toString());
   }
+}
+
+/// A short technical note such as "No response within 2 s (receive timeout)", in place of Dio's
+/// long advice about raising the limit.
+String _timeoutDetail(String phase, Duration? limit) {
+  final seconds = limit == null
+      ? null
+      : (limit.inMilliseconds / 1000).toStringAsFixed(
+          limit.inMilliseconds % 1000 == 0 ? 0 : 1,
+        );
+  return seconds == null
+      ? 'Timed out ($phase timeout)'
+      : 'No response within $seconds s ($phase timeout)';
 }
 
 AppException _fromStatus(Response<Object?>? response) {

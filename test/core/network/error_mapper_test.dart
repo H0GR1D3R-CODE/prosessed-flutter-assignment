@@ -34,6 +34,30 @@ void main() {
       }
     });
 
+    test('a timeout says which phase and how long, not Dio\'s advice', () {
+      final error = DioException(
+        requestOptions: RequestOptions(
+          path: '/x',
+          receiveTimeout: const Duration(seconds: 2),
+        ),
+        type: DioExceptionType.receiveTimeout,
+        message: 'try raising the RequestOptions.receiveTimeout above...',
+      );
+
+      final detail =
+          (mapDioException(error) as RequestTimeoutException).message;
+
+      expect(detail, 'No response within 2 s (receive timeout)');
+    });
+
+    test('a timeout with no configured limit still reads cleanly', () {
+      final detail = (mapDioException(
+        _of(DioExceptionType.connectionTimeout),
+      ) as RequestTimeoutException).message;
+
+      expect(detail, 'Timed out (connect timeout)');
+    });
+
     test('connection problems become NetworkException', () {
       expect(
         mapDioException(_of(DioExceptionType.connectionError)),
