@@ -26,6 +26,9 @@ class Product extends Equatable {
     this.minimumOrderQuantity = 1,
   });
 
+  /// No order may hold more than this many of one product.
+  static const int maxPerOrder = 99;
+
   final int id;
   final String title;
   final String description;
@@ -65,6 +68,10 @@ class Product extends Equatable {
 
   /// Can be added to a cart.
   bool get isAvailable => stock > 0 && availabilityStatus != 'Out of Stock';
+
+  /// The most that can be ordered at once: what is in stock, up to [maxPerOrder].
+  int get maxOrderQuantity =>
+      stock <= 0 ? 0 : (stock < maxPerOrder ? stock : maxPerOrder);
 
   /// The photos to show, falling back to the thumbnail.
   List<String> get gallery => images.isEmpty ? [thumbnail] : images;

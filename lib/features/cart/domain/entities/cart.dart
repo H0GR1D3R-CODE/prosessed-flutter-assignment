@@ -132,7 +132,7 @@ class Cart extends Equatable {
   const Cart([this.items = const []]);
 
   /// A single line never holds more than this, whatever the stock.
-  static const int maxPerLine = 99;
+  static const int maxPerLine = Product.maxPerOrder;
 
   final List<CartItem> items;
 
