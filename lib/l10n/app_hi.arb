@@ -167,6 +167,13 @@
   "shopPrompt": "आज आप क्या खरीद रहे हैं?",
   "shopSelectTitle": "कोई उत्पाद चुनें",
   "shopSelectMessage": "इसकी तस्वीरें, कीमत और समीक्षाएँ यहीं खुलेंगी।",
+  "photoReload": "यह तस्वीर दोबारा लोड करने के लिए टैप करें",
+  "panelHide": "विवरण पैनल छिपाएँ",
+  "panelShow": "विवरण पैनल दिखाएँ",
+  "panelResize": "पैनल का आकार बदलने के लिए खींचें",
+  "summaryHide": "ऑर्डर सारांश छिपाएँ",
+  "summaryShow": "ऑर्डर सारांश दिखाएँ",
+  "brandHome": "ShopSphere होम",
   "shopWelcome": "स्वागत है",
   "productGallery": "{total} में से फ़ोटो {current}",
   "errorGoHome": "शॉप पर लौटें"

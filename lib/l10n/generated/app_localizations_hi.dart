@@ -610,6 +610,27 @@ class AppLocalizationsHi extends AppLocalizations {
       'इसकी तस्वीरें, कीमत और समीक्षाएँ यहीं खुलेंगी।';
 
   @override
+  String get photoReload => 'यह तस्वीर दोबारा लोड करने के लिए टैप करें';
+
+  @override
+  String get panelHide => 'विवरण पैनल छिपाएँ';
+
+  @override
+  String get panelShow => 'विवरण पैनल दिखाएँ';
+
+  @override
+  String get panelResize => 'पैनल का आकार बदलने के लिए खींचें';
+
+  @override
+  String get summaryHide => 'ऑर्डर सारांश छिपाएँ';
+
+  @override
+  String get summaryShow => 'ऑर्डर सारांश दिखाएँ';
+
+  @override
+  String get brandHome => 'ShopSphere होम';
+
+  @override
   String get shopWelcome => 'स्वागत है';
 
   @override

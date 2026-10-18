@@ -1,12 +1,12 @@
 {
-    "name": "shopsphere",
-    "short_name": "shopsphere",
+    "name": "ShopSphere",
+    "short_name": "ShopSphere",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
+    "background_color": "#D4FF3F",
+    "theme_color": "#D4FF3F",
     "description": "ShopSphere: a Flutter e-commerce catalogue on the DummyJSON API.",
-    "orientation": "portrait-primary",
+    "orientation": "any",
     "prefer_related_applications": false,
     "icons": [
         {

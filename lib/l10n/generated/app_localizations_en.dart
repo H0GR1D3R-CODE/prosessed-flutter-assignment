@@ -609,6 +609,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shopSelectMessage => 'Its photos, price and reviews open here.';
 
   @override
+  String get photoReload => 'Tap to reload this photo';
+
+  @override
+  String get panelHide => 'Hide the details panel';
+
+  @override
+  String get panelShow => 'Show the details panel';
+
+  @override
+  String get panelResize => 'Drag to resize the panel';
+
+  @override
+  String get summaryHide => 'Hide the order summary';
+
+  @override
+  String get summaryShow => 'Show the order summary';
+
+  @override
+  String get brandHome => 'ShopSphere home';
+
+  @override
   String get shopWelcome => 'Welcome';
 
   @override

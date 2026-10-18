@@ -1,46 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
+    The base href is replaced by the value of the `--base-href` argument given to
+    `flutter build web`, so the app can be served from a sub-path (for example GitHub Pages).
   -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="ShopSphere: a Flutter e-commerce catalogue on the DummyJSON API.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ShopSphere: a shopping app built with Flutter on the DummyJSON API. Search, browse, save, and check out.">
+  <meta name="theme-color" content="#D4FF3F">
 
-  <!-- iOS meta tags & icons -->
+  <!-- iOS meta tags and icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="shopsphere">
+  <meta name="apple-mobile-web-app-title" content="ShopSphere">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/Icon-192.png">
 
-  <title>shopsphere</title>
+  <title>ShopSphere</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    html, body { margin: 0; height: 100%; background: #D4FF3F; }
+    /* The same volt screen the app opens on, so nothing flashes while Flutter starts. */
+    #boot {
+      position: fixed; inset: 0; display: grid; place-items: center;
+      background: #D4FF3F; z-index: 10; transition: opacity .45s ease;
+    }
+    #boot.done { opacity: 0; pointer-events: none; }
+    #boot img {
+      width: 96px; height: 96px; border-radius: 24px;
+      box-shadow: 0 12px 32px rgba(16, 17, 20, .18);
+      animation: float 2.4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.04); }
+    }
+    @media (prefers-reduced-motion: reduce) { #boot img { animation: none; } }
+  </style>
 </head>
 <body>
-  <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
-
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
-  -->
+  <div id="boot"><img src="icons/Icon-192.png" alt="ShopSphere"></div>
+  <script>
+    // Flutter announces its first frame; fade the loading screen out and then drop it.
+    window.addEventListener('flutter-first-frame', function () {
+      var boot = document.getElementById('boot');
+      if (!boot) return;
+      boot.classList.add('done');
+      setTimeout(function () { boot.remove(); }, 600);
+    });
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

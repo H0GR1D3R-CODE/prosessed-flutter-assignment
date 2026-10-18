@@ -5,7 +5,7 @@ import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/utils/breakpoints.dart';
 import 'package:shopsphere/core/widgets/badges.dart';
-import 'package:shopsphere/core/widgets/orbit_logo.dart';
+import 'package:shopsphere/core/widgets/brand_mark.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/l10n/l10n.dart';
 
@@ -80,9 +80,13 @@ class AppShell extends StatelessWidget {
             child: NavigationRail(
               selectedIndex: navigationShell.currentIndex,
               onDestinationSelected: _select,
-              leading: const Padding(
-                padding: EdgeInsets.symmetric(vertical: Gap.l),
-                child: OrbitLogo(size: 52),
+              leading: Padding(
+                padding: const EdgeInsets.symmetric(vertical: Gap.l),
+                child: BrandMark(
+                  tooltip: l10n.brandHome,
+                  background: context.colors.surfaceContainerLowest,
+                  onTap: () => _select(0),
+                ),
               ),
               destinations: [
                 for (final d in destinations)

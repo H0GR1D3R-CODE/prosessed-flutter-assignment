@@ -337,6 +337,13 @@
   "shopPrompt": "What are you shopping for?",
   "shopSelectTitle": "Pick a product",
   "shopSelectMessage": "Its photos, price and reviews open here.",
+  "photoReload": "Tap to reload this photo",
+  "panelHide": "Hide the details panel",
+  "panelShow": "Show the details panel",
+  "panelResize": "Drag to resize the panel",
+  "summaryHide": "Hide the order summary",
+  "summaryShow": "Show the order summary",
+  "brandHome": "ShopSphere home",
   "shopWelcome": "Welcome",
   "productGallery": "Photo {current} of {total}",
   "@productGallery": {

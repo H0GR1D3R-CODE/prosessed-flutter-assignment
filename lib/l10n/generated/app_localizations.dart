@@ -1100,6 +1100,48 @@ abstract class AppLocalizations {
   /// **'Its photos, price and reviews open here.'**
   String get shopSelectMessage;
 
+  /// No description provided for @photoReload.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to reload this photo'**
+  String get photoReload;
+
+  /// No description provided for @panelHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the details panel'**
+  String get panelHide;
+
+  /// No description provided for @panelShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the details panel'**
+  String get panelShow;
+
+  /// No description provided for @panelResize.
+  ///
+  /// In en, this message translates to:
+  /// **'Drag to resize the panel'**
+  String get panelResize;
+
+  /// No description provided for @summaryHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide the order summary'**
+  String get summaryHide;
+
+  /// No description provided for @summaryShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the order summary'**
+  String get summaryShow;
+
+  /// No description provided for @brandHome.
+  ///
+  /// In en, this message translates to:
+  /// **'ShopSphere home'**
+  String get brandHome;
+
   /// No description provided for @shopWelcome.
   ///
   /// In en, this message translates to:
