@@ -92,6 +92,12 @@ abstract final class OrbTints {
     'womens-watches': clay,
   };
 
+  /// A stable tint for any text, e.g. a reviewer's name.
+  static OrbTint forSeed(String seed) {
+    final sum = seed.codeUnits.fold<int>(0, (total, unit) => total + unit);
+    return _all[sum % _all.length];
+  }
+
   /// The tint for a category slug. Unknown slugs get a stable colour from their characters.
   static OrbTint forCategory(String? slug) {
     if (slug == null || slug.isEmpty) return peach;

@@ -100,6 +100,15 @@ class ProductListCubit extends Cubit<ProductListState> {
     });
   }
 
+  /// The keyboard's search key: run the search now instead of waiting for the pause.
+  void searchSubmitted(String text) {
+    _debouncer.cancel();
+    final trimmed = text.trim();
+    _applyQuery(
+      state.query.copyWith(search: trimmed, clearCategory: trimmed.isNotEmpty),
+    );
+  }
+
   void clearSearch() {
     _debouncer.cancel();
     _applyQuery(state.query.copyWith(search: ''));

@@ -13,6 +13,15 @@ abstract final class Formatters {
   /// One decimal place: `4.5`.
   static String rating(double value) => value.toStringAsFixed(1);
 
+  /// `mens-shirts` becomes `Mens Shirts`.
+  static String slugToTitle(String slug) {
+    return slug
+        .split('-')
+        .where((part) => part.isNotEmpty)
+        .map((part) => '${part[0].toUpperCase()}${part.substring(1)}')
+        .join(' ');
+  }
+
   static String date(DateTime value, String locale) =>
       DateFormat.yMMMd(locale).format(value.toLocal());
 }
