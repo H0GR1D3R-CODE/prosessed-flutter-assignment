@@ -45,24 +45,27 @@ void main() {
       );
     });
 
-    test('HTTP statuses map to their own exceptions and keep the server message', () {
-      expect(
-        mapDioException(_bad(400, {'message': 'Invalid credentials'})),
-        isA<BadRequestException>().having(
-          (e) => e.message,
-          'message',
-          'Invalid credentials',
-        ),
-      );
-      expect(mapDioException(_bad(401)), isA<UnauthorizedException>());
-      expect(mapDioException(_bad(403)), isA<UnauthorizedException>());
-      expect(mapDioException(_bad(404)), isA<NotFoundException>());
-      expect(
-        mapDioException(_bad(500, {'message': 'Internal Server Error'})),
-        isA<ServerException>().having((e) => e.statusCode, 'statusCode', 500),
-      );
-      expect(mapDioException(_bad(503)), isA<ServerException>());
-    });
+    test(
+      'HTTP statuses map to their own exceptions and keep the server message',
+      () {
+        expect(
+          mapDioException(_bad(400, {'message': 'Invalid credentials'})),
+          isA<BadRequestException>().having(
+            (e) => e.message,
+            'message',
+            'Invalid credentials',
+          ),
+        );
+        expect(mapDioException(_bad(401)), isA<UnauthorizedException>());
+        expect(mapDioException(_bad(403)), isA<UnauthorizedException>());
+        expect(mapDioException(_bad(404)), isA<NotFoundException>());
+        expect(
+          mapDioException(_bad(500, {'message': 'Internal Server Error'})),
+          isA<ServerException>().having((e) => e.statusCode, 'statusCode', 500),
+        );
+        expect(mapDioException(_bad(503)), isA<ServerException>());
+      },
+    );
 
     test('an AppException already attached is passed through', () {
       const original = ParseException('bad');

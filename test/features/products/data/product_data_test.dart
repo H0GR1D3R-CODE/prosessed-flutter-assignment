@@ -52,18 +52,23 @@ void main() {
     });
 
     test('a product without a brand parses with brand null', () {
-      final json = {...fixtureMap('products_list_page')['products'][0] as Map<String, dynamic>}
-        ..remove('brand');
+      final json = {
+        ...((fixtureMap('products_list_page')['products']! as List<dynamic>)[0]
+            as Map<String, dynamic>),
+      }..remove('brand');
 
       expect(ProductModel.fromJson(json).brand, isNull);
     });
 
-    test('survives a trip through JSON, which is how the offline cache stores it', () {
-      final original = _page();
-      final again = ProductPageModel.fromJson(original.toJson());
+    test(
+      'survives a trip through JSON, which is how the offline cache stores it',
+      () {
+        final original = _page();
+        final again = ProductPageModel.fromJson(original.toJson());
 
-      expect(again.toEntity(), original.toEntity());
-    });
+        expect(again.toEntity(), original.toEntity());
+      },
+    );
   });
 
   group('Product entity', () {
@@ -101,16 +106,19 @@ void main() {
       remote = ProductRemoteDataSourceImpl(ApiClient(dioWith(network)));
     });
 
-    test('asks for a light payload with limit, skip and the list fields', () async {
-      await remote.all(skip: 20, limit: 20, sort: ProductSort.relevance);
+    test(
+      'asks for a light payload with limit, skip and the list fields',
+      () async {
+        await remote.all(skip: 20, limit: 20, sort: ProductSort.relevance);
 
-      final query = network.requests.single.queryParameters;
-      expect(network.requests.single.path, '/products');
-      expect(query['limit'], 20);
-      expect(query['skip'], 20);
-      expect(query['select'], ProductRemoteDataSourceImpl.listFields);
-      expect(query.containsKey('sortBy'), isFalse);
-    });
+        final query = network.requests.single.queryParameters;
+        expect(network.requests.single.path, '/products');
+        expect(query['limit'], 20);
+        expect(query['skip'], 20);
+        expect(query['select'], ProductRemoteDataSourceImpl.listFields);
+        expect(query.containsKey('sortBy'), isFalse);
+      },
+    );
 
     test('maps every sort order to the API parameters', () async {
       final expected = {
@@ -122,13 +130,27 @@ void main() {
       for (final entry in expected.entries) {
         await remote.all(skip: 0, limit: 20, sort: entry.key);
         final query = network.requests.last.queryParameters;
-        expect((query['sortBy'], query['order']), entry.value, reason: '${entry.key}');
+        expect(
+          (query['sortBy'], query['order']),
+          entry.value,
+          reason: '${entry.key}',
+        );
       }
     });
 
     test('search and category use their own endpoints', () async {
-      await remote.search('phone', skip: 0, limit: 20, sort: ProductSort.relevance);
-      await remote.byCategory('smartphones', skip: 0, limit: 20, sort: ProductSort.relevance);
+      await remote.search(
+        'phone',
+        skip: 0,
+        limit: 20,
+        sort: ProductSort.relevance,
+      );
+      await remote.byCategory(
+        'smartphones',
+        skip: 0,
+        limit: 20,
+        sort: ProductSort.relevance,
+      );
 
       expect(network.requests[0].path, '/products/search');
       expect(network.requests[0].queryParameters['q'], 'phone');
@@ -178,15 +200,22 @@ void main() {
       ),
     ).thenThrow(error);
 
-    test('the plain first page is returned and saved for offline use', () async {
-      remoteReturnsPage();
+    test(
+      'the plain first page is returned and saved for offline use',
+      () async {
+        remoteReturnsPage();
 
-      final result = await repository.getProducts(query: plain, skip: 0, limit: 20);
+        final result = await repository.getProducts(
+          query: plain,
+          skip: 0,
+          limit: 20,
+        );
 
-      expect(result.valueOrNull?.items, hasLength(3));
-      expect(result.valueOrNull?.fromCache, isFalse);
-      verify(() => local.saveFirstPage(any())).called(1);
-    });
+        expect(result.valueOrNull?.items, hasLength(3));
+        expect(result.valueOrNull?.fromCache, isFalse);
+        verify(() => local.saveFirstPage(any())).called(1);
+      },
+    );
 
     test('later pages are not cached', () async {
       remoteReturnsPage();
@@ -196,21 +225,32 @@ void main() {
       verifyNever(() => local.saveFirstPage(any()));
     });
 
-    test('a server failure falls back to the saved page, flagged as cached', () async {
-      remoteThrows(const ServerException(statusCode: 500));
-      when(() => local.readFirstPage()).thenAnswer((_) async => _page());
+    test(
+      'a server failure falls back to the saved page, flagged as cached',
+      () async {
+        remoteThrows(const ServerException(statusCode: 500));
+        when(() => local.readFirstPage()).thenAnswer((_) async => _page());
 
-      final result = await repository.getProducts(query: plain, skip: 0, limit: 20);
+        final result = await repository.getProducts(
+          query: plain,
+          skip: 0,
+          limit: 20,
+        );
 
-      expect(result.valueOrNull?.fromCache, isTrue);
-      expect(result.valueOrNull?.items, isNotEmpty);
-    });
+        expect(result.valueOrNull?.fromCache, isTrue);
+        expect(result.valueOrNull?.items, isNotEmpty);
+      },
+    );
 
     test('offline with nothing saved is a NetworkFailure', () async {
       remoteThrows(const NetworkException('offline'));
       when(() => local.readFirstPage()).thenAnswer((_) async => null);
 
-      final result = await repository.getProducts(query: plain, skip: 0, limit: 20);
+      final result = await repository.getProducts(
+        query: plain,
+        skip: 0,
+        limit: 20,
+      );
 
       expect(result.failureOrNull, isA<NetworkFailure>());
     });
@@ -252,7 +292,12 @@ void main() {
       );
 
       verify(
-        () => remote.search('phone', skip: 0, limit: 20, sort: ProductSort.relevance),
+        () => remote.search(
+          'phone',
+          skip: 0,
+          limit: 20,
+          sort: ProductSort.relevance,
+        ),
       ).called(1);
       verifyNever(
         () => remote.byCategory(
@@ -264,28 +309,40 @@ void main() {
       );
     });
 
-    test('categories fall back to the saved list when the request fails', () async {
-      when(() => remote.categories()).thenThrow(const NetworkException('offline'));
-      when(() => local.readCategories()).thenAnswer(
-        (_) async => [const CategoryModel(slug: 'beauty', name: 'Beauty')],
-      );
+    test(
+      'categories fall back to the saved list when the request fails',
+      () async {
+        when(() => remote.categories())
+            .thenThrow(const NetworkException('offline'));
+        when(() => local.readCategories()).thenAnswer(
+          (_) async => [const CategoryModel(slug: 'beauty', name: 'Beauty')],
+        );
 
-      final result = await repository.getCategories();
+        final result = await repository.getCategories();
 
-      expect(result.valueOrNull?.single.slug, 'beauty');
-    });
+        expect(result.valueOrNull?.single.slug, 'beauty');
+      },
+    );
 
     test('an unknown product is a NotFoundFailure', () async {
       when(() => remote.product(9999)).thenThrow(const NotFoundException());
 
-      expect((await repository.getProduct(9999)).failureOrNull, isA<NotFoundFailure>());
+      expect(
+        (await repository.getProduct(9999)).failureOrNull,
+        isA<NotFoundFailure>(),
+      );
     });
 
     test('a broken cache write does not fail a good response', () async {
       remoteReturnsPage();
-      when(() => local.saveFirstPage(any())).thenThrow(const CacheException('full'));
+      when(() => local.saveFirstPage(any()))
+          .thenThrow(const CacheException('full'));
 
-      final result = await repository.getProducts(query: plain, skip: 0, limit: 20);
+      final result = await repository.getProducts(
+        query: plain,
+        skip: 0,
+        limit: 20,
+      );
 
       expect(result.isSuccess, isTrue);
     });

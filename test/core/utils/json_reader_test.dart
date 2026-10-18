@@ -19,14 +19,22 @@ void main() {
       expect(json.string('name'), 'Orb');
       expect(json.integer('count'), 3);
       expect(json.decimal('price'), 9.5);
-      expect(json.decimal('count'), 3.0, reason: 'ints are accepted as numbers');
+      expect(
+        json.decimal('count'),
+        3.0,
+        reason: 'ints are accepted as numbers',
+      );
     });
 
     test('a missing or wrong-typed required value names the key', () {
       expect(
         () => json.string('count'),
         throwsA(
-          isA<ParseException>().having((e) => e.message, 'message', contains('"count"')),
+          isA<ParseException>().having(
+            (e) => e.message,
+            'message',
+            contains('"count"'),
+          ),
         ),
       );
       expect(() => json.integer('missing'), throwsA(isA<ParseException>()));

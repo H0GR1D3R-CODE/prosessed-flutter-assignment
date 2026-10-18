@@ -92,62 +92,72 @@ void main() {
     );
   });
 
-  test('a 401 refreshes the token once and replays the request with the new one', () async {
-    final tokens = _MemoryTokens(access: 'old', refresh: 'r1');
-    final rig = _Rig(
-      tokens: tokens,
-      network: FakeAdapter(
-        (_) => FakeAdapter.json(401, {'message': 'Invalid/Expired Token!'}),
-      ),
-      refresh: (token) async {
-        expect(token, 'r1');
-        return const TokenPair(accessToken: 'new', refreshToken: 'r2');
-      },
-    );
+  test(
+    'a 401 refreshes the token once and replays the request with the new one',
+    () async {
+      final tokens = _MemoryTokens(access: 'old', refresh: 'r1');
+      final rig = _Rig(
+        tokens: tokens,
+        network: FakeAdapter(
+          (_) => FakeAdapter.json(401, {'message': 'Invalid/Expired Token!'}),
+        ),
+        refresh: (token) async {
+          expect(token, 'r1');
+          return const TokenPair(accessToken: 'new', refreshToken: 'r2');
+        },
+      );
 
-    final json = await rig.client.getMap('/auth/me', authenticated: true);
+      final json = await rig.client.getMap('/auth/me', authenticated: true);
 
-    expect(json['replayed'], isTrue);
-    expect(json['auth'], 'Bearer new');
-    expect(rig.refreshes, 1);
-    expect(tokens.access, 'new');
-    expect(tokens.refresh, 'r2');
-  });
+      expect(json['replayed'], isTrue);
+      expect(json['auth'], 'Bearer new');
+      expect(rig.refreshes, 1);
+      expect(tokens.access, 'new');
+      expect(tokens.refresh, 'r2');
+    },
+  );
 
-  test('a refresh the server refuses ends the session and surfaces the 401', () async {
-    final rig = _Rig(
-      tokens: _MemoryTokens(access: 'old', refresh: 'bad'),
-      network: FakeAdapter(
-        (_) => FakeAdapter.json(401, {'message': 'Invalid/Expired Token!'}),
-      ),
-      refresh: (_) async => throw const UnauthorizedException(statusCode: 403),
-    );
+  test(
+    'a refresh the server refuses ends the session and surfaces the 401',
+    () async {
+      final rig = _Rig(
+        tokens: _MemoryTokens(access: 'old', refresh: 'bad'),
+        network: FakeAdapter(
+          (_) => FakeAdapter.json(401, {'message': 'Invalid/Expired Token!'}),
+        ),
+        refresh: (_) async =>
+            throw const UnauthorizedException(statusCode: 403),
+      );
 
-    await expectLater(
-      rig.client.getMap('/auth/me', authenticated: true),
-      throwsA(isA<UnauthorizedException>()),
-    );
-    await Future<void>.delayed(Duration.zero);
+      await expectLater(
+        rig.client.getMap('/auth/me', authenticated: true),
+        throwsA(isA<UnauthorizedException>()),
+      );
+      await Future<void>.delayed(Duration.zero);
 
-    expect(rig.expired, 1);
-  });
+      expect(rig.expired, 1);
+    },
+  );
 
-  test('no refresh token means the session ends without trying to refresh', () async {
-    final rig = _Rig(
-      tokens: _MemoryTokens(access: 'old'),
-      network: FakeAdapter((_) => FakeAdapter.json(401, {})),
-      refresh: _neverRefresh,
-    );
+  test(
+    'no refresh token means the session ends without trying to refresh',
+    () async {
+      final rig = _Rig(
+        tokens: _MemoryTokens(access: 'old'),
+        network: FakeAdapter((_) => FakeAdapter.json(401, {})),
+        refresh: _neverRefresh,
+      );
 
-    await expectLater(
-      rig.client.getMap('/auth/me', authenticated: true),
-      throwsA(isA<UnauthorizedException>()),
-    );
-    await Future<void>.delayed(Duration.zero);
+      await expectLater(
+        rig.client.getMap('/auth/me', authenticated: true),
+        throwsA(isA<UnauthorizedException>()),
+      );
+      await Future<void>.delayed(Duration.zero);
 
-    expect(rig.expired, 1);
-    expect(rig.refreshes, 0);
-  });
+      expect(rig.expired, 1);
+      expect(rig.refreshes, 0);
+    },
+  );
 
   test('a refresh that fails for lack of network keeps the session', () async {
     final rig = _Rig(

@@ -34,23 +34,29 @@ void main() {
       }
     });
 
-    test('a stray FormatException or TypeError becomes a ParseFailure', () async {
-      final format = await guard<void>(
-        () async => throw const FormatException('x'),
-      );
-      final type = await guard<void>(() async {
-        final Object value = 'text';
-        (value as int).toString();
-      });
-      expect(format.failureOrNull, isA<ParseFailure>());
-      expect(type.failureOrNull, isA<ParseFailure>());
-    });
+    test(
+      'a stray FormatException or TypeError becomes a ParseFailure',
+      () async {
+        final format = await guard<void>(
+          () async => throw const FormatException('x'),
+        );
+        final type = await guard<void>(() async {
+          const Object value = 'text';
+          (value as int).toString();
+        });
+        expect(format.failureOrNull, isA<ParseFailure>());
+        expect(type.failureOrNull, isA<ParseFailure>());
+      },
+    );
 
-    test('anything else is an UnknownFailure carrying its description', () async {
-      final result = await guard<void>(() async => throw Exception('boom'));
-      expect(result.failureOrNull, isA<UnknownFailure>());
-      expect(result.failureOrNull!.detail, contains('boom'));
-    });
+    test(
+      'anything else is an UnknownFailure carrying its description',
+      () async {
+        final result = await guard<void>(() async => throw Exception('boom'));
+        expect(result.failureOrNull, isA<UnknownFailure>());
+        expect(result.failureOrNull!.detail, contains('boom'));
+      },
+    );
   });
 
   group('Result', () {
@@ -64,9 +70,9 @@ void main() {
     test('map transforms successes and leaves failures alone', () {
       expect(const Result<int>.success(2).map((v) => '$v').valueOrNull, '2');
       expect(
-        const Result<int>.failure(
-          NotFoundFailure(),
-        ).map((v) => '$v').failureOrNull,
+        const Result<int>.failure(NotFoundFailure())
+            .map((v) => '$v')
+            .failureOrNull,
         isA<NotFoundFailure>(),
       );
     });

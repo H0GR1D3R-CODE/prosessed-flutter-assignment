@@ -17,7 +17,12 @@ import '../../../helpers/builders.dart';
 
 class MockProductRepository extends Mock implements ProductRepository {}
 
-ProductPage _page(List<int> ids, {int total = 100, int skip = 0, bool cached = false}) => ProductPage(
+ProductPage _page(
+  List<int> ids, {
+  int total = 100,
+  int skip = 0,
+  bool cached = false,
+}) => ProductPage(
   items: [for (final id in ids) buildProduct(id: id)],
   total: total,
   skip: skip,
@@ -110,7 +115,11 @@ void main() {
       },
       expect: () => [
         const ProductListLoading(ProductQuery()),
-        isA<ProductListLoaded>().having((s) => s.fromCache, 'fromCache', isTrue),
+        isA<ProductListLoaded>().having(
+          (s) => s.fromCache,
+          'fromCache',
+          isTrue,
+        ),
       ],
       verify: (_) => verify(
         () => repository.getProducts(
@@ -137,7 +146,9 @@ void main() {
             skip: 2,
             limit: any(named: 'limit'),
           ),
-        ).thenAnswer((_) async => Result.success(_page([2, 3, 4], total: 4, skip: 2)));
+        ).thenAnswer(
+          (_) async => Result.success(_page([2, 3, 4], total: 4, skip: 2)),
+        );
       },
       build: buildList,
       act: (cubit) async {
@@ -146,7 +157,11 @@ void main() {
       },
       skip: 2,
       expect: () => [
-        isA<ProductListLoaded>().having((s) => s.isLoadingMore, 'isLoadingMore', isTrue),
+        isA<ProductListLoaded>().having(
+          (s) => s.isLoadingMore,
+          'isLoadingMore',
+          isTrue,
+        ),
         isA<ProductListLoaded>()
             .having((s) => s.items.map((p) => p.id), 'ids', [1, 2, 3, 4])
             .having((s) => s.isLoadingMore, 'isLoadingMore', isFalse)
@@ -179,7 +194,11 @@ void main() {
       },
       skip: 2,
       expect: () => [
-        isA<ProductListLoaded>().having((s) => s.isLoadingMore, 'loading', isTrue),
+        isA<ProductListLoaded>().having(
+          (s) => s.isLoadingMore,
+          'loading',
+          isTrue,
+        ),
         isA<ProductListLoaded>()
             .having((s) => s.items.length, 'items kept', 2)
             .having((s) => s.loadMoreFailure, 'failure', isA<TimeoutFailure>())
@@ -203,7 +222,8 @@ void main() {
       'typing searches once, after the debounce, and clears the category',
       setUp: () => stubPage(_page([1])),
       build: buildList,
-      seed: () => const ProductListLoading(ProductQuery(categorySlug: 'beauty')),
+      seed: () =>
+          const ProductListLoading(ProductQuery(categorySlug: 'beauty')),
       act: (cubit) async {
         cubit
           ..searchChanged('p')
@@ -245,35 +265,38 @@ void main() {
       },
     );
 
-    test('a slow answer for an old query cannot overwrite a newer one', () async {
-      final slow = Completer<Result<ProductPage>>();
-      when(
-        () => repository.getProducts(
-          query: const ProductQuery(),
-          skip: any(named: 'skip'),
-          limit: any(named: 'limit'),
-        ),
-      ).thenAnswer((_) => slow.future);
-      when(
-        () => repository.getProducts(
-          query: const ProductQuery(categorySlug: 'beauty'),
-          skip: any(named: 'skip'),
-          limit: any(named: 'limit'),
-        ),
-      ).thenAnswer((_) async => Result.success(_page([7])));
-      final cubit = buildList();
+    test(
+      'a slow answer for an old query cannot overwrite a newer one',
+      () async {
+        final slow = Completer<Result<ProductPage>>();
+        when(
+          () => repository.getProducts(
+            query: const ProductQuery(),
+            skip: any(named: 'skip'),
+            limit: any(named: 'limit'),
+          ),
+        ).thenAnswer((_) => slow.future);
+        when(
+          () => repository.getProducts(
+            query: const ProductQuery(categorySlug: 'beauty'),
+            skip: any(named: 'skip'),
+            limit: any(named: 'limit'),
+          ),
+        ).thenAnswer((_) async => Result.success(_page([7])));
+        final cubit = buildList();
 
-      final first = cubit.load();
-      cubit.selectCategory('beauty');
-      await Future<void>.delayed(Duration.zero);
-      slow.complete(Result.success(_page([1, 2, 3])));
-      await first;
+        final first = cubit.load();
+        cubit.selectCategory('beauty');
+        await Future<void>.delayed(Duration.zero);
+        slow.complete(Result.success(_page([1, 2, 3])));
+        await first;
 
-      final state = cubit.state as ProductListLoaded;
-      expect(state.items.map((p) => p.id), [7]);
-      expect(state.query.categorySlug, 'beauty');
-      await cubit.close();
-    });
+        final state = cubit.state as ProductListLoaded;
+        expect(state.items.map((p) => p.id), [7]);
+        expect(state.query.categorySlug, 'beauty');
+        await cubit.close();
+      },
+    );
 
     blocTest<ProductListCubit, ProductListState>(
       'pull-to-refresh keeps the list on screen and swaps in the fresh page',
@@ -286,7 +309,8 @@ void main() {
             limit: any(named: 'limit'),
           ),
         ).thenAnswer(
-          (_) async => Result.success(calls++ == 0 ? _page([1, 2]) : _page([9])),
+          (_) async =>
+              Result.success(calls++ == 0 ? _page([1, 2]) : _page([9])),
         );
       },
       build: buildList,
@@ -335,14 +359,16 @@ void main() {
   });
 
   group('ProductDetailsCubit', () {
-    ProductDetailsCubit buildDetails(int id) =>
-        ProductDetailsCubit(productId: id, getProduct: GetProductDetailsUseCase(repository));
+    ProductDetailsCubit buildDetails(int id) => ProductDetailsCubit(
+      productId: id,
+      getProduct: GetProductDetailsUseCase(repository),
+    );
 
     blocTest<ProductDetailsCubit, ProductDetailsState>(
       'loads one product',
-      setUp: () => when(() => repository.getProduct(1)).thenAnswer(
-        (_) async => Result.success(buildProduct()),
-      ),
+      setUp: () =>
+          when(() => repository.getProduct(1))
+              .thenAnswer((_) async => Result.success(buildProduct())),
       build: () => buildDetails(1),
       act: (cubit) => cubit.load(),
       expect: () => [
@@ -377,15 +403,17 @@ void main() {
       act: (cubit) => cubit.load(),
       expect: () => [
         const CategoriesLoading(),
-        const CategoriesLoaded([ProductCategory(slug: 'beauty', name: 'Beauty')]),
+        const CategoriesLoaded([
+          ProductCategory(slug: 'beauty', name: 'Beauty'),
+        ]),
       ],
     );
 
     blocTest<CategoriesCubit, CategoriesState>(
       'a failure is reported so the strip can offer a retry',
-      setUp: () => when(() => repository.getCategories()).thenAnswer(
-        (_) async => const Result.failure(NetworkFailure()),
-      ),
+      setUp: () =>
+          when(() => repository.getCategories())
+              .thenAnswer((_) async => const Result.failure(NetworkFailure())),
       build: () => CategoriesCubit(GetCategoriesUseCase(repository)),
       act: (cubit) => cubit.load(),
       expect: () => [
