@@ -709,4 +709,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchShortcutHint => 'Press / to search';
+
+  @override
+  String searchFor(String query) {
+    return 'Search for “$query”';
+  }
 }

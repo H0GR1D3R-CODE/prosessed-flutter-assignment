@@ -710,4 +710,9 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get searchShortcutHint => 'खोजने के लिए / दबाएँ';
+
+  @override
+  String searchFor(String query) {
+    return '“$query” खोजें';
+  }
 }

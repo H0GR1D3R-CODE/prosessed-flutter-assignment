@@ -11,11 +11,16 @@ import 'package:shopsphere/features/products/presentation/bloc/categories_cubit.
 import 'package:shopsphere/features/products/presentation/bloc/product_list_cubit.dart';
 import 'package:shopsphere/l10n/l10n.dart';
 
-enum SuggestionKind { recent, category }
+enum SuggestionKind { query, recent, category }
 
 /// One line in the suggestions: something searched before, or a category that matches.
 @immutable
 class SearchSuggestion {
+  /// Exactly what is typed: the row Enter chooses, so a plain search is never overruled.
+  const SearchSuggestion.query(this.text)
+    : kind = SuggestionKind.query,
+      slug = null;
+
   const SearchSuggestion.recent(this.text)
     : kind = SuggestionKind.recent,
       slug = null;
@@ -30,6 +35,7 @@ class SearchSuggestion {
   final String? slug;
 
   bool get isRecent => kind == SuggestionKind.recent;
+  bool get isQuery => kind == SuggestionKind.query;
 
   @override
   bool operator ==(Object other) =>
@@ -73,6 +79,9 @@ class _SearchBoxState extends State<SearchBox> {
               .take(3)
               .toList();
     return [
+      // The first row is always "search for what I typed", which is what Enter chooses.
+      if (query.length >= SearchHistory.minLength)
+        SearchSuggestion.query(typed.trim()),
       for (final term in recents) SearchSuggestion.recent(term),
       for (final category in matching)
         SearchSuggestion.category(category.name, category.slug),
@@ -82,7 +91,7 @@ class _SearchBoxState extends State<SearchBox> {
   void _onSelected(SearchSuggestion suggestion) {
     _chose = true;
     final products = context.read<ProductListCubit>();
-    if (suggestion.isRecent) {
+    if (suggestion.isRecent || suggestion.isQuery) {
       products.searchSubmitted(suggestion.text);
       context.read<SearchHistoryCubit>().record(suggestion.text);
     } else {
@@ -111,7 +120,7 @@ class _SearchBoxState extends State<SearchBox> {
       builder: (context, constraints) => RawAutocomplete<SearchSuggestion>(
         textEditingController: widget.controller,
         focusNode: widget.focusNode,
-        displayStringForOption: (s) => s.isRecent ? s.text : '',
+        displayStringForOption: (s) => s.isRecent || s.isQuery ? s.text : '',
         optionsBuilder: (value) => _suggestions(value.text),
         onSelected: _onSelected,
         fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
@@ -303,11 +312,15 @@ class _SuggestionRow extends StatelessWidget {
     final l10n = context.l10n;
     final colors = context.colors;
     final isRecent = suggestion.isRecent;
+    final isQuery = suggestion.isQuery;
+    final label = isQuery
+        ? l10n.searchFor(suggestion.text)
+        : isRecent
+        ? suggestion.text
+        : l10n.searchCategorySuggestion(suggestion.text);
     return Semantics(
       button: true,
-      label: isRecent
-          ? suggestion.text
-          : l10n.searchCategorySuggestion(suggestion.text),
+      label: label,
       excludeSemantics: true,
       child: Material(
         color: highlighted ? colors.surfaceContainerHigh : Colors.transparent,
@@ -320,7 +333,9 @@ class _SuggestionRow extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    isRecent
+                    isQuery
+                        ? Icons.search_rounded
+                        : isRecent
                         ? Icons.history_rounded
                         : CategoryIcons.of(suggestion.slug ?? ''),
                     size: 20,
@@ -329,9 +344,7 @@ class _SuggestionRow extends StatelessWidget {
                   Gap.wm,
                   Expanded(
                     child: Text(
-                      isRecent
-                          ? suggestion.text
-                          : l10n.searchCategorySuggestion(suggestion.text),
+                      label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: context.text.bodyLarge,

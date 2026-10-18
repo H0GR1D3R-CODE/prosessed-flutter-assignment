@@ -194,5 +194,6 @@
   "searchCategorySuggestion": "{category} में",
   "viewedTitle": "हाल ही में देखे गए",
   "viewedClear": "हटाएँ",
-  "searchShortcutHint": "खोजने के लिए / दबाएँ"
+  "searchShortcutHint": "खोजने के लिए / दबाएँ",
+  "searchFor": "“{query}” खोजें"
 }

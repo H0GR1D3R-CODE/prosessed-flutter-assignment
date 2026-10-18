@@ -409,5 +409,13 @@
   },
   "viewedTitle": "Recently viewed",
   "viewedClear": "Clear",
-  "searchShortcutHint": "Press / to search"
+  "searchShortcutHint": "Press / to search",
+  "searchFor": "Search for “{query}”",
+  "@searchFor": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  }
 }

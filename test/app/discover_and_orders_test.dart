@@ -106,6 +106,31 @@ void main() {
       expect(api.to('/products/category/beauty'), isNotEmpty);
     });
 
+    testWidgets(
+      'Enter searches for what was typed, even when a category matches',
+      (tester) async {
+        final api = FakeShopApi();
+        await pumpShopApp(tester, api, secure: signedInStorage);
+
+        await tester.enterText(find.byType(TextField), 'beau');
+        await settle(tester, const Duration(milliseconds: 300));
+        expect(find.text(en.searchFor('beau')), findsOneWidget);
+        expect(
+          find.text(en.searchCategorySuggestion('Beauty')),
+          findsOneWidget,
+        );
+
+        await tester.testTextInput.receiveAction(TextInputAction.search);
+        await settle(tester, const Duration(seconds: 1));
+
+        expect(api.to('/products/category/beauty'), isEmpty);
+        expect(
+          api.to(Endpoints.productSearch).last.queryParameters['q'],
+          'beau',
+        );
+      },
+    );
+
     testWidgets('there is nothing to suggest on a first visit', (tester) async {
       await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
 
