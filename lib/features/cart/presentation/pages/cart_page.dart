@@ -6,14 +6,22 @@ import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/orb_tints.dart';
 import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/widgets/orbit_logo.dart';
+import 'package:shopsphere/core/widgets/resizable_split.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/features/cart/presentation/widgets/cart_widgets.dart';
 import 'package:shopsphere/l10n/l10n.dart';
 
 /// The Cart tab. On a phone the summary rides under the list; on a wide window it sits beside it.
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   const CartPage({super.key});
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  bool _summaryCollapsed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -59,21 +67,25 @@ class CartPage extends StatelessWidget {
               _Header(count: state.itemCount),
               Expanded(
                 child: wide
-                    ? Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(child: list),
-                          SizedBox(
-                            width: 380,
-                            child: Padding(
-                              padding: const EdgeInsets.only(
-                                right: Gap.l,
-                                bottom: Gap.xl,
-                              ),
-                              child: CartSummaryCard(summary: state.summary),
-                            ),
+                    ? ResizableSplit(
+                        primary: list,
+                        initialSecondaryWidth: 400,
+                        minSecondaryWidth: 320,
+                        minPrimaryWidth: 420,
+                        collapsed: _summaryCollapsed,
+                        onCollapsedChanged: (value) =>
+                            setState(() => _summaryCollapsed = value),
+                        collapseTooltip: l10n.summaryHide,
+                        expandTooltip: l10n.summaryShow,
+                        resizeLabel: l10n.panelResize,
+                        collapsedOverlay: CartMiniBar(summary: state.summary),
+                        secondary: Padding(
+                          padding: const EdgeInsets.only(
+                            right: Gap.l,
+                            bottom: Gap.xl,
                           ),
-                        ],
+                          child: CartSummaryCard(summary: state.summary),
+                        ),
                       )
                     : Column(
                         children: [

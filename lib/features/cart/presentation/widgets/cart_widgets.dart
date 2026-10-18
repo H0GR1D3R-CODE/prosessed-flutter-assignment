@@ -269,3 +269,50 @@ class CartSummaryCard extends StatelessWidget {
     );
   }
 }
+
+/// The summary shrunk to a pill, for when the side panel is tucked away: the total and the
+/// checkout button stay within reach.
+class CartMiniBar extends StatelessWidget {
+  const CartMiniBar({required this.summary, super.key});
+
+  final CartSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.colors;
+    return Material(
+      color: colors.inverseSurface,
+      elevation: 8,
+      shadowColor: colors.shadow.withValues(alpha: 0.3),
+      shape: const StadiumBorder(),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(Gap.xl, Gap.s, Gap.s, Gap.s),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.cartTotal,
+              style: context.text.labelLarge?.copyWith(
+                color: colors.onInverseSurface.withValues(alpha: 0.7),
+              ),
+            ),
+            Gap.wm,
+            Text(
+              Formatters.money(summary.total),
+              style: AppTypography.price(colors.onInverseSurface, size: 20),
+            ),
+            Gap.wl,
+            AppButton(
+              kind: AppButtonKind.accent,
+              label: l10n.cartCheckout,
+              icon: Icons.arrow_forward_rounded,
+              expanded: false,
+              onPressed: () => context.push(Routes.checkout),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

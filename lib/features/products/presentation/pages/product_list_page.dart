@@ -9,6 +9,7 @@ import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/utils/breakpoints.dart';
 import 'package:shopsphere/core/widgets/inline_banner.dart';
+import 'package:shopsphere/core/widgets/resizable_split.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:shopsphere/features/products/domain/entities/product.dart';
@@ -54,6 +55,7 @@ class _ShopView extends StatefulWidget {
 class _ShopViewState extends State<_ShopView> {
   final ScrollController _scroll = ScrollController();
   final TextEditingController _search = TextEditingController();
+  bool _detailCollapsed = false;
 
   @override
   void initState() {
@@ -138,25 +140,32 @@ class _ShopViewState extends State<_ShopView> {
         ),
       ],
       child: split
-          ? Row(
-              children: [
-                SizedBox(
-                  width: math.min(560, MediaQuery.sizeOf(context).width * 0.46),
-                  child: list,
+          ? BlocListener<SelectedProductCubit, int?>(
+              // Picking a product brings the panel back if it was tucked away.
+              listenWhen: (previous, current) => current != null,
+              listener: (context, id) {
+                if (_detailCollapsed) setState(() => _detailCollapsed = false);
+              },
+              child: ResizableSplit(
+                primary: list,
+                initialSecondaryWidth: (MediaQuery.sizeOf(context).width * 0.4)
+                    .clamp(420, 640),
+                collapsed: _detailCollapsed,
+                onCollapsedChanged: (value) =>
+                    setState(() => _detailCollapsed = value),
+                collapseTooltip: context.l10n.panelHide,
+                expandTooltip: context.l10n.panelShow,
+                resizeLabel: context.l10n.panelResize,
+                secondary: BlocBuilder<SelectedProductCubit, int?>(
+                  builder: (context, id) => id == null
+                      ? const _SelectPrompt()
+                      : ProductDetailsPage(
+                          key: ValueKey(id),
+                          productId: id,
+                          embedded: true,
+                        ),
                 ),
-                VerticalDivider(color: context.colors.outlineVariant),
-                Expanded(
-                  child: BlocBuilder<SelectedProductCubit, int?>(
-                    builder: (context, id) => id == null
-                        ? const _SelectPrompt()
-                        : ProductDetailsPage(
-                            key: ValueKey(id),
-                            productId: id,
-                            embedded: true,
-                          ),
-                  ),
-                ),
-              ],
+              ),
             )
           : list,
     );
@@ -215,76 +224,81 @@ class _ShopList extends StatelessWidget {
   Widget _body(BuildContext context, ProductListState state) {
     final cubit = context.read<ProductListCubit>();
     final l10n = context.l10n;
-    final width = MediaQuery.sizeOf(context).width;
-    final paneWidth = split ? math.min(560.0, width * 0.46) : width;
-    final columns = Breakpoints.gridColumns(paneWidth - Gap.l * 2);
 
-    return switch (state) {
-      ProductListInitial() || ProductListLoading() => SliverMainAxisGroup(
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(Gap.l, 0, Gap.l, Gap.xxl),
-            sliver: ProductGridSkeleton(columns: columns),
-          ),
-        ],
-      ),
-      ProductListFailure(:final failure) => SliverFillRemaining(
-        hasScrollBody: false,
-        child: ErrorView(failure: failure, onRetry: cubit.load),
-      ),
-      ProductListEmpty(:final query) => SliverFillRemaining(
-        hasScrollBody: false,
-        child: query.hasSearch
-            ? EmptyView(
-                icon: Icons.search_off_rounded,
-                title: l10n.shopEmptySearchTitle(query.search),
-                message: l10n.shopEmptySearchMessage,
-                actionLabel: l10n.shopClearSearch,
-                onAction: cubit.clearSearch,
-              )
-            : EmptyView(
-                icon: Icons.inventory_2_outlined,
-                title: l10n.shopEmptyTitle,
-                message: l10n.shopEmptyMessage,
-                actionLabel: l10n.categoryAll,
-                onAction: () => cubit.selectCategory(null),
+    // The list can be dragged wider or narrower, so the columns follow its real width.
+    return SliverLayoutBuilder(
+      builder: (context, constraints) {
+        final columns = Breakpoints.gridColumns(
+          constraints.crossAxisExtent - Gap.l * 2,
+        );
+        return switch (state) {
+          ProductListInitial() || ProductListLoading() => SliverMainAxisGroup(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(Gap.l, 0, Gap.l, Gap.xxl),
+                sliver: ProductGridSkeleton(columns: columns),
               ),
-      ),
-      final ProductListLoaded loaded => SliverMainAxisGroup(
-        slivers: [
-          SliverToBoxAdapter(
-            child: _ResultsBar(
-              total: loaded.total,
-              sort: loaded.query.sort,
-              onSort: () => onPickSort(loaded.query.sort),
-              showOffline: loaded.fromCache,
-              onRetry: cubit.load,
-            ),
+            ],
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: Gap.l),
-            sliver: BlocSelector<SelectedProductCubit, int?, int?>(
-              selector: (id) => id,
-              builder: (context, selectedId) => ProductSliverGrid(
-                products: loaded.items,
-                columns: columns,
-                selectedId: split ? selectedId : null,
-                onTap: onOpen,
+          ProductListFailure(:final failure) => SliverFillRemaining(
+            hasScrollBody: false,
+            child: ErrorView(failure: failure, onRetry: cubit.load),
+          ),
+          ProductListEmpty(:final query) => SliverFillRemaining(
+            hasScrollBody: false,
+            child: query.hasSearch
+                ? EmptyView(
+                    icon: Icons.search_off_rounded,
+                    title: l10n.shopEmptySearchTitle(query.search),
+                    message: l10n.shopEmptySearchMessage,
+                    actionLabel: l10n.shopClearSearch,
+                    onAction: cubit.clearSearch,
+                  )
+                : EmptyView(
+                    icon: Icons.inventory_2_outlined,
+                    title: l10n.shopEmptyTitle,
+                    message: l10n.shopEmptyMessage,
+                    actionLabel: l10n.categoryAll,
+                    onAction: () => cubit.selectCategory(null),
+                  ),
+          ),
+          final ProductListLoaded loaded => SliverMainAxisGroup(
+            slivers: [
+              SliverToBoxAdapter(
+                child: _ResultsBar(
+                  total: loaded.total,
+                  sort: loaded.query.sort,
+                  onSort: () => onPickSort(loaded.query.sort),
+                  showOffline: loaded.fromCache,
+                  onRetry: cubit.load,
+                ),
               ),
-            ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: Gap.l),
+                sliver: BlocSelector<SelectedProductCubit, int?, int?>(
+                  selector: (id) => id,
+                  builder: (context, selectedId) => ProductSliverGrid(
+                    products: loaded.items,
+                    columns: columns,
+                    selectedId: split ? selectedId : null,
+                    onTap: onOpen,
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: ProductListFooter(
+                  isLoadingMore: loaded.isLoadingMore,
+                  hasMore: loaded.hasMore,
+                  total: loaded.total,
+                  loadMoreFailure: loaded.loadMoreFailure,
+                  onRetry: cubit.loadMore,
+                ),
+              ),
+            ],
           ),
-          SliverToBoxAdapter(
-            child: ProductListFooter(
-              isLoadingMore: loaded.isLoadingMore,
-              hasMore: loaded.hasMore,
-              total: loaded.total,
-              loadMoreFailure: loaded.loadMoreFailure,
-              onRetry: cubit.loadMore,
-            ),
-          ),
-        ],
-      ),
-    };
+        };
+      },
+    );
   }
 }
 
