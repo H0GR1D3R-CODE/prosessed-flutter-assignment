@@ -141,6 +141,23 @@ void main() {
       expect(find.text(en.savedEmptyTitle), findsOneWidget);
     });
 
+    testWidgets('coming back from a product does not bring the keyboard back', (
+      tester,
+    ) async {
+      await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
+
+      await tester.tap(find.byType(TextField));
+      await tester.pump();
+      expect(tester.testTextInput.isVisible, isTrue);
+
+      await tester.tap(find.text(_mascara));
+      await settle(tester, const Duration(seconds: 1));
+      await tester.tap(find.byTooltip(en.back));
+      await settle(tester);
+
+      expect(tester.testTextInput.isVisible, isFalse);
+    });
+
     testWidgets('the theme button switches to dark and back', (tester) async {
       await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
       Brightness brightness() =>

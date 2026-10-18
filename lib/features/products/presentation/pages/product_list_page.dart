@@ -78,6 +78,8 @@ class _ShopViewState extends State<_ShopView> {
   }
 
   void _openProduct(Product product, {required bool split}) {
+    // Otherwise the search box keeps focus and the keyboard returns with this page.
+    FocusScope.of(context).unfocus();
     if (split) {
       context.read<SelectedProductCubit>().select(product.id);
     } else {
@@ -93,6 +95,7 @@ class _ShopViewState extends State<_ShopView> {
 
   Future<void> _pickSort(ProductSort current) async {
     final cubit = context.read<ProductListCubit>();
+    FocusScope.of(context).unfocus();
     final picked = await showSortSheet(context, current);
     if (picked != null) cubit.selectSort(picked);
   }
@@ -190,6 +193,8 @@ class _ShopList extends StatelessWidget {
         child: CustomScrollView(
           controller: scroll,
           physics: const AlwaysScrollableScrollPhysics(),
+          // Scrolling the results puts the keyboard away.
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           slivers: [
             const SliverToBoxAdapter(child: _ShopHeader()),
             SliverPersistentHeader(
