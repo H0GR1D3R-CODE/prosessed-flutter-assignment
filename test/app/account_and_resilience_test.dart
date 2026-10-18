@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shopsphere/features/cart/presentation/widgets/cart_widgets.dart';
 import 'package:shopsphere/l10n/generated/app_localizations_hi.dart';
 
 import '../helpers/app_harness.dart';
@@ -250,6 +251,81 @@ void main() {
 
       expect(find.text(en.productAbout), findsOneWidget);
       expect(find.text('Eyeshadow Palette with Mirror'), findsOneWidget);
+    });
+
+    testWidgets(
+      'the details panel can be tucked away, and returns with the next pick',
+      (tester) async {
+        await pumpShopApp(
+          tester,
+          FakeShopApi(),
+          secure: signedInStorage,
+          size: const Size(1280, 800),
+        );
+        expect(find.byTooltip(en.panelHide), findsOneWidget);
+
+        await tester.tap(find.byTooltip(en.panelHide));
+        await settle(tester);
+        expect(find.byTooltip(en.panelShow), findsOneWidget);
+
+        // Picking a product opens the panel again.
+        await tester.tap(find.text(_mascara));
+        await settle(tester, const Duration(seconds: 1));
+        expect(find.byTooltip(en.panelHide), findsOneWidget);
+        expect(find.text(en.productAbout), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'the cart summary can shrink to a bar that still reaches checkout',
+      (tester) async {
+        await pumpShopApp(
+          tester,
+          FakeShopApi(),
+          secure: signedInStorage,
+          size: const Size(1280, 800),
+        );
+        await tester.tap(find.text(_mascara));
+        await settle(tester, const Duration(seconds: 1));
+        await tester.tap(find.textContaining(en.addToCart));
+        await settle(tester, const Duration(seconds: 5));
+
+        await tester.tap(find.text(en.navCart));
+        await settle(tester);
+        expect(find.byType(CartMiniBar), findsNothing);
+
+        await tester.tap(find.byTooltip(en.summaryHide));
+        await settle(tester);
+        expect(find.byType(CartMiniBar), findsOneWidget);
+
+        await tester.tap(
+          find.descendant(
+            of: find.byType(CartMiniBar),
+            matching: find.text(en.cartCheckout),
+          ),
+        );
+        await settle(tester);
+        expect(find.text(en.checkoutTitle), findsOneWidget);
+      },
+    );
+
+    testWidgets('the logo in the rail takes you back to the shop', (
+      tester,
+    ) async {
+      await pumpShopApp(
+        tester,
+        FakeShopApi(),
+        secure: signedInStorage,
+        size: const Size(1280, 800),
+      );
+      await tester.tap(find.text(en.navProfile));
+      await settle(tester);
+      expect(find.text(_mascara), findsNothing);
+
+      await tester.tap(find.byTooltip(en.brandHome));
+      await settle(tester);
+
+      expect(find.text(_mascara), findsOneWidget);
     });
 
     testWidgets('a medium window uses a rail and a wider grid', (tester) async {
