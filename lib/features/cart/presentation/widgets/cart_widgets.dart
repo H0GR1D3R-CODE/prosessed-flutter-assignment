@@ -98,14 +98,17 @@ class CartItemTile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Row(
+                        // A Wrap, so the struck-through price drops to the next line instead of
+                        // overflowing when the column is narrow and the text is large.
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 8,
                           children: [
                             Text(
                               Formatters.money(item.discountedUnitPrice),
                               style: context.text.labelLarge,
                             ),
-                            if (item.hasDiscount) ...[
-                              Gap.ws,
+                            if (item.hasDiscount)
                               Text(
                                 Formatters.money(item.unitPrice),
                                 style: context.text.labelMedium?.copyWith(
@@ -113,7 +116,6 @@ class CartItemTile extends StatelessWidget {
                                   decoration: TextDecoration.lineThrough,
                                 ),
                               ),
-                            ],
                           ],
                         ),
                         Gap.hs,

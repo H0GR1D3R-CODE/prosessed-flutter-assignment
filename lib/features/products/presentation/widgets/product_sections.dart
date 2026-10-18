@@ -279,13 +279,19 @@ class ReviewTile extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (review.date != null)
-                          Text(
-                            Formatters.date(review.date!, locale),
-                            style: context.text.labelSmall?.copyWith(
-                              color: colors.onSurfaceVariant,
+                        if (review.date != null) ...[
+                          Gap.ws,
+                          Flexible(
+                            child: Text(
+                              Formatters.date(review.date!, locale),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: context.text.labelSmall?.copyWith(
+                                color: colors.onSurfaceVariant,
+                              ),
                             ),
                           ),
+                        ],
                       ],
                     ),
                     const SizedBox(height: 2),

@@ -283,6 +283,38 @@ void main() {
       expect(find.text(_mascara), findsOneWidget);
     });
 
+    testWidgets('a full cart and the checkout fit a small phone at 1.3x text', (
+      tester,
+    ) async {
+      await pumpShopApp(
+        tester,
+        FakeShopApi(),
+        secure: signedInStorage,
+        size: const Size(320, 640),
+        textScale: 1.3,
+      );
+
+      // At this size the first card starts below the fold.
+      await tester.ensureVisible(find.text(_mascara));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.text(_mascara));
+      await settle(tester, const Duration(seconds: 1));
+      await tester.tap(find.textContaining(en.addToCart));
+      await settle(tester, const Duration(seconds: 5));
+      await tester.tap(find.byTooltip(en.back));
+      await settle(tester);
+
+      await tester.tap(find.text(en.navCart));
+      await settle(tester);
+      expect(find.text(_mascara), findsOneWidget);
+      expect(tester.takeException(), isNull, reason: 'overflow in the cart');
+
+      await tester.tap(find.text(en.cartCheckout));
+      await settle(tester);
+      expect(find.text(en.checkoutTitle), findsOneWidget);
+      expect(tester.takeException(), isNull, reason: 'overflow at checkout');
+    });
+
     testWidgets('text at 1.3x does not overflow on the main screens', (
       tester,
     ) async {
