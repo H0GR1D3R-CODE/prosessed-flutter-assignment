@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -45,10 +46,12 @@ final GetIt sl = GetIt.instance;
 /// Name of the HTTP client that has no auth interceptor (used for the token refresh itself).
 const String plainClientName = 'plain';
 
-/// Registers everything the app needs. Tests pass fakes for the storage backends.
+/// Registers everything the app needs. Tests pass fakes for the storage backends and for the
+/// network ([httpAdapter] stands in for the real connection on every client).
 Future<void> configureDependencies({
   SharedPreferences? preferences,
   FlutterSecureStorage? secureStorage,
+  HttpClientAdapter? httpAdapter,
   bool logRequests = kDebugMode,
 }) async {
   await sl.reset();
@@ -66,24 +69,29 @@ Future<void> configureDependencies({
     SessionEvents.new,
     dispose: (events) => events.dispose(),
   );
+  Dio newDio() {
+    final dio = DioFactory.create();
+    if (httpAdapter != null) dio.httpClientAdapter = httpAdapter;
+    return dio;
+  }
+
   sl.registerLazySingleton<ApiClient>(
     () => ApiClient(
-      DioFactory.create()
+      newDio()
         ..interceptors.addAll([
           if (logRequests) DebugLogInterceptor(),
           AuthInterceptor(
             store: sl<TokenStore>(),
             refresh: (token) => sl<AuthRemoteDataSource>().refresh(token),
             events: sl<SessionEvents>(),
-            replay: DioFactory.create(),
+            replay: newDio(),
           ),
         ]),
     ),
   );
   sl.registerLazySingleton<ApiClient>(
     () => ApiClient(
-      DioFactory.create()
-        ..interceptors.addAll([if (logRequests) DebugLogInterceptor()]),
+      newDio()..interceptors.addAll([if (logRequests) DebugLogInterceptor()]),
     ),
     instanceName: plainClientName,
   );
