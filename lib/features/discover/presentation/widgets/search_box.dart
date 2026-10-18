@@ -149,12 +149,21 @@ class _SearchBoxState extends State<SearchBox> {
             ),
           );
         },
-        optionsViewBuilder: (context, onSelected, options) => _Suggestions(
-          options: options.toList(),
-          maxWidth: constraints.maxWidth,
-          showingRecents: widget.controller.text.trim().isEmpty,
-          onSelected: onSelected,
-        ),
+        // Rebuilt whenever the history changes, so removing a word takes it off the list at once
+        // (the autocomplete itself only re-filters when the typed text changes).
+        optionsViewBuilder: (context, onSelected, options) =>
+            BlocBuilder<SearchHistoryCubit, SearchHistoryState>(
+              builder: (context, _) {
+                final fresh = _suggestions(widget.controller.text);
+                if (fresh.isEmpty) return const SizedBox.shrink();
+                return _Suggestions(
+                  options: fresh,
+                  maxWidth: constraints.maxWidth,
+                  showingRecents: widget.controller.text.trim().isEmpty,
+                  onSelected: onSelected,
+                );
+              },
+            ),
       ),
     );
   }

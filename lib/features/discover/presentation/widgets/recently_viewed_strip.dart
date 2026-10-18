@@ -58,7 +58,13 @@ class RecentlyViewedStrip extends StatelessWidget {
                         ),
                       ),
                       SizedBox(
-                        height: 112,
+                        // Room for the photo and two lines of label, however large the text is.
+                        height:
+                            64 +
+                            18 +
+                            2 *
+                                MediaQuery.textScalerOf(context).scale(12) *
+                                1.5,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.symmetric(
