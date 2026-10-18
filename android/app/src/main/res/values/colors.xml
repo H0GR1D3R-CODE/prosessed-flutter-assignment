@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#D4FF3F</color>
+    <!-- The volt field the Flutter splash screen continues from, so there is no flash between them. -->
+    <color name="splash_volt">#D4FF3F</color>
+</resources>
