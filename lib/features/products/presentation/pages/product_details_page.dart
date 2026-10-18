@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +12,7 @@ import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/utils/formatters.dart';
 import 'package:shopsphere/core/widgets/badges.dart';
 import 'package:shopsphere/core/widgets/buttons.dart';
+import 'package:shopsphere/core/widgets/fly_to_cart.dart';
 import 'package:shopsphere/core/widgets/quantity_stepper.dart';
 import 'package:shopsphere/core/widgets/shimmer.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
@@ -235,6 +238,18 @@ class _PurchaseBar extends StatefulWidget {
 
 class _PurchaseBarState extends State<_PurchaseBar> {
   int _quantity = 1;
+  final GlobalKey _addKey = GlobalKey(debugLabel: 'add-to-cart');
+
+  Future<void> _add() async {
+    unawaited(HapticFeedback.lightImpact());
+    final cart = context.read<CartCubit>();
+    await cart.add(widget.product, quantity: _quantity);
+    if (!mounted) return;
+    // Only celebrate an add that really happened (not one stopped at the stock limit).
+    if (cart.state.event is CartItemAdded) {
+      FlyToCart.play(context, from: _addKey);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -280,23 +295,18 @@ class _PurchaseBarState extends State<_PurchaseBar> {
                     Gap.wm,
                   ],
                   Expanded(
-                    child: AppButton(
-                      kind: AppButtonKind.accent,
-                      icon: product.isAvailable
-                          ? Icons.shopping_bag_outlined
-                          : null,
-                      label: product.isAvailable
-                          ? l10n.addToCartWithPrice(total)
-                          : l10n.outOfStock,
-                      onPressed: product.isAvailable
-                          ? () {
-                              HapticFeedback.lightImpact();
-                              context.read<CartCubit>().add(
-                                product,
-                                quantity: _quantity,
-                              );
-                            }
-                          : null,
+                    child: KeyedSubtree(
+                      key: _addKey,
+                      child: AppButton(
+                        kind: AppButtonKind.accent,
+                        icon: product.isAvailable
+                            ? Icons.shopping_bag_outlined
+                            : null,
+                        label: product.isAvailable
+                            ? l10n.addToCartWithPrice(total)
+                            : l10n.outOfStock,
+                        onPressed: product.isAvailable ? _add : null,
+                      ),
                     ),
                   ),
                 ],

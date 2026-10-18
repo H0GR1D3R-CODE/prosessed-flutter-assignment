@@ -7,6 +7,7 @@ import 'package:shopsphere/core/theme/orb_tints.dart';
 import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/widgets/orbit_logo.dart';
 import 'package:shopsphere/core/widgets/resizable_split.dart';
+import 'package:shopsphere/core/widgets/reveal.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/features/cart/presentation/widgets/cart_widgets.dart';
@@ -57,8 +58,14 @@ class _CartPageState extends State<CartPage> {
             padding: const EdgeInsets.fromLTRB(Gap.l, 0, Gap.l, Gap.xl),
             itemCount: state.cart.items.length,
             separatorBuilder: (_, _) => Gap.hm,
-            itemBuilder: (context, index) =>
-                CartItemTile(item: state.cart.items[index]),
+            itemBuilder: (context, index) {
+              final item = state.cart.items[index];
+              return Reveal(
+                key: ValueKey('reveal-${item.productId}'),
+                index: index,
+                child: CartItemTile(item: item),
+              );
+            },
           );
 
           return Column(

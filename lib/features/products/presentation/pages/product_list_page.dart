@@ -345,8 +345,20 @@ class _ShopHeader extends StatelessWidget {
             tooltip: dark ? l10n.themeToggleToLight : l10n.themeToggleToDark,
             onPressed: () =>
                 context.read<SettingsCubit>().toggleTheme(currentlyDark: dark),
-            icon: Icon(
-              dark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 380),
+              switchInCurve: Curves.easeOutBack,
+              transitionBuilder: (child, animation) => RotationTransition(
+                turns: Tween(begin: 0.25, end: 0.0).animate(animation),
+                child: ScaleTransition(
+                  scale: animation,
+                  child: FadeTransition(opacity: animation, child: child),
+                ),
+              ),
+              child: Icon(
+                dark ? Icons.light_mode_rounded : Icons.dark_mode_rounded,
+                key: ValueKey(dark),
+              ),
             ),
           ),
         ],

@@ -8,6 +8,7 @@ import 'package:shopsphere/core/theme/app_typography.dart';
 import 'package:shopsphere/core/theme/orb_tints.dart';
 import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/utils/formatters.dart';
+import 'package:shopsphere/core/widgets/animated_money.dart';
 import 'package:shopsphere/core/widgets/buttons.dart';
 import 'package:shopsphere/core/widgets/orb.dart';
 import 'package:shopsphere/core/widgets/quantity_stepper.dart';
@@ -133,8 +134,8 @@ class CartItemTile extends StatelessWidget {
                                 alignment: Alignment.centerRight,
                                 child: FittedBox(
                                   fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    Formatters.money(item.total),
+                                  child: AnimatedMoney(
+                                    value: item.total,
                                     style: AppTypography.price(
                                       colors.onSurface,
                                       size: 16,
@@ -170,15 +171,13 @@ class OrderTotals extends StatelessWidget {
     final colors = context.colors;
     return Column(
       children: [
-        _TotalRow(
-          label: l10n.cartSubtotal,
-          value: Formatters.money(summary.subtotal),
-        ),
+        _TotalRow(label: l10n.cartSubtotal, amount: summary.subtotal),
         if (summary.discount > 0) ...[
           Gap.hs,
           _TotalRow(
             label: l10n.cartDiscount,
-            value: '−${Formatters.money(summary.discount)}',
+            amount: summary.discount,
+            prefix: '−',
             valueColor: context.shop.success,
           ),
         ],
@@ -192,8 +191,8 @@ class OrderTotals extends StatelessWidget {
             Expanded(
               child: Text(l10n.cartTotal, style: context.text.titleLarge),
             ),
-            Text(
-              Formatters.money(summary.total),
+            AnimatedMoney(
+              value: summary.total,
               style: AppTypography.price(
                 colors.onSurface,
                 size: 26,
@@ -208,10 +207,16 @@ class OrderTotals extends StatelessWidget {
 }
 
 class _TotalRow extends StatelessWidget {
-  const _TotalRow({required this.label, required this.value, this.valueColor});
+  const _TotalRow({
+    required this.label,
+    required this.amount,
+    this.prefix = '',
+    this.valueColor,
+  });
 
   final String label;
-  final String value;
+  final double amount;
+  final String prefix;
   final Color? valueColor;
 
   @override
@@ -226,12 +231,10 @@ class _TotalRow extends StatelessWidget {
             ),
           ),
         ),
-        Text(
-          value,
-          style: context.text.titleMedium?.copyWith(
-            color: valueColor,
-            fontFeatures: const [FontFeature.tabularFigures()],
-          ),
+        AnimatedMoney(
+          value: amount,
+          prefix: prefix,
+          style: context.text.titleMedium?.copyWith(color: valueColor),
         ),
       ],
     );
@@ -298,8 +301,8 @@ class CartMiniBar extends StatelessWidget {
               ),
             ),
             Gap.wm,
-            Text(
-              Formatters.money(summary.total),
+            AnimatedMoney(
+              value: summary.total,
               style: AppTypography.price(colors.onInverseSurface, size: 20),
             ),
             Gap.wl,

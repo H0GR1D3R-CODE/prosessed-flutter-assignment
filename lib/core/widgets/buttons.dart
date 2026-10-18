@@ -129,21 +129,31 @@ class PressableScale extends StatefulWidget {
 
 class _PressableScaleState extends State<PressableScale> {
   bool _pressed = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     final reduceMotion = MediaQuery.disableAnimationsOf(context);
+    // Pointing at a card lifts it a touch; pressing it pushes it in.
+    final scale = reduceMotion
+        ? 1.0
+        : _pressed
+        ? 0.97
+        : _hovered
+        ? 1.02
+        : 1.0;
     return Semantics(
       button: true,
       label: widget.semanticLabel,
       child: AnimatedScale(
-        scale: _pressed && !reduceMotion ? 0.97 : 1,
-        duration: const Duration(milliseconds: 120),
-        curve: Curves.easeOut,
+        scale: scale,
+        duration: Duration(milliseconds: _pressed ? 110 : 200),
+        curve: Curves.easeOutCubic,
         child: InkWell(
           onTap: widget.onTap,
           borderRadius: widget.borderRadius,
           onHighlightChanged: (value) => setState(() => _pressed = value),
+          onHover: (value) => setState(() => _hovered = value),
           child: widget.child,
         ),
       ),

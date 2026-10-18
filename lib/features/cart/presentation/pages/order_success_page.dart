@@ -24,10 +24,16 @@ class OrderSuccessPage extends StatefulWidget {
 }
 
 class _OrderSuccessPageState extends State<OrderSuccessPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 1600),
+  );
+
+  /// A burst of confetti once the check has landed.
+  late final AnimationController _confetti = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 3000),
   );
 
   @override
@@ -35,14 +41,17 @@ class _OrderSuccessPageState extends State<OrderSuccessPage>
     super.didChangeDependencies();
     if (MediaQuery.disableAnimationsOf(context)) {
       _controller.value = 1;
+      _confetti.value = 1;
     } else if (!_controller.isAnimating && _controller.value == 0) {
       _controller.forward();
+      _confetti.forward();
     }
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _confetti.dispose();
     super.dispose();
   }
 
@@ -78,7 +87,22 @@ class _OrderSuccessPageState extends State<OrderSuccessPage>
                         dimension: 220,
                         child: Stack(
                           alignment: Alignment.center,
+                          clipBehavior: Clip.none,
                           children: [
+                            Positioned.fill(
+                              child: IgnorePointer(
+                                child: AnimatedBuilder(
+                                  animation: _confetti,
+                                  builder: (context, _) => CustomPaint(
+                                    painter: _ConfettiPainter(
+                                      // Waits for the check, then runs for about two seconds.
+                                      progress: ((_confetti.value - 0.2) / 0.8)
+                                          .clamp(0.0, 1.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                             CustomPaint(
                               size: const Size.square(220),
                               painter: _RipplePainter(
@@ -216,4 +240,73 @@ class _CheckPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_CheckPainter old) => old.progress != progress;
+}
+
+/// Confetti thrown up from behind the check and falling back under gravity.
+///
+/// Every piece's path is worked out from a fixed seed, so it is the same each time and costs
+/// nothing but a few maths operations per frame.
+class _ConfettiPainter extends CustomPainter {
+  const _ConfettiPainter({required this.progress});
+
+  final double progress;
+
+  static const int _pieces = 46;
+  static const double _seconds = 2.2;
+  static const double _gravity = 980;
+  static const List<Color> _palette = [
+    Palette.volt,
+    Color(0xFFFF5E4D),
+    Color(0xFF72B9FF),
+    Color(0xFFA48FFF),
+    Color(0xFF6FD6A4),
+    Color(0xFFFFCF4D),
+  ];
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (progress <= 0 || progress >= 1) return;
+    final random = math.Random(11);
+    final origin = size.center(Offset.zero);
+    final t = progress * _seconds;
+    for (var i = 0; i < _pieces; i++) {
+      // A fan, mostly upwards.
+      final angle = -math.pi * (0.1 + 0.8 * random.nextDouble());
+      final speed = 320 + 380 * random.nextDouble();
+      final spin = (random.nextDouble() - 0.5) * 14;
+      final extent = 6 + 6 * random.nextDouble();
+      final color = _palette[i % _palette.length];
+      final round = i.isEven;
+
+      final x = origin.dx + math.cos(angle) * speed * t;
+      final y =
+          origin.dy + math.sin(angle) * speed * t + 0.5 * _gravity * t * t;
+      final fade = progress < 0.7 ? 1.0 : 1 - (progress - 0.7) / 0.3;
+
+      canvas
+        ..save()
+        ..translate(x, y)
+        ..rotate(spin * t);
+      final paint = Paint()..color = color.withValues(alpha: fade);
+      if (round) {
+        canvas.drawCircle(Offset.zero, extent * 0.5, paint);
+      } else {
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromCenter(
+              center: Offset.zero,
+              width: extent * 1.5,
+              height: extent * 0.7,
+            ),
+            const Radius.circular(2),
+          ),
+          paint,
+        );
+      }
+      canvas.restore();
+    }
+  }
+
+  @override
+  bool shouldRepaint(_ConfettiPainter old) => old.progress != progress;
 }

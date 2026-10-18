@@ -6,6 +6,7 @@ import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/utils/breakpoints.dart';
 import 'package:shopsphere/core/widgets/badges.dart';
 import 'package:shopsphere/core/widgets/brand_mark.dart';
+import 'package:shopsphere/core/widgets/fly_to_cart.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/l10n/l10n.dart';
 
@@ -123,10 +124,12 @@ class _Destination {
   Widget buildIcon({required bool selected}) {
     final glyph = Icon(selected ? selectedIcon : icon);
     if (!showsCartCount) return glyph;
-    // The cart tab carries a live count that bounces whenever it goes up.
-    return BlocSelector<CartCubit, CartState, int>(
+    // The cart tab carries a live count that bounces whenever it goes up. The resting icon is
+    // the landing spot for the fly-to-cart animation (only one widget may hold the key).
+    final badge = BlocSelector<CartCubit, CartState, int>(
       selector: (state) => state.itemCount,
       builder: (context, count) => BouncingBadge(count: count, child: glyph),
     );
+    return selected ? badge : KeyedSubtree(key: cartIconKey, child: badge);
   }
 }
