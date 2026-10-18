@@ -10,10 +10,12 @@ import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/widgets/buttons.dart';
 import 'package:shopsphere/core/widgets/network_photo.dart';
 import 'package:shopsphere/core/widgets/orb.dart';
+import 'package:shopsphere/core/widgets/reveal.dart';
 import 'package:shopsphere/core/widgets/shimmer.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
 import 'package:shopsphere/features/auth/domain/entities/user.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:shopsphere/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:shopsphere/features/profile/presentation/bloc/profile_cubit.dart';
 import 'package:shopsphere/features/settings/domain/settings.dart';
 import 'package:shopsphere/features/settings/presentation/bloc/settings_cubit.dart';
@@ -76,64 +78,96 @@ class _ProfileBody extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: Gap.m),
               child: Text(l10n.profileTitle, style: context.text.displaySmall),
             ),
-            _Card(
-              child: Column(
-                children: [
-                  _Avatar(user: user),
-                  Gap.hm,
-                  Text(
-                    user.fullName,
-                    textAlign: TextAlign.center,
-                    style: context.text.headlineLarge,
-                  ),
-                  const SizedBox(height: Gap.xs),
-                  Text(
-                    '@${user.username}',
-                    style: context.text.bodyLarge?.copyWith(
-                      color: colors.onSurfaceVariant,
+            Reveal(
+              index: 0,
+              child: _Card(
+                child: Column(
+                  children: [
+                    _Avatar(user: user),
+                    Gap.hm,
+                    Text(
+                      user.fullName,
+                      textAlign: TextAlign.center,
+                      style: context.text.headlineLarge,
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Gap.hm,
-            _Card(
-              child: Column(
-                children: [
-                  _InfoRow(
-                    icon: Icons.mail_outline_rounded,
-                    label: l10n.profileEmail,
-                    value: user.email,
-                  ),
-                  if (user.phone != null)
-                    _InfoRow(
-                      icon: Icons.phone_outlined,
-                      label: l10n.profilePhone,
-                      value: user.phone!,
+                    const SizedBox(height: Gap.xs),
+                    Text(
+                      '@${user.username}',
+                      style: context.text.bodyLarge?.copyWith(
+                        color: colors.onSurfaceVariant,
+                      ),
                     ),
-                  if (user.address != null)
-                    _InfoRow(
-                      icon: Icons.place_outlined,
-                      label: l10n.profileAddress,
-                      value: user.address!.oneLine,
-                    ),
-                ],
-              ),
-            ),
-            Gap.hm,
-            const _AppearanceCard(),
-            Gap.hm,
-            _Card(
-              padding: EdgeInsets.zero,
-              child: ListTile(
-                leading: const Icon(Icons.bug_report_outlined),
-                title: Text(
-                  l10n.profileDevTools,
-                  style: context.text.titleMedium,
+                  ],
                 ),
-                subtitle: Text(l10n.profileDevToolsNote),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: () => context.push(Routes.devTools),
+              ),
+            ),
+            Gap.hm,
+            Reveal(
+              index: 1,
+              child: _Card(
+                child: Column(
+                  children: [
+                    _InfoRow(
+                      icon: Icons.mail_outline_rounded,
+                      label: l10n.profileEmail,
+                      value: user.email,
+                    ),
+                    if (user.phone != null)
+                      _InfoRow(
+                        icon: Icons.phone_outlined,
+                        label: l10n.profilePhone,
+                        value: user.phone!,
+                      ),
+                    if (user.address != null)
+                      _InfoRow(
+                        icon: Icons.place_outlined,
+                        label: l10n.profileAddress,
+                        value: user.address!.oneLine,
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            Gap.hm,
+            const Reveal(index: 2, child: _AppearanceCard()),
+            Gap.hm,
+            Reveal(
+              index: 3,
+              child: _Card(
+                padding: EdgeInsets.zero,
+                child: BlocBuilder<OrdersCubit, OrdersState>(
+                  builder: (context, orders) => ListTile(
+                    leading: const Icon(Icons.receipt_long_outlined),
+                    title: Text(
+                      l10n.profileOrders,
+                      style: context.text.titleMedium,
+                    ),
+                    subtitle: Text(
+                      orders.orders.isEmpty
+                          ? l10n.profileOrdersNote
+                          : l10n.ordersCount(orders.orders.length),
+                    ),
+                    trailing: const Icon(Icons.chevron_right_rounded),
+                    onTap: () => context.push(Routes.orders),
+                  ),
+                ),
+              ),
+            ),
+            Gap.hm,
+            Reveal(
+              index: 4,
+              child: _Card(
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  leading: const Icon(Icons.bug_report_outlined),
+                  title: Text(
+                    l10n.profileDevTools,
+                    style: context.text.titleMedium,
+                  ),
+                  subtitle: Text(l10n.profileDevToolsNote),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => context.push(Routes.devTools),
+                ),
               ),
             ),
             Gap.hxl,

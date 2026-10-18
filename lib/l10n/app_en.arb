@@ -356,5 +356,58 @@
       }
     }
   },
-  "errorGoHome": "Back to the shop"
+  "errorGoHome": "Back to the shop",
+  "ordersTitle": "Your orders",
+  "ordersEmptyTitle": "No orders yet",
+  "ordersEmptyMessage": "Orders you place will be listed here.",
+  "ordersCount": "{count, plural, =1{1 order} other{{count} orders}}",
+  "@ordersCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "orderNumber": "Order #{id}",
+  "@orderNumber": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "orderPlacedOn": "Placed {date}",
+  "@orderPlacedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "orderShowItems": "Show items",
+  "orderHideItems": "Hide items",
+  "profileOrders": "Your orders",
+  "profileOrdersNote": "See what you have ordered",
+  "orderViewOrders": "View my orders",
+  "searchRecent": "Recent searches",
+  "searchClearAll": "Clear all",
+  "searchForget": "Remove {term} from recent searches",
+  "@searchForget": {
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
+  },
+  "searchCategorySuggestion": "In {category}",
+  "@searchCategorySuggestion": {
+    "placeholders": {
+      "category": {
+        "type": "String"
+      }
+    }
+  },
+  "viewedTitle": "Recently viewed",
+  "viewedClear": "Clear",
+  "searchShortcutHint": "Press / to search"
 }

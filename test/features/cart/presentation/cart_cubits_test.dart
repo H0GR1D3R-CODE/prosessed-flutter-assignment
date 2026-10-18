@@ -9,10 +9,25 @@ import 'package:shopsphere/features/cart/domain/repositories/cart_repository.dar
 import 'package:shopsphere/features/cart/domain/usecases/cart_usecases.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/checkout_cubit.dart';
+import 'package:shopsphere/features/orders/domain/orders.dart';
+import 'package:shopsphere/features/orders/presentation/bloc/orders_cubit.dart';
 
 import '../../../helpers/builders.dart';
 
 class MockCartRepository extends Mock implements CartRepository {}
+
+/// Order history held in memory.
+class _MemoryOrdersRepository implements OrdersRepository {
+  List<PlacedOrder> saved = const [];
+
+  @override
+  Future<List<PlacedOrder>> load(int userId) async => saved;
+
+  @override
+  Future<void> save(int userId, List<PlacedOrder> orders) async {
+    saved = orders;
+  }
+}
 
 /// An in-memory repository: remembers whatever was saved last.
 class _MemoryCartRepository extends Mock implements CartRepository {
@@ -195,6 +210,7 @@ void main() {
     late MockCartRepository repository;
     late _MemoryCartRepository memory;
     late CartCubit cart;
+    late OrdersCubit orders;
 
     setUp(() async {
       repository = MockCartRepository();
@@ -202,13 +218,24 @@ void main() {
       cart = _cubit(memory);
       await cart.load(1);
       await cart.add(buildProduct(price: 20, discount: 50), quantity: 2);
+
+      final ordersRepository = _MemoryOrdersRepository();
+      orders = OrdersCubit(
+        load: LoadOrdersUseCase(ordersRepository),
+        record: RecordOrderUseCase(ordersRepository),
+      );
+      await orders.load(1);
     });
 
-    tearDown(() => cart.close());
+    tearDown(() async {
+      await cart.close();
+      await orders.close();
+    });
 
     CheckoutCubit buildCheckout() => CheckoutCubit(
       placeOrder: PlaceOrderUseCase(repository),
       cartCubit: cart,
+      ordersCubit: orders,
     );
 
     final receipt = OrderReceipt(
@@ -231,6 +258,10 @@ void main() {
       expect: () => [const CheckoutPlacing(), CheckoutPlaced(receipt)],
       verify: (_) {
         expect(cart.state.cart.isEmpty, isTrue);
+        final order = orders.state.orders.single;
+        expect(order.id, 209, reason: 'the order is remembered');
+        expect(order.items.single.quantity, 2);
+        expect(order.placedAt, DateTime(2026, 10, 18));
         verify(() => repository.placeOrder(userId: 1, cart: any(named: 'cart')))
             .called(1);
       },
@@ -250,7 +281,10 @@ void main() {
         const CheckoutPlacing(),
         const CheckoutFailed(NetworkFailure()),
       ],
-      verify: (_) => expect(cart.state.cart.itemCount, 2),
+      verify: (_) {
+        expect(cart.state.cart.itemCount, 2);
+        expect(orders.state.orders, isEmpty, reason: 'nothing was ordered');
+      },
     );
 
     blocTest<CheckoutCubit, CheckoutState>(

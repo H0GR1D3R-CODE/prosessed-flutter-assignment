@@ -639,4 +639,74 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorGoHome => 'Back to the shop';
+
+  @override
+  String get ordersTitle => 'Your orders';
+
+  @override
+  String get ordersEmptyTitle => 'No orders yet';
+
+  @override
+  String get ordersEmptyMessage => 'Orders you place will be listed here.';
+
+  @override
+  String ordersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count orders',
+      one: '1 order',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String orderNumber(int id) {
+    return 'Order #$id';
+  }
+
+  @override
+  String orderPlacedOn(String date) {
+    return 'Placed $date';
+  }
+
+  @override
+  String get orderShowItems => 'Show items';
+
+  @override
+  String get orderHideItems => 'Hide items';
+
+  @override
+  String get profileOrders => 'Your orders';
+
+  @override
+  String get profileOrdersNote => 'See what you have ordered';
+
+  @override
+  String get orderViewOrders => 'View my orders';
+
+  @override
+  String get searchRecent => 'Recent searches';
+
+  @override
+  String get searchClearAll => 'Clear all';
+
+  @override
+  String searchForget(String term) {
+    return 'Remove $term from recent searches';
+  }
+
+  @override
+  String searchCategorySuggestion(String category) {
+    return 'In $category';
+  }
+
+  @override
+  String get viewedTitle => 'Recently viewed';
+
+  @override
+  String get viewedClear => 'Clear';
+
+  @override
+  String get searchShortcutHint => 'Press / to search';
 }

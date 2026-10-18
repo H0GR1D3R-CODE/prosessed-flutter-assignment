@@ -12,6 +12,7 @@ abstract final class Routes {
   static const String checkout = '/checkout';
   static const String orderSuccess = '/order-success';
   static const String devTools = '/dev-tools';
+  static const String orders = '/orders';
 
   static String product(int id) => '/product/$id';
 }

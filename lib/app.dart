@@ -7,6 +7,8 @@ import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/features/cart/presentation/widgets/cart_event_listener.dart';
+import 'package:shopsphere/features/discover/presentation/bloc/discover_cubits.dart';
+import 'package:shopsphere/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:shopsphere/features/settings/domain/settings.dart';
 import 'package:shopsphere/features/settings/presentation/bloc/settings_cubit.dart';
 import 'package:shopsphere/features/wishlist/presentation/bloc/wishlist_cubit.dart';
@@ -23,6 +25,9 @@ class _ShopSphereAppState extends State<ShopSphereApp> {
   late final AuthCubit _auth = sl<AuthCubit>();
   late final CartCubit _cart = sl<CartCubit>();
   late final WishlistCubit _wishlist = sl<WishlistCubit>();
+  late final OrdersCubit _orders = sl<OrdersCubit>();
+  late final SearchHistoryCubit _searches = sl<SearchHistoryCubit>();
+  late final RecentlyViewedCubit _viewed = sl<RecentlyViewedCubit>();
   late final SettingsCubit _settings = sl<SettingsCubit>();
   late final GoRouter _router = createRouter(_auth);
 
@@ -39,12 +44,18 @@ class _ShopSphereAppState extends State<ShopSphereApp> {
       case Authenticated(:final user) when user != null:
         _cart.load(user.id);
         _wishlist.load(user.id);
+        _orders.load(user.id);
+        _searches.load(user.id);
+        _viewed.load(user.id);
       case Authenticated():
         // Signed in but the profile is not known yet (offline start): try to fetch it.
         _auth.refreshUser();
       case Unauthenticated():
         _cart.unload();
         _wishlist.unload();
+        _orders.unload();
+        _searches.unload();
+        _viewed.unload();
       case AuthUnknown():
         break;
     }
@@ -57,6 +68,9 @@ class _ShopSphereAppState extends State<ShopSphereApp> {
         BlocProvider<AuthCubit>.value(value: _auth),
         BlocProvider<CartCubit>.value(value: _cart),
         BlocProvider<WishlistCubit>.value(value: _wishlist),
+        BlocProvider<OrdersCubit>.value(value: _orders),
+        BlocProvider<SearchHistoryCubit>.value(value: _searches),
+        BlocProvider<RecentlyViewedCubit>.value(value: _viewed),
         BlocProvider<SettingsCubit>.value(value: _settings),
       ],
       child: BlocListener<AuthCubit, AuthState>(

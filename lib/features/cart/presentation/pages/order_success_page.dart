@@ -172,6 +172,12 @@ class _OrderSuccessPageState extends State<OrderSuccessPage>
                                 label: l10n.orderContinue,
                                 onPressed: () => context.go(Routes.shop),
                               ),
+                              Gap.hm,
+                              AppButton(
+                                kind: AppButtonKind.outline,
+                                label: l10n.orderViewOrders,
+                                onPressed: () => context.push(Routes.orders),
+                              ),
                             ],
                           ),
                         ),
