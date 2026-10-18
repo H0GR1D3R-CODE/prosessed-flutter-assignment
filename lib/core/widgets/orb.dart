@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/orb_tints.dart';
+import 'package:shopsphere/core/widgets/network_photo.dart';
 import 'package:shopsphere/core/widgets/shimmer.dart';
 
 /// Paints a softly lit sphere with a contact shadow underneath: the visual signature of the app.
@@ -148,6 +148,7 @@ class ProductOrb extends StatelessWidget {
     this.heroTag,
     this.imageScale = 1.0,
     this.semanticLabel,
+    this.fallbackIcon = Icons.image_outlined,
     super.key,
   });
 
@@ -159,19 +160,15 @@ class ProductOrb extends StatelessWidget {
   final double imageScale;
   final String? semanticLabel;
 
+  /// What the photo would have been (the category's icon), shown if it cannot be loaded.
+  final IconData fallbackIcon;
+
   @override
   Widget build(BuildContext context) {
-    Widget image = CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: BoxFit.contain,
-      fadeInDuration: const Duration(milliseconds: 180),
+    Widget image = NetworkPhoto(
+      url: imageUrl,
       memCacheWidth: 700,
-      placeholder: (context, url) => const SizedBox.shrink(),
-      errorWidget: (context, url, error) => Icon(
-        Icons.image_not_supported_outlined,
-        size: 32,
-        color: context.colors.onSurfaceVariant,
-      ),
+      fallbackIcon: fallbackIcon,
     );
     if (heroTag != null) image = Hero(tag: heroTag!, child: image);
 

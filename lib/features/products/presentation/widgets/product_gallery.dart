@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/orb_tints.dart';
+import 'package:shopsphere/core/widgets/network_photo.dart';
 import 'package:shopsphere/core/widgets/orb.dart';
 import 'package:shopsphere/features/products/domain/entities/product.dart';
 import 'package:shopsphere/l10n/l10n.dart';
@@ -102,15 +102,11 @@ class _ProductGalleryState extends State<ProductGallery> {
                               height * 0.07,
                               height * 0.14,
                             ),
-                            child: CachedNetworkImage(
-                              imageUrl: photos[index],
-                              fit: BoxFit.contain,
+                            child: NetworkPhoto(
+                              url: photos[index],
                               memCacheWidth: 1000,
-                              fadeInDuration: const Duration(milliseconds: 200),
-                              errorWidget: (context, url, error) => Icon(
-                                Icons.image_not_supported_outlined,
-                                size: 40,
-                                color: context.colors.onSurfaceVariant,
+                              fallbackIcon: CategoryIcons.of(
+                                widget.product.category,
                               ),
                             ),
                           );

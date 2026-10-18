@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +8,7 @@ import 'package:shopsphere/core/theme/orb_tints.dart';
 import 'package:shopsphere/core/theme/shop_colors.dart';
 import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/widgets/buttons.dart';
+import 'package:shopsphere/core/widgets/network_photo.dart';
 import 'package:shopsphere/core/widgets/orb.dart';
 import 'package:shopsphere/core/widgets/shimmer.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
@@ -217,11 +217,11 @@ class _Avatar extends StatelessWidget {
           child: ClipOval(
             child: user.imageUrl == null
                 ? initials
-                : CachedNetworkImage(
-                    imageUrl: user.imageUrl!,
+                : NetworkPhoto(
+                    url: user.imageUrl!,
                     fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => initials,
-                    placeholder: (context, url) => initials,
+                    placeholder: initials,
+                    fallback: initials,
                   ),
           ),
         ),

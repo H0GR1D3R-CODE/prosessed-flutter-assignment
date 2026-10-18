@@ -72,6 +72,7 @@ class ProductCard extends StatelessWidget {
                       tint: tint,
                       heroTag: heroTag,
                       imageScale: 0.94,
+                      fallbackIcon: CategoryIcons.of(product.category),
                     ),
                     if (product.hasDiscount)
                       Positioned(
