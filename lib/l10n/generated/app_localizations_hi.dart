@@ -640,4 +640,74 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get errorGoHome => 'शॉप पर लौटें';
+
+  @override
+  String get ordersTitle => 'आपके ऑर्डर';
+
+  @override
+  String get ordersEmptyTitle => 'अभी कोई ऑर्डर नहीं';
+
+  @override
+  String get ordersEmptyMessage => 'आपके दिए गए ऑर्डर यहाँ दिखेंगे।';
+
+  @override
+  String ordersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ऑर्डर',
+      one: '1 ऑर्डर',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String orderNumber(int id) {
+    return 'ऑर्डर #$id';
+  }
+
+  @override
+  String orderPlacedOn(String date) {
+    return '$date को दिया गया';
+  }
+
+  @override
+  String get orderShowItems => 'सामान दिखाएँ';
+
+  @override
+  String get orderHideItems => 'सामान छिपाएँ';
+
+  @override
+  String get profileOrders => 'आपके ऑर्डर';
+
+  @override
+  String get profileOrdersNote => 'देखें कि आपने क्या ऑर्डर किया';
+
+  @override
+  String get orderViewOrders => 'मेरे ऑर्डर देखें';
+
+  @override
+  String get searchRecent => 'हाल की खोजें';
+
+  @override
+  String get searchClearAll => 'सब हटाएँ';
+
+  @override
+  String searchForget(String term) {
+    return 'हाल की खोजों से $term हटाएँ';
+  }
+
+  @override
+  String searchCategorySuggestion(String category) {
+    return '$category में';
+  }
+
+  @override
+  String get viewedTitle => 'हाल ही में देखे गए';
+
+  @override
+  String get viewedClear => 'हटाएँ';
+
+  @override
+  String get searchShortcutHint => 'खोजने के लिए / दबाएँ';
 }

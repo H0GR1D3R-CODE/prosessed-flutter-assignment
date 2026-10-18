@@ -4,6 +4,8 @@ import 'package:shopsphere/core/error/failures.dart';
 import 'package:shopsphere/features/cart/domain/entities/order_receipt.dart';
 import 'package:shopsphere/features/cart/domain/usecases/cart_usecases.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
+import 'package:shopsphere/features/orders/domain/orders.dart';
+import 'package:shopsphere/features/orders/presentation/bloc/orders_cubit.dart';
 
 sealed class CheckoutState extends Equatable {
   const CheckoutState();
@@ -38,13 +40,18 @@ final class CheckoutFailed extends CheckoutState {
   List<Object?> get props => [failure];
 }
 
-/// Places the order for the current cart and empties the cart once the server accepts it.
+/// Places the order for the current cart. Once the server accepts it, the order is recorded in
+/// the shopper's history and the cart is emptied.
 class CheckoutCubit extends Cubit<CheckoutState> {
-  CheckoutCubit({required this._placeOrder, required this._cartCubit})
-    : super(const CheckoutReview());
+  CheckoutCubit({
+    required this._placeOrder,
+    required this._cartCubit,
+    required this._ordersCubit,
+  }) : super(const CheckoutReview());
 
   final PlaceOrderUseCase _placeOrder;
   final CartCubit _cartCubit;
+  final OrdersCubit _ordersCubit;
 
   Future<void> placeOrder() async {
     if (state is CheckoutPlacing || state is CheckoutPlaced) return;
@@ -57,6 +64,14 @@ class CheckoutCubit extends Cubit<CheckoutState> {
     await result.fold(
       onFailure: (failure) async => emit(CheckoutFailed(failure)),
       onSuccess: (receipt) async {
+        // Keep a record of what was ordered, then empty the cart.
+        await _ordersCubit.record(
+          PlacedOrder(
+            id: receipt.orderId,
+            placedAt: receipt.placedAt,
+            items: cart.items,
+          ),
+        );
         await _cartCubit.clear();
         emit(CheckoutPlaced(receipt));
       },

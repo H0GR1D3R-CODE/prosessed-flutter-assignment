@@ -11,6 +11,7 @@ import 'package:shopsphere/features/cart/presentation/pages/cart_page.dart';
 import 'package:shopsphere/features/cart/presentation/pages/checkout_page.dart';
 import 'package:shopsphere/features/cart/presentation/pages/order_success_page.dart';
 import 'package:shopsphere/features/dev_tools/presentation/pages/error_lab_page.dart';
+import 'package:shopsphere/features/orders/presentation/pages/orders_page.dart';
 import 'package:shopsphere/features/products/presentation/pages/product_details_page.dart';
 import 'package:shopsphere/features/products/presentation/pages/product_list_page.dart';
 import 'package:shopsphere/features/profile/presentation/pages/profile_page.dart';
@@ -146,6 +147,15 @@ GoRouter createRouter(AuthCubit auth) {
           state: state,
           transition: ShopTransition.zoom,
           child: OrderSuccessPage(receipt: state.extra! as OrderReceipt),
+        ),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootKey,
+        path: Routes.orders,
+        pageBuilder: (context, state) => shopPage(
+          state: state,
+          transition: ShopTransition.slide,
+          child: const OrdersPage(),
         ),
       ),
       GoRoute(

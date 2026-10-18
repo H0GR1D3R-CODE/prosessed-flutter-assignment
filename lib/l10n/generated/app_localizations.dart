@@ -1159,6 +1159,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to the shop'**
   String get errorGoHome;
+
+  /// No description provided for @ordersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your orders'**
+  String get ordersTitle;
+
+  /// No description provided for @ordersEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No orders yet'**
+  String get ordersEmptyTitle;
+
+  /// No description provided for @ordersEmptyMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Orders you place will be listed here.'**
+  String get ordersEmptyMessage;
+
+  /// No description provided for @ordersCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 order} other{{count} orders}}'**
+  String ordersCount(int count);
+
+  /// No description provided for @orderNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Order #{id}'**
+  String orderNumber(int id);
+
+  /// No description provided for @orderPlacedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Placed {date}'**
+  String orderPlacedOn(String date);
+
+  /// No description provided for @orderShowItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Show items'**
+  String get orderShowItems;
+
+  /// No description provided for @orderHideItems.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide items'**
+  String get orderHideItems;
+
+  /// No description provided for @profileOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'Your orders'**
+  String get profileOrders;
+
+  /// No description provided for @profileOrdersNote.
+  ///
+  /// In en, this message translates to:
+  /// **'See what you have ordered'**
+  String get profileOrdersNote;
+
+  /// No description provided for @orderViewOrders.
+  ///
+  /// In en, this message translates to:
+  /// **'View my orders'**
+  String get orderViewOrders;
+
+  /// No description provided for @searchRecent.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent searches'**
+  String get searchRecent;
+
+  /// No description provided for @searchClearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all'**
+  String get searchClearAll;
+
+  /// No description provided for @searchForget.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {term} from recent searches'**
+  String searchForget(String term);
+
+  /// No description provided for @searchCategorySuggestion.
+  ///
+  /// In en, this message translates to:
+  /// **'In {category}'**
+  String searchCategorySuggestion(String category);
+
+  /// No description provided for @viewedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently viewed'**
+  String get viewedTitle;
+
+  /// No description provided for @viewedClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get viewedClear;
+
+  /// No description provided for @searchShortcutHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Press / to search'**
+  String get searchShortcutHint;
 }
 
 class _AppLocalizationsDelegate

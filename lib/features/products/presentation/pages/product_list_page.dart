@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shopsphere/core/di/injection.dart';
@@ -12,6 +13,9 @@ import 'package:shopsphere/core/widgets/inline_banner.dart';
 import 'package:shopsphere/core/widgets/resizable_split.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:shopsphere/features/discover/presentation/bloc/discover_cubits.dart';
+import 'package:shopsphere/features/discover/presentation/widgets/recently_viewed_strip.dart';
+import 'package:shopsphere/features/discover/presentation/widgets/search_box.dart';
 import 'package:shopsphere/features/products/domain/entities/product.dart';
 import 'package:shopsphere/features/products/domain/entities/product_query.dart';
 import 'package:shopsphere/features/products/presentation/bloc/categories_cubit.dart';
@@ -55,21 +59,43 @@ class _ShopView extends StatefulWidget {
 class _ShopViewState extends State<_ShopView> {
   final ScrollController _scroll = ScrollController();
   final TextEditingController _search = TextEditingController();
+  final FocusNode _searchFocus = FocusNode(debugLabel: 'shop-search');
   bool _detailCollapsed = false;
 
   @override
   void initState() {
     super.initState();
     _scroll.addListener(_onScroll);
+    HardwareKeyboard.instance.addHandler(_onKey);
   }
 
   @override
   void dispose() {
+    HardwareKeyboard.instance.removeHandler(_onKey);
     _scroll
       ..removeListener(_onScroll)
       ..dispose();
     _search.dispose();
+    _searchFocus.dispose();
     super.dispose();
+  }
+
+  /// Pressing "/" jumps to the search box, as on most sites, unless you are already typing or
+  /// another tab or page is showing.
+  bool _onKey(KeyEvent event) {
+    if (event is! KeyDownEvent ||
+        event.logicalKey != LogicalKeyboardKey.slash) {
+      return false;
+    }
+    if (!mounted || !TickerMode.valuesOf(context).enabled) return false;
+    final focused = FocusManager.instance.primaryFocus?.context;
+    final typing =
+        focused != null &&
+        (focused.widget is EditableText ||
+            focused.findAncestorWidgetOfExactType<EditableText>() != null);
+    if (typing) return false;
+    _searchFocus.requestFocus();
+    return true;
   }
 
   /// Ask for the next page a little before the user reaches the bottom.
@@ -82,6 +108,9 @@ class _ShopViewState extends State<_ShopView> {
   void _openProduct(Product product, {required bool split}) {
     // Otherwise the search box keeps focus and the keyboard returns with this page.
     FocusScope.of(context).unfocus();
+    // Opening a result means the search did its job: remember it.
+    final typed = _search.text.trim();
+    if (typed.isNotEmpty) context.read<SearchHistoryCubit>().record(typed);
     if (split) {
       context.read<SelectedProductCubit>().select(product.id);
     } else {
@@ -108,6 +137,7 @@ class _ShopViewState extends State<_ShopView> {
     final list = _ShopList(
       scroll: _scroll,
       search: _search,
+      searchFocus: _searchFocus,
       split: split,
       onOpen: (product) => _openProduct(product, split: split),
       onPickSort: _pickSort,
@@ -176,6 +206,7 @@ class _ShopList extends StatelessWidget {
   const _ShopList({
     required this.scroll,
     required this.search,
+    required this.searchFocus,
     required this.split,
     required this.onOpen,
     required this.onPickSort,
@@ -183,6 +214,7 @@ class _ShopList extends StatelessWidget {
 
   final ScrollController scroll;
   final TextEditingController search;
+  final FocusNode searchFocus;
   final bool split;
   final ValueChanged<Product> onOpen;
   final ValueChanged<ProductSort> onPickSort;
@@ -211,6 +243,7 @@ class _ShopList extends StatelessWidget {
               delegate: _FiltersHeader(
                 height: searchHeight + CategoryChips.height + Gap.l + Gap.s,
                 search: search,
+                searchFocus: searchFocus,
                 searchHeight: searchHeight,
               ),
             ),
@@ -264,6 +297,8 @@ class _ShopList extends StatelessWidget {
           ),
           final ProductListLoaded loaded => SliverMainAxisGroup(
             slivers: [
+              if (!loaded.query.hasSearch && loaded.query.categorySlug == null)
+                SliverToBoxAdapter(child: RecentlyViewedStrip(onOpen: onOpen)),
               SliverToBoxAdapter(
                 child: _ResultsBar(
                   total: loaded.total,
@@ -372,11 +407,13 @@ class _FiltersHeader extends SliverPersistentHeaderDelegate {
   _FiltersHeader({
     required this.height,
     required this.search,
+    required this.searchFocus,
     required this.searchHeight,
   });
 
   final double height;
   final TextEditingController search;
+  final FocusNode searchFocus;
   final double searchHeight;
 
   @override
@@ -392,7 +429,6 @@ class _FiltersHeader extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     final cubit = context.read<ProductListCubit>();
-    final l10n = context.l10n;
     return DecoratedBox(
       decoration: BoxDecoration(
         color: context.colors.surface,
@@ -409,34 +445,10 @@ class _FiltersHeader extends SliverPersistentHeaderDelegate {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Gap.l),
-            child: SizedBox(
+            child: SearchBox(
+              controller: search,
+              focusNode: searchFocus,
               height: searchHeight,
-              child: ValueListenableBuilder<TextEditingValue>(
-                valueListenable: search,
-                builder: (context, value, _) => TextField(
-                  controller: search,
-                  textInputAction: TextInputAction.search,
-                  onChanged: cubit.searchChanged,
-                  onSubmitted: cubit.searchSubmitted,
-                  decoration: InputDecoration(
-                    hintText: l10n.shopSearchHint,
-                    prefixIcon: const Icon(Icons.search_rounded),
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: Gap.l,
-                    ),
-                    suffixIcon: value.text.isEmpty
-                        ? null
-                        : IconButton(
-                            tooltip: l10n.shopClearSearch,
-                            icon: const Icon(Icons.close_rounded),
-                            onPressed: () {
-                              search.clear();
-                              cubit.clearSearch();
-                            },
-                          ),
-                  ),
-                ),
-              ),
             ),
           ),
           const SizedBox(height: Gap.s),
@@ -460,7 +472,9 @@ class _FiltersHeader extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(_FiltersHeader old) =>
-      old.height != height || old.search != search;
+      old.height != height ||
+      old.search != search ||
+      old.searchFocus != searchFocus;
 }
 
 /// "194 products", the sort control, and the offline notice when it applies.

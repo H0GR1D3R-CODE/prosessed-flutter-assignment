@@ -17,6 +17,7 @@ import 'package:shopsphere/core/widgets/quantity_stepper.dart';
 import 'package:shopsphere/core/widgets/shimmer.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
+import 'package:shopsphere/features/discover/presentation/bloc/discover_cubits.dart';
 import 'package:shopsphere/features/products/domain/entities/product.dart';
 import 'package:shopsphere/features/products/presentation/bloc/product_details_cubit.dart';
 import 'package:shopsphere/features/products/presentation/widgets/product_card.dart';
@@ -67,41 +68,50 @@ class _DetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-      builder: (context, state) {
-        final Product? product = switch (state) {
-          ProductDetailsLoaded(:final product) => product,
-          ProductDetailsLoading() => args?.product,
-          ProductDetailsFailure() => null,
-        };
-        return Scaffold(
-          // The bar lives in the Scaffold's own slot, so a floating snackbar rises above it.
-          bottomNavigationBar: product == null
-              ? null
-              : _PurchaseBar(key: ValueKey(product.id), product: product),
-          body: switch (state) {
-            ProductDetailsLoading() =>
-              product == null
-                  ? _DetailsLoading(embedded: embedded)
-                  : _DetailsContent(
-                      product: product,
-                      partial: true,
-                      heroTag: args?.heroTag,
-                      embedded: embedded,
-                    ),
-            ProductDetailsLoaded() => _DetailsContent(
-              product: product!,
-              partial: false,
-              heroTag: args?.heroTag,
-              embedded: embedded,
-            ),
-            ProductDetailsFailure(:final failure) => _DetailsFailure(
-              failure: failure,
-              embedded: embedded,
-            ),
-          },
-        );
+    return BlocListener<ProductDetailsCubit, ProductDetailsState>(
+      // Opening a product puts it on the "recently viewed" shelf.
+      listenWhen: (previous, current) => current is ProductDetailsLoaded,
+      listener: (context, state) {
+        if (state is ProductDetailsLoaded) {
+          context.read<RecentlyViewedCubit>().record(state.product);
+        }
       },
+      child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+        builder: (context, state) {
+          final Product? product = switch (state) {
+            ProductDetailsLoaded(:final product) => product,
+            ProductDetailsLoading() => args?.product,
+            ProductDetailsFailure() => null,
+          };
+          return Scaffold(
+            // The bar lives in the Scaffold's own slot, so a floating snackbar rises above it.
+            bottomNavigationBar: product == null
+                ? null
+                : _PurchaseBar(key: ValueKey(product.id), product: product),
+            body: switch (state) {
+              ProductDetailsLoading() =>
+                product == null
+                    ? _DetailsLoading(embedded: embedded)
+                    : _DetailsContent(
+                        product: product,
+                        partial: true,
+                        heroTag: args?.heroTag,
+                        embedded: embedded,
+                      ),
+              ProductDetailsLoaded() => _DetailsContent(
+                product: product!,
+                partial: false,
+                heroTag: args?.heroTag,
+                embedded: embedded,
+              ),
+              ProductDetailsFailure(:final failure) => _DetailsFailure(
+                failure: failure,
+                embedded: embedded,
+              ),
+            },
+          );
+        },
+      ),
     );
   }
 }

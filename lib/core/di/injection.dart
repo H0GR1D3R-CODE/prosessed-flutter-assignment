@@ -24,6 +24,12 @@ import 'package:shopsphere/features/cart/presentation/bloc/checkout_cubit.dart';
 import 'package:shopsphere/features/dev_tools/data/error_lab_repository_impl.dart';
 import 'package:shopsphere/features/dev_tools/domain/error_lab.dart';
 import 'package:shopsphere/features/dev_tools/presentation/bloc/error_lab_cubit.dart';
+import 'package:shopsphere/features/discover/data/discover_repositories.dart';
+import 'package:shopsphere/features/discover/domain/discover.dart';
+import 'package:shopsphere/features/discover/presentation/bloc/discover_cubits.dart';
+import 'package:shopsphere/features/orders/data/orders_repository_impl.dart';
+import 'package:shopsphere/features/orders/domain/orders.dart';
+import 'package:shopsphere/features/orders/presentation/bloc/orders_cubit.dart';
 import 'package:shopsphere/features/products/data/datasources/product_local_data_source.dart';
 import 'package:shopsphere/features/products/data/datasources/product_remote_data_source.dart';
 import 'package:shopsphere/features/products/data/repositories/product_repository_impl.dart';
@@ -99,6 +105,8 @@ Future<void> configureDependencies({
   _registerAuth();
   _registerProducts();
   _registerCart();
+  _registerOrders();
+  _registerDiscover();
   _registerWishlist();
   _registerSettings();
   _registerProfile();
@@ -203,6 +211,58 @@ void _registerCart() {
       () => CheckoutCubit(
         placeOrder: sl<PlaceOrderUseCase>(),
         cartCubit: sl<CartCubit>(),
+        ordersCubit: sl<OrdersCubit>(),
+      ),
+    );
+}
+
+void _registerOrders() {
+  sl
+    ..registerLazySingleton<OrdersRepository>(
+      () => PrefsOrdersRepository(sl<SharedPreferences>()),
+    )
+    ..registerFactory(() => LoadOrdersUseCase(sl<OrdersRepository>()))
+    ..registerFactory(() => RecordOrderUseCase(sl<OrdersRepository>()))
+    ..registerLazySingleton<OrdersCubit>(
+      () => OrdersCubit(
+        load: sl<LoadOrdersUseCase>(),
+        record: sl<RecordOrderUseCase>(),
+      ),
+    );
+}
+
+void _registerDiscover() {
+  sl
+    ..registerLazySingleton<SearchHistoryRepository>(
+      () => PrefsSearchHistoryRepository(sl<SharedPreferences>()),
+    )
+    ..registerLazySingleton<RecentlyViewedRepository>(
+      () => PrefsRecentlyViewedRepository(sl<SharedPreferences>()),
+    )
+    ..registerFactory(
+      () => LoadSearchHistoryUseCase(sl<SearchHistoryRepository>()),
+    )
+    ..registerFactory(() => RecordSearchUseCase(sl<SearchHistoryRepository>()))
+    ..registerFactory(() => ForgetSearchUseCase(sl<SearchHistoryRepository>()))
+    ..registerFactory(
+      () => LoadRecentlyViewedUseCase(sl<RecentlyViewedRepository>()),
+    )
+    ..registerFactory(() => RecordViewedUseCase(sl<RecentlyViewedRepository>()))
+    ..registerFactory(
+      () => ClearRecentlyViewedUseCase(sl<RecentlyViewedRepository>()),
+    )
+    ..registerLazySingleton<SearchHistoryCubit>(
+      () => SearchHistoryCubit(
+        load: sl<LoadSearchHistoryUseCase>(),
+        record: sl<RecordSearchUseCase>(),
+        forget: sl<ForgetSearchUseCase>(),
+      ),
+    )
+    ..registerLazySingleton<RecentlyViewedCubit>(
+      () => RecentlyViewedCubit(
+        load: sl<LoadRecentlyViewedUseCase>(),
+        record: sl<RecordViewedUseCase>(),
+        clear: sl<ClearRecentlyViewedUseCase>(),
       ),
     );
 }
