@@ -499,17 +499,11 @@ class _SelectPrompt extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(Gap.xxl),
-        child: Text(
-          context.l10n.shopPrompt,
-          textAlign: TextAlign.center,
-          style: context.text.headlineMedium?.copyWith(
-            color: context.colors.onSurfaceVariant,
-          ),
-        ),
-      ),
+    final l10n = context.l10n;
+    return EmptyView(
+      icon: Icons.touch_app_rounded,
+      title: l10n.shopSelectTitle,
+      message: l10n.shopSelectMessage,
     );
   }
 }

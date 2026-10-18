@@ -241,6 +241,9 @@ void main() {
       expect(find.byType(NavigationBar), findsNothing);
       expect(find.text(_mascara), findsOneWidget);
 
+      // Until something is picked, the detail pane says what it is for.
+      expect(find.text(en.shopSelectTitle), findsOneWidget);
+
       // Opening a product fills the detail pane instead of leaving the list.
       await tester.tap(find.text(_mascara));
       await settle(tester, const Duration(seconds: 1));

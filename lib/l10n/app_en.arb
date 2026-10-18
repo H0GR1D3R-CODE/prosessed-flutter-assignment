@@ -335,6 +335,8 @@
   "labHandled": "Handled: the app turned that into a friendly state.",
   "labClose": "Close",
   "shopPrompt": "What are you shopping for?",
+  "shopSelectTitle": "Pick a product",
+  "shopSelectMessage": "Its photos, price and reviews open here.",
   "shopWelcome": "Welcome",
   "productGallery": "Photo {current} of {total}",
   "@productGallery": {

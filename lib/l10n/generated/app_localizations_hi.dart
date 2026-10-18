@@ -603,6 +603,13 @@ class AppLocalizationsHi extends AppLocalizations {
   String get shopPrompt => 'आज आप क्या खरीद रहे हैं?';
 
   @override
+  String get shopSelectTitle => 'कोई उत्पाद चुनें';
+
+  @override
+  String get shopSelectMessage =>
+      'इसकी तस्वीरें, कीमत और समीक्षाएँ यहीं खुलेंगी।';
+
+  @override
   String get shopWelcome => 'स्वागत है';
 
   @override

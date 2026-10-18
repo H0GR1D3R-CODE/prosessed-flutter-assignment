@@ -603,6 +603,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get shopPrompt => 'What are you shopping for?';
 
   @override
+  String get shopSelectTitle => 'Pick a product';
+
+  @override
+  String get shopSelectMessage => 'Its photos, price and reviews open here.';
+
+  @override
   String get shopWelcome => 'Welcome';
 
   @override

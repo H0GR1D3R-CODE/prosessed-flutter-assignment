@@ -1088,6 +1088,18 @@ abstract class AppLocalizations {
   /// **'What are you shopping for?'**
   String get shopPrompt;
 
+  /// No description provided for @shopSelectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a product'**
+  String get shopSelectTitle;
+
+  /// No description provided for @shopSelectMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Its photos, price and reviews open here.'**
+  String get shopSelectMessage;
+
   /// No description provided for @shopWelcome.
   ///
   /// In en, this message translates to:

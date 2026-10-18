@@ -165,6 +165,8 @@
   "labHandled": "संभाल लिया: ऐप ने इसे एक सरल स्थिति में बदल दिया।",
   "labClose": "बंद करें",
   "shopPrompt": "आज आप क्या खरीद रहे हैं?",
+  "shopSelectTitle": "कोई उत्पाद चुनें",
+  "shopSelectMessage": "इसकी तस्वीरें, कीमत और समीक्षाएँ यहीं खुलेंगी।",
   "shopWelcome": "स्वागत है",
   "productGallery": "{total} में से फ़ोटो {current}",
   "errorGoHome": "शॉप पर लौटें"
