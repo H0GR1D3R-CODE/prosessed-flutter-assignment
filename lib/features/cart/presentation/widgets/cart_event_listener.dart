@@ -29,6 +29,9 @@ class CartEventListener extends StatelessWidget {
           case CartItemAdded(:final title, :final quantity):
             messenger.showSnackBar(
               SnackBar(
+                // Material 3 keeps a snackbar with an action on screen until it is dismissed,
+                // which would leave it covering the checkout button.
+                persist: false,
                 duration: const Duration(seconds: 3),
                 content: Text(l10n.addedToCart(quantity, title)),
                 action: SnackBarAction(
@@ -44,6 +47,8 @@ class CartEventListener extends StatelessWidget {
           case final CartItemRemoved removed:
             messenger.showSnackBar(
               SnackBar(
+                persist: false,
+                duration: const Duration(seconds: 5),
                 content: Text(l10n.cartRemoved(removed.item.title)),
                 action: SnackBarAction(
                   label: l10n.undo,
