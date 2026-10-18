@@ -20,6 +20,9 @@ import 'package:shopsphere/features/cart/domain/repositories/cart_repository.dar
 import 'package:shopsphere/features/cart/domain/usecases/cart_usecases.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/checkout_cubit.dart';
+import 'package:shopsphere/features/dev_tools/data/error_lab_repository_impl.dart';
+import 'package:shopsphere/features/dev_tools/domain/error_lab.dart';
+import 'package:shopsphere/features/dev_tools/presentation/bloc/error_lab_cubit.dart';
 import 'package:shopsphere/features/products/data/datasources/product_local_data_source.dart';
 import 'package:shopsphere/features/products/data/datasources/product_remote_data_source.dart';
 import 'package:shopsphere/features/products/data/repositories/product_repository_impl.dart';
@@ -91,6 +94,7 @@ Future<void> configureDependencies({
   _registerWishlist();
   _registerSettings();
   _registerProfile();
+  _registerDevTools();
 }
 
 void _registerAuth() {
@@ -227,4 +231,16 @@ void _registerProfile() {
       knownUser: knownUser,
     ),
   );
+}
+
+void _registerDevTools() {
+  sl
+    ..registerLazySingleton<ErrorLabRepository>(
+      () => ErrorLabRepositoryImpl(
+        client: sl<ApiClient>(),
+        tokens: sl<TokenStore>(),
+      ),
+    )
+    ..registerFactory(() => RunLabScenarioUseCase(sl<ErrorLabRepository>()))
+    ..registerFactory(() => ErrorLabCubit(sl<RunLabScenarioUseCase>()));
 }
