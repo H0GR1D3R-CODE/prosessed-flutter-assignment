@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shopsphere/core/router/routes.dart';
+import 'package:shopsphere/core/router/transitions.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:shopsphere/features/auth/presentation/pages/login_page.dart';
 import 'package:shopsphere/features/cart/domain/entities/order_receipt.dart';
@@ -60,14 +61,21 @@ GoRouter createRouter(AuthCubit auth) {
     routes: [
       GoRoute(
         path: Routes.splash,
-        builder: (context, state) => const SplashPage(),
+        pageBuilder: (context, state) =>
+            shopPage(state: state, child: const SplashPage()),
       ),
       GoRoute(
         path: Routes.login,
-        builder: (context, state) => const LoginPage(),
+        pageBuilder: (context, state) =>
+            shopPage(state: state, child: const LoginPage()),
       ),
-      StatefulShellRoute.indexedStack(
+      StatefulShellRoute(
         builder: (context, state, shell) => AppShell(navigationShell: shell),
+        // The tabs cross-fade instead of snapping, and each keeps its own state.
+        navigatorContainerBuilder: (context, shell, children) => FadingBranches(
+          currentIndex: shell.currentIndex,
+          children: children,
+        ),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -106,33 +114,48 @@ GoRouter createRouter(AuthCubit auth) {
       GoRoute(
         parentNavigatorKey: _rootKey,
         path: '/product/:id',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final args = state.extra is ProductRouteArgs
               ? state.extra! as ProductRouteArgs
               : null;
-          return ProductDetailsPage(
-            productId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
-            args: args,
+          return shopPage(
+            state: state,
+            transition: ShopTransition.rise,
+            child: ProductDetailsPage(
+              productId: int.tryParse(state.pathParameters['id'] ?? '') ?? 0,
+              args: args,
+            ),
           );
         },
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,
         path: Routes.checkout,
-        builder: (context, state) => const CheckoutPage(),
+        pageBuilder: (context, state) => shopPage(
+          state: state,
+          transition: ShopTransition.slide,
+          child: const CheckoutPage(),
+        ),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,
         path: Routes.orderSuccess,
         redirect: (context, state) =>
             state.extra is OrderReceipt ? null : Routes.shop,
-        builder: (context, state) =>
-            OrderSuccessPage(receipt: state.extra! as OrderReceipt),
+        pageBuilder: (context, state) => shopPage(
+          state: state,
+          transition: ShopTransition.zoom,
+          child: OrderSuccessPage(receipt: state.extra! as OrderReceipt),
+        ),
       ),
       GoRoute(
         parentNavigatorKey: _rootKey,
         path: Routes.devTools,
-        builder: (context, state) => const ErrorLabPage(),
+        pageBuilder: (context, state) => shopPage(
+          state: state,
+          transition: ShopTransition.slide,
+          child: const ErrorLabPage(),
+        ),
       ),
     ],
   );

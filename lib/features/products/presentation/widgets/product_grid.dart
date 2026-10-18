@@ -1,11 +1,10 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:shopsphere/core/error/failures.dart';
 import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/widgets/inline_banner.dart';
 import 'package:shopsphere/core/widgets/orbit_logo.dart';
+import 'package:shopsphere/core/widgets/reveal.dart';
 import 'package:shopsphere/core/widgets/shimmer.dart';
 import 'package:shopsphere/features/products/domain/entities/product.dart';
 import 'package:shopsphere/features/products/presentation/widgets/product_card.dart';
@@ -67,7 +66,7 @@ class ProductSliverGrid extends StatelessWidget {
             final lowered = columns > 1 && index % columns % 2 == 1;
             return Transform.translate(
               offset: Offset(0, lowered ? stagger : 0),
-              child: _Reveal(
+              child: Reveal(
                 index: index % (columns * 3),
                 child: ProductCard(
                   key: ValueKey(product.id),
@@ -81,53 +80,6 @@ class ProductSliverGrid extends StatelessWidget {
           },
         );
       },
-    );
-  }
-}
-
-/// Fades and lifts a card in as it first appears. Cards scrolled into view later do the same,
-/// which gives the list a gentle stagger without a separate animation system.
-class _Reveal extends StatefulWidget {
-  const _Reveal({required this.index, required this.child});
-
-  final int index;
-  final Widget child;
-
-  @override
-  State<_Reveal> createState() => _RevealState();
-}
-
-class _RevealState extends State<_Reveal> {
-  bool _shown = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_shown) return;
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _shown = true;
-      return;
-    }
-    Future<void>.delayed(
-      Duration(milliseconds: 35 * math.min(widget.index, 8)),
-      () {
-        if (mounted) setState(() => _shown = true);
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedOpacity(
-      opacity: _shown ? 1 : 0,
-      duration: const Duration(milliseconds: 320),
-      curve: Curves.easeOut,
-      child: AnimatedSlide(
-        offset: _shown ? Offset.zero : const Offset(0, 0.04),
-        duration: const Duration(milliseconds: 320),
-        curve: Curves.easeOutCubic,
-        child: widget.child,
-      ),
     );
   }
 }
