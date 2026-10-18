@@ -59,3 +59,4 @@ local.properties
 # Test output
 coverage/
 *.lcov
+test/_all_files_coverage_test.dart
