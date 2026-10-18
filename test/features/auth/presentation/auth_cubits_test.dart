@@ -34,7 +34,8 @@ void main() {
   group('AuthCubit', () {
     blocTest<AuthCubit, AuthState>(
       'starts unauthenticated when nothing is stored',
-      setUp: () => when(() => repository.hasSession()).thenAnswer((_) async => false),
+      setUp: () =>
+          when(() => repository.hasSession()).thenAnswer((_) async => false),
       build: buildAuth,
       act: (cubit) => cubit.start(),
       expect: () => [const Unauthenticated()],
@@ -44,9 +45,8 @@ void main() {
       'starts authenticated with the user when the stored session is valid',
       setUp: () {
         when(() => repository.hasSession()).thenAnswer((_) async => true);
-        when(
-          () => repository.fetchCurrentUser(),
-        ).thenAnswer((_) async => const Result.success(testUser));
+        when(() => repository.fetchCurrentUser())
+            .thenAnswer((_) async => const Result.success(testUser));
       },
       build: buildAuth,
       act: (cubit) => cubit.start(),
@@ -135,14 +135,15 @@ void main() {
 
     blocTest<LoginCubit, LoginState>(
       'wrong credentials end in a failure the form can show inline',
-      setUp: () => when(
-        () => repository.login(
-          username: any(named: 'username'),
-          password: any(named: 'password'),
-        ),
-      ).thenAnswer(
-        (_) async => const Result.failure(InvalidCredentialsFailure()),
-      ),
+      setUp: () =>
+          when(
+            () => repository.login(
+              username: any(named: 'username'),
+              password: any(named: 'password'),
+            ),
+          ).thenAnswer(
+            (_) async => const Result.failure(InvalidCredentialsFailure()),
+          ),
       build: buildLogin,
       act: (cubit) => cubit.submit(username: 'emilys', password: 'wrongpass'),
       expect: () => [

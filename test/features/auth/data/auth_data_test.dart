@@ -15,31 +15,38 @@ class MockLocal extends Mock implements AuthLocalDataSource {}
 
 void main() {
   group('UserModel', () {
-    test('parses the sign-in response: tokens plus the user at the top level', () {
-      final login = LoginResponseModel.fromJson(fixtureMap('login_ok'));
+    test(
+      'parses the sign-in response: tokens plus the user at the top level',
+      () {
+        final login = LoginResponseModel.fromJson(fixtureMap('login_ok'));
 
-      expect(login.accessToken, 'fake-access-token');
-      expect(login.refreshToken, 'fake-refresh-token');
-      expect(login.user.username, 'emilys');
-      expect(login.user.firstName, 'Emily');
-      expect(login.user.address, isNull, reason: 'sign-in does not return one');
-    });
+        expect(login.accessToken, 'fake-access-token');
+        expect(login.refreshToken, 'fake-refresh-token');
+        expect(login.user.username, 'emilys');
+        expect(login.user.firstName, 'Emily');
+        expect(
+          login.user.address,
+          isNull,
+          reason: 'sign-in does not return one',
+        );
+      },
+    );
 
-    test('parses /auth/me including the address, and survives a round trip', () {
-      final user = UserModel.fromJson(fixtureMap('me'));
-      final again = UserModel.fromJson(user.toJson());
+    test(
+      'parses /auth/me including the address, and survives a round trip',
+      () {
+        final user = UserModel.fromJson(fixtureMap('me'));
+        final again = UserModel.fromJson(user.toJson());
 
-      expect(user.address?.city, 'Phoenix');
-      expect(user.toEntity().address?.oneLine, contains('626 Main Street'));
-      expect(again.toEntity(), user.toEntity());
-    });
+        expect(user.address?.city, 'Phoenix');
+        expect(user.toEntity().address?.oneLine, contains('626 Main Street'));
+        expect(again.toEntity(), user.toEntity());
+      },
+    );
 
     test('never stores more than the profile fields it shows', () {
       final stored = UserModel.fromJson(fixtureMap('me')).toJson();
-      expect(
-        stored.keys,
-        containsAll(['id', 'username', 'email']),
-      );
+      expect(stored.keys, containsAll(['id', 'username', 'email']));
       expect(
         stored.keys.toSet().intersection({'password', 'ssn', 'bank', 'ein'}),
         isEmpty,
@@ -77,49 +84,58 @@ void main() {
       registerFallbackValue(UserModel.fromJson(fixtureMap('me')));
     });
 
-    test('login stores both tokens and the user, and returns the user', () async {
-      when(
-        () => remote.login(
-          username: any(named: 'username'),
-          password: any(named: 'password'),
-        ),
-      ).thenAnswer(
-        (_) async => LoginResponseModel.fromJson(fixtureMap('login_ok')),
-      );
+    test(
+      'login stores both tokens and the user, and returns the user',
+      () async {
+        when(
+          () => remote.login(
+            username: any(named: 'username'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer(
+          (_) async => LoginResponseModel.fromJson(fixtureMap('login_ok')),
+        );
 
-      final result = await repository.login(
-        username: 'emilys',
-        password: 'emilyspass',
-      );
+        final result = await repository.login(
+          username: 'emilys',
+          password: 'emilyspass',
+        );
 
-      expect(result.valueOrNull?.fullName, 'Emily Johnson');
-      verify(
-        () => local.saveTokens(
-          accessToken: 'fake-access-token',
-          refreshToken: 'fake-refresh-token',
-        ),
-      ).called(1);
-      verify(() => local.saveUser(any())).called(1);
-    });
+        expect(result.valueOrNull?.fullName, 'Emily Johnson');
+        verify(
+          () => local.saveTokens(
+            accessToken: 'fake-access-token',
+            refreshToken: 'fake-refresh-token',
+          ),
+        ).called(1);
+        verify(() => local.saveUser(any())).called(1);
+      },
+    );
 
-    test('a 400 from sign-in is InvalidCredentialsFailure, and nothing is stored', () async {
-      when(
-        () => remote.login(
-          username: any(named: 'username'),
-          password: any(named: 'password'),
-        ),
-      ).thenThrow(const BadRequestException('Invalid credentials'));
+    test(
+      'a 400 from sign-in is InvalidCredentialsFailure, and nothing is stored',
+      () async {
+        when(
+          () => remote.login(
+            username: any(named: 'username'),
+            password: any(named: 'password'),
+          ),
+        ).thenThrow(const BadRequestException('Invalid credentials'));
 
-      final result = await repository.login(username: 'emilys', password: 'x');
+        final result = await repository.login(
+          username: 'emilys',
+          password: 'x',
+        );
 
-      expect(result.failureOrNull, isA<InvalidCredentialsFailure>());
-      verifyNever(
-        () => local.saveTokens(
-          accessToken: any(named: 'accessToken'),
-          refreshToken: any(named: 'refreshToken'),
-        ),
-      );
-    });
+        expect(result.failureOrNull, isA<InvalidCredentialsFailure>());
+        verifyNever(
+          () => local.saveTokens(
+            accessToken: any(named: 'accessToken'),
+            refreshToken: any(named: 'refreshToken'),
+          ),
+        );
+      },
+    );
 
     test('no connection is a NetworkFailure', () async {
       when(
@@ -138,9 +154,8 @@ void main() {
     });
 
     test('fetchCurrentUser caches what the server returns', () async {
-      when(
-        () => remote.me(),
-      ).thenAnswer((_) async => UserModel.fromJson(fixtureMap('me')));
+      when(() => remote.me())
+          .thenAnswer((_) async => UserModel.fromJson(fixtureMap('me')));
 
       final result = await repository.fetchCurrentUser();
 
@@ -149,17 +164,18 @@ void main() {
     });
 
     test('an expired token on /auth/me is a SessionExpiredFailure', () async {
-      when(
-        () => remote.me(),
-      ).thenThrow(const UnauthorizedException(statusCode: 401));
+      when(() => remote.me())
+          .thenThrow(const UnauthorizedException(statusCode: 401));
 
-      expect((await repository.fetchCurrentUser()).failureOrNull, isA<SessionExpiredFailure>());
+      expect(
+        (await repository.fetchCurrentUser()).failureOrNull,
+        isA<SessionExpiredFailure>(),
+      );
     });
 
     test('hasSession is false when storage cannot be read', () async {
-      when(
-        () => local.readRefreshToken(),
-      ).thenThrow(const CacheException('keystore locked'));
+      when(() => local.readRefreshToken())
+          .thenThrow(const CacheException('keystore locked'));
 
       expect(await repository.hasSession(), isFalse);
     });

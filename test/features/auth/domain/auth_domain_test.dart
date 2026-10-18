@@ -37,14 +37,14 @@ void main() {
         ),
       ).thenAnswer((_) async => const Result.success(testUser));
 
-      final result = await LoginUseCase(
-        repository,
-      )(username: '  emilys ', password: ' pass ');
+      final result = await LoginUseCase(repository)(
+        username: '  emilys ',
+        password: ' pass ',
+      );
 
       expect(result.valueOrNull, testUser);
-      verify(
-        () => repository.login(username: 'emilys', password: ' pass '),
-      ).called(1);
+      verify(() => repository.login(username: 'emilys', password: ' pass '))
+          .called(1);
     });
   });
 
@@ -64,38 +64,42 @@ void main() {
       verifyNever(() => repository.fetchCurrentUser());
     });
 
-    test('a token the server accepts is an active session with that user', () async {
-      when(() => repository.hasSession()).thenAnswer((_) async => true);
-      when(
-        () => repository.fetchCurrentUser(),
-      ).thenAnswer((_) async => const Result.success(testUser));
+    test(
+      'a token the server accepts is an active session with that user',
+      () async {
+        when(() => repository.hasSession()).thenAnswer((_) async => true);
+        when(() => repository.fetchCurrentUser())
+            .thenAnswer((_) async => const Result.success(testUser));
 
-      final outcome = await restore();
+        final outcome = await restore();
 
-      expect(outcome, isA<ActiveSession>());
-      expect((outcome as ActiveSession).user, testUser);
-    });
+        expect(outcome, isA<ActiveSession>());
+        expect((outcome as ActiveSession).user, testUser);
+      },
+    );
 
     test('a token the server rejects is an expired session', () async {
       when(() => repository.hasSession()).thenAnswer((_) async => true);
-      when(() => repository.fetchCurrentUser()).thenAnswer(
-        (_) async => const Result.failure(SessionExpiredFailure()),
-      );
+      when(
+        () => repository.fetchCurrentUser(),
+      ).thenAnswer((_) async => const Result.failure(SessionExpiredFailure()));
 
       expect(await restore(), isA<ExpiredSession>());
     });
 
-    test('offline at launch trusts the token and uses the cached user', () async {
-      when(() => repository.hasSession()).thenAnswer((_) async => true);
-      when(
-        () => repository.fetchCurrentUser(),
-      ).thenAnswer((_) async => const Result.failure(NetworkFailure()));
-      when(() => repository.cachedUser()).thenAnswer((_) async => testUser);
+    test(
+      'offline at launch trusts the token and uses the cached user',
+      () async {
+        when(() => repository.hasSession()).thenAnswer((_) async => true);
+        when(() => repository.fetchCurrentUser())
+            .thenAnswer((_) async => const Result.failure(NetworkFailure()));
+        when(() => repository.cachedUser()).thenAnswer((_) async => testUser);
 
-      final outcome = await restore();
+        final outcome = await restore();
 
-      expect(outcome, isA<ActiveSession>());
-      expect((outcome as ActiveSession).user, testUser);
-    });
+        expect(outcome, isA<ActiveSession>());
+        expect((outcome as ActiveSession).user, testUser);
+      },
+    );
   });
 }
