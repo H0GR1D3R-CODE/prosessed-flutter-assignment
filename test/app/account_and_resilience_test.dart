@@ -309,6 +309,11 @@ void main() {
       expect(find.text(_mascara), findsOneWidget);
       expect(tester.takeException(), isNull, reason: 'overflow in the cart');
 
+      // Every control in the row is a full 48 dp target, including the remove button.
+      final remove = tester.getSize(find.byTooltip(en.cartRemove(_mascara)));
+      expect(remove.width, greaterThanOrEqualTo(48));
+      expect(remove.height, greaterThanOrEqualTo(48));
+
       await tester.tap(find.text(en.cartCheckout));
       await settle(tester);
       expect(find.text(en.checkoutTitle), findsOneWidget);

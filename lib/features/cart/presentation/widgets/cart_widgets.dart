@@ -94,7 +94,6 @@ class CartItemTile extends StatelessWidget {
                               tooltip: l10n.cartRemove(item.title),
                               onPressed: () => cart.remove(item.productId),
                               icon: const Icon(Icons.close_rounded, size: 20),
-                              visualDensity: VisualDensity.compact,
                             ),
                           ],
                         ),
