@@ -97,6 +97,35 @@ void main() {
       expect(find.text(en.homeCouponCopied('WELCOME10')), findsOneWidget);
     });
 
+    testWidgets(
+      'offline, the saved products appear under a notice at the top',
+      (tester) async {
+        // A first visit online fills the cache...
+        await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
+        final prefs = sl<SharedPreferences>();
+        final saved = {for (final key in prefs.getKeys()) key: prefs.get(key)!};
+        await tester.pumpWidget(const SizedBox());
+        await sl.reset();
+
+        // ...so a second one with no connection still has something to show.
+        await pumpShopApp(
+          tester,
+          FakeShopApi()..offline = true,
+          secure: signedInStorage,
+          preferences: saved,
+        );
+
+        expect(find.text(en.shopOfflineBanner), findsOneWidget);
+        expect(find.byType(HomeHero), findsOneWidget);
+        expect(
+          tester.getTopLeft(find.text(en.shopOfflineBanner)).dy,
+          lessThan(tester.getTopLeft(find.byType(HomeHero)).dy),
+          reason:
+              'the notice comes first, so it is not hidden under the shelves',
+        );
+      },
+    );
+
     testWidgets('tapping the deal of the day opens that product', (
       tester,
     ) async {

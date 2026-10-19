@@ -302,6 +302,23 @@ class _ShopList extends StatelessWidget {
           ),
           final ProductListLoaded loaded => SliverMainAxisGroup(
             slivers: [
+              if (loaded.fromCache)
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      Gap.l,
+                      Gap.xs,
+                      Gap.l,
+                      Gap.s,
+                    ),
+                    child: InlineBanner(
+                      tone: BannerTone.warning,
+                      message: l10n.shopOfflineBanner,
+                      actionLabel: l10n.retry,
+                      onAction: cubit.load,
+                    ),
+                  ),
+                ),
               if (_isHome(loaded)) ..._showcase(context, loaded),
               SliverToBoxAdapter(
                 child: _ResultsBar(
@@ -309,8 +326,6 @@ class _ShopList extends StatelessWidget {
                   total: loaded.total,
                   sort: loaded.query.sort,
                   onSort: () => onPickSort(loaded.query.sort),
-                  showOffline: loaded.fromCache,
-                  onRetry: cubit.load,
                 ),
               ),
               SliverPadding(
@@ -533,8 +548,6 @@ class _ResultsBar extends StatelessWidget {
     required this.total,
     required this.sort,
     required this.onSort,
-    required this.showOffline,
-    required this.onRetry,
   });
 
   /// A heading above the count, for the home page's main grid.
@@ -542,8 +555,6 @@ class _ResultsBar extends StatelessWidget {
   final int total;
   final ProductSort sort;
   final VoidCallback onSort;
-  final bool showOffline;
-  final VoidCallback onRetry;
 
   @override
   Widget build(BuildContext context) {
@@ -552,16 +563,6 @@ class _ResultsBar extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(Gap.l, Gap.s, Gap.s, Gap.s),
       child: Column(
         children: [
-          if (showOffline)
-            Padding(
-              padding: const EdgeInsets.only(right: Gap.m, bottom: Gap.s),
-              child: InlineBanner(
-                tone: BannerTone.warning,
-                message: l10n.shopOfflineBanner,
-                actionLabel: l10n.retry,
-                onAction: onRetry,
-              ),
-            ),
           if (title != null)
             Padding(
               padding: const EdgeInsets.only(right: Gap.m, bottom: Gap.xs),
