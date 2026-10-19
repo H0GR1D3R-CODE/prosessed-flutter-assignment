@@ -424,5 +424,106 @@
   "themeHintDark": "Always dark, whatever your device does.",
   "languageHintSystem": "Follows your device language.",
   "languageHintEnglish": "Always English.",
-  "languageHintHindi": "Always Hindi."
+  "languageHintHindi": "Always Hindi.",
+  "homeDealTag": "Deal of the day",
+  "homeDealCta": "Shop now",
+  "homeCouponTag": "For you",
+  "homeCouponTitle": "10% off your first order",
+  "homeCouponBody": "Use code {code} at checkout.",
+  "@homeCouponBody": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "homeCouponCopy": "Copy code",
+  "homeCouponCopied": "Code {code} copied",
+  "@homeCouponCopied": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "homeGiveTag": "Feel good",
+  "homeGiveTitle": "Round up for good",
+  "homeGiveBody": "Donate the change from your order when you check out.",
+  "homeSlideLabel": "Offer {page} of {count}",
+  "@homeSlideLabel": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shelfDealsTitle": "Deals worth grabbing",
+  "shelfDealsNote": "Biggest discounts first",
+  "shelfTopTitle": "Loved by shoppers",
+  "shelfTopNote": "Rated 4.0 and above",
+  "shelfAllTitle": "Everything in orbit",
+  "couponTitle": "Promo code",
+  "couponHint": "Enter a code",
+  "couponApply": "Apply",
+  "couponApplied": "{code} applied",
+  "@couponApplied": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "couponRemove": "Remove code",
+  "couponUnknown": "That code isn't valid. Try one below.",
+  "couponTooSmall": "{code} needs {amount} more in your cart.",
+  "@couponTooSmall": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "couponAvailable": "Codes you can use",
+  "couponWelcomeNote": "10% off everything",
+  "couponSave5Note": "$5 off orders over $25",
+  "couponOrbit20Note": "20% off orders over $100, up to $40",
+  "couponLine": "Code {code}",
+  "@couponLine": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "giveTitle": "Give a little",
+  "giveBody": "Add a donation to the Orbit Trees fund. This is a demo: nothing is really charged or donated.",
+  "giveNone": "Not now",
+  "giveRoundUp": "Round up +{amount}",
+  "@giveRoundUp": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "giveLine": "Donation",
+  "giveThanks": "Thank you for giving {amount}.",
+  "@giveThanks": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "loginRemember": "Keep me signed in",
+  "loginRememberNote": "Stay signed in on this device. Untick it on a shared one.",
+  "loginSecureNote": "Your sign-in is kept in your device's secure storage.",
+  "splashTagline": "Everything, in orbit.",
+  "splashStatus": "Warming up the shop"
 }

@@ -736,4 +736,141 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get languageHintHindi => 'हमेशा हिन्दी।';
+
+  @override
+  String get homeDealTag => 'आज का सौदा';
+
+  @override
+  String get homeDealCta => 'अभी खरीदें';
+
+  @override
+  String get homeCouponTag => 'आपके लिए';
+
+  @override
+  String get homeCouponTitle => 'पहले ऑर्डर पर 10% की छूट';
+
+  @override
+  String homeCouponBody(String code) {
+    return 'चेकआउट पर कोड $code इस्तेमाल करें।';
+  }
+
+  @override
+  String get homeCouponCopy => 'कोड कॉपी करें';
+
+  @override
+  String homeCouponCopied(String code) {
+    return 'कोड $code कॉपी हो गया';
+  }
+
+  @override
+  String get homeGiveTag => 'अच्छा लगेगा';
+
+  @override
+  String get homeGiveTitle => 'राउंड अप करें, भलाई करें';
+
+  @override
+  String get homeGiveBody => 'चेकआउट पर अपने ऑर्डर की बची रकम दान करें।';
+
+  @override
+  String homeSlideLabel(int page, int count) {
+    return 'ऑफ़र $page / $count';
+  }
+
+  @override
+  String get shelfDealsTitle => 'लपकने लायक सौदे';
+
+  @override
+  String get shelfDealsNote => 'सबसे बड़ी छूट पहले';
+
+  @override
+  String get shelfTopTitle => 'खरीदारों की पसंद';
+
+  @override
+  String get shelfTopNote => 'रेटिंग 4.0 और ऊपर';
+
+  @override
+  String get shelfAllTitle => 'सब कुछ एक जगह';
+
+  @override
+  String get couponTitle => 'प्रोमो कोड';
+
+  @override
+  String get couponHint => 'कोड डालें';
+
+  @override
+  String get couponApply => 'लागू करें';
+
+  @override
+  String couponApplied(String code) {
+    return '$code लागू हुआ';
+  }
+
+  @override
+  String get couponRemove => 'कोड हटाएं';
+
+  @override
+  String get couponUnknown => 'यह कोड मान्य नहीं है। नीचे से कोई चुनें।';
+
+  @override
+  String couponTooSmall(String code, String amount) {
+    return '$code के लिए कार्ट में $amount और चाहिए।';
+  }
+
+  @override
+  String get couponAvailable => 'इस्तेमाल हो सकने वाले कोड';
+
+  @override
+  String get couponWelcomeNote => 'हर चीज़ पर 10% छूट';
+
+  @override
+  String get couponSave5Note => '\$25 से ऊपर के ऑर्डर पर \$5 छूट';
+
+  @override
+  String get couponOrbit20Note =>
+      '\$100 से ऊपर के ऑर्डर पर 20% छूट, अधिकतम \$40';
+
+  @override
+  String couponLine(String code) {
+    return 'कोड $code';
+  }
+
+  @override
+  String get giveTitle => 'थोड़ा दान करें';
+
+  @override
+  String get giveBody =>
+      'ऑर्बिट ट्रीज़ फ़ंड में दान जोड़ें। यह डेमो है: असल में कुछ चार्ज या दान नहीं होता।';
+
+  @override
+  String get giveNone => 'अभी नहीं';
+
+  @override
+  String giveRoundUp(String amount) {
+    return 'राउंड अप +$amount';
+  }
+
+  @override
+  String get giveLine => 'दान';
+
+  @override
+  String giveThanks(String amount) {
+    return '$amount देने के लिए धन्यवाद।';
+  }
+
+  @override
+  String get loginRemember => 'मुझे साइन इन रखें';
+
+  @override
+  String get loginRememberNote =>
+      'इस डिवाइस पर साइन इन रहें। साझा डिवाइस पर इसे बंद रखें।';
+
+  @override
+  String get loginSecureNote =>
+      'आपका साइन-इन डिवाइस के सुरक्षित स्टोरेज में रखा जाता है।';
+
+  @override
+  String get splashTagline => 'सब कुछ, एक ही कक्षा में।';
+
+  @override
+  String get splashStatus => 'दुकान तैयार हो रही है';
 }

@@ -4,6 +4,7 @@ import 'package:shopsphere/core/network/api_config.dart';
 
 import '../helpers/app_harness.dart';
 import '../helpers/pump_app.dart';
+import '../helpers/shop_finders.dart';
 
 const String _mascara = 'Essence Mascara Lash Princess';
 
@@ -58,6 +59,12 @@ void main() {
       final api = FakeShopApi();
       await pumpShopApp(tester, api, secure: signedInStorage);
 
+      await tester.scrollUntilVisible(
+        find.text(en.sortRelevance),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.pump(const Duration(milliseconds: 300));
       await tester.tap(find.text(en.sortRelevance));
       await settle(tester);
       await tester.tap(find.text(en.sortPriceLow));
@@ -127,6 +134,7 @@ void main() {
     ) async {
       await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
 
+      await scrollToGrid(tester);
       await tester.tap(find.byIcon(Icons.favorite_border_rounded).first);
       await settle(tester);
       await tester.tap(find.text(en.navSaved));

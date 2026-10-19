@@ -18,11 +18,13 @@ import 'package:shopsphere/features/discover/presentation/widgets/recently_viewe
 import 'package:shopsphere/features/discover/presentation/widgets/search_box.dart';
 import 'package:shopsphere/features/products/domain/entities/product.dart';
 import 'package:shopsphere/features/products/domain/entities/product_query.dart';
+import 'package:shopsphere/features/products/domain/showcase.dart';
 import 'package:shopsphere/features/products/presentation/bloc/categories_cubit.dart';
 import 'package:shopsphere/features/products/presentation/bloc/product_list_cubit.dart';
 import 'package:shopsphere/features/products/presentation/bloc/selected_product_cubit.dart';
 import 'package:shopsphere/features/products/presentation/pages/product_details_page.dart';
 import 'package:shopsphere/features/products/presentation/widgets/category_chips.dart';
+import 'package:shopsphere/features/products/presentation/widgets/home_showcase.dart';
 import 'package:shopsphere/features/products/presentation/widgets/product_card.dart';
 import 'package:shopsphere/features/products/presentation/widgets/product_grid.dart';
 import 'package:shopsphere/features/products/presentation/widgets/sort_sheet.dart';
@@ -297,10 +299,10 @@ class _ShopList extends StatelessWidget {
           ),
           final ProductListLoaded loaded => SliverMainAxisGroup(
             slivers: [
-              if (!loaded.query.hasSearch && loaded.query.categorySlug == null)
-                SliverToBoxAdapter(child: RecentlyViewedStrip(onOpen: onOpen)),
+              if (_isHome(loaded)) ..._showcase(context, loaded),
               SliverToBoxAdapter(
                 child: _ResultsBar(
+                  title: _isHome(loaded) ? l10n.shelfAllTitle : null,
                   total: loaded.total,
                   sort: loaded.query.sort,
                   onSort: () => onPickSort(loaded.query.sort),
@@ -334,6 +336,50 @@ class _ShopList extends StatelessWidget {
         };
       },
     );
+  }
+
+  /// The offers and shelves that open the home page. They give way to plain results as soon as
+  /// the shopper searches or picks a category.
+  bool _isHome(ProductListLoaded loaded) =>
+      !loaded.query.hasSearch && loaded.query.categorySlug == null;
+
+  List<Widget> _showcase(BuildContext context, ProductListLoaded loaded) {
+    final l10n = context.l10n;
+    final deals = Showcase.deals(loaded.items);
+    final topRated = Showcase.topRated(loaded.items);
+    return [
+      SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.only(top: Gap.xs),
+          child: HomeHero(
+            deal: deals.isEmpty ? null : deals.first,
+            onOpen: onOpen,
+          ),
+        ),
+      ),
+      SliverToBoxAdapter(child: RecentlyViewedStrip(onOpen: onOpen)),
+      if (Showcase.worthShowing(deals))
+        SliverToBoxAdapter(
+          child: ProductShelf(
+            title: l10n.shelfDealsTitle,
+            note: l10n.shelfDealsNote,
+            products: deals,
+            onOpen: onOpen,
+            keyPrefix: 'deal',
+            showDiscount: true,
+          ),
+        ),
+      if (Showcase.worthShowing(topRated))
+        SliverToBoxAdapter(
+          child: ProductShelf(
+            title: l10n.shelfTopTitle,
+            note: l10n.shelfTopNote,
+            products: topRated,
+            onOpen: onOpen,
+            keyPrefix: 'top',
+          ),
+        ),
+    ];
   }
 }
 
@@ -480,6 +526,7 @@ class _FiltersHeader extends SliverPersistentHeaderDelegate {
 /// "194 products", the sort control, and the offline notice when it applies.
 class _ResultsBar extends StatelessWidget {
   const _ResultsBar({
+    required this.title,
     required this.total,
     required this.sort,
     required this.onSort,
@@ -487,6 +534,8 @@ class _ResultsBar extends StatelessWidget {
     required this.onRetry,
   });
 
+  /// A heading above the count, for the home page's main grid.
+  final String? title;
   final int total;
   final ProductSort sort;
   final VoidCallback onSort;
@@ -508,6 +557,14 @@ class _ResultsBar extends StatelessWidget {
                 message: l10n.shopOfflineBanner,
                 actionLabel: l10n.retry,
                 onAction: onRetry,
+              ),
+            ),
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.only(right: Gap.m, bottom: Gap.xs),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(title!, style: context.text.titleLarge),
               ),
             ),
           Row(

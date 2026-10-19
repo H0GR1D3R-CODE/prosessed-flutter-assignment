@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shopsphere/features/cart/presentation/widgets/cart_widgets.dart';
+import 'package:shopsphere/features/products/presentation/widgets/home_showcase.dart';
 import 'package:shopsphere/l10n/generated/app_localizations_hi.dart';
 
 import '../helpers/app_harness.dart';
 import '../helpers/pump_app.dart';
+import '../helpers/shop_finders.dart';
 
 const String _mascara = 'Essence Mascara Lash Princess';
 
@@ -276,7 +278,7 @@ void main() {
       await settle(tester, const Duration(seconds: 1));
 
       expect(find.text(en.productAbout), findsOneWidget);
-      expect(find.text('Eyeshadow Palette with Mirror'), findsOneWidget);
+      expect(find.byType(HomeHero), findsOneWidget, reason: 'the list stays');
     });
 
     testWidgets(
@@ -382,7 +384,7 @@ void main() {
       );
 
       expect(tester.takeException(), isNull);
-      expect(find.text(_mascara), findsOneWidget);
+      expect(find.byType(HomeHero), findsOneWidget);
     });
 
     testWidgets('a full cart and the checkout fit a small phone at 1.3x text', (
@@ -396,10 +398,9 @@ void main() {
         textScale: 1.3,
       );
 
-      // At this size the first card starts below the fold.
-      await tester.ensureVisible(find.text(_mascara));
-      await tester.pump(const Duration(milliseconds: 300));
-      await tester.tap(find.text(_mascara));
+      // At this size the first card starts well below the fold.
+      await scrollToGrid(tester);
+      await tester.tap(inGrid(_mascara));
       await settle(tester, const Duration(seconds: 1));
       await tester.tap(find.textContaining(en.addToCart));
       await settle(tester, const Duration(seconds: 5));
@@ -440,7 +441,8 @@ void main() {
         expect(tester.takeException(), isNull, reason: 'overflow on $tab');
       }
 
-      await tester.tap(find.text(_mascara));
+      await scrollToGrid(tester);
+      await tester.tap(inGrid(_mascara));
       await settle(tester, const Duration(seconds: 1));
       expect(tester.takeException(), isNull, reason: 'overflow on details');
     });

@@ -1315,6 +1315,240 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Always Hindi.'**
   String get languageHintHindi;
+
+  /// No description provided for @homeDealTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Deal of the day'**
+  String get homeDealTag;
+
+  /// No description provided for @homeDealCta.
+  ///
+  /// In en, this message translates to:
+  /// **'Shop now'**
+  String get homeDealCta;
+
+  /// No description provided for @homeCouponTag.
+  ///
+  /// In en, this message translates to:
+  /// **'For you'**
+  String get homeCouponTag;
+
+  /// No description provided for @homeCouponTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'10% off your first order'**
+  String get homeCouponTitle;
+
+  /// No description provided for @homeCouponBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Use code {code} at checkout.'**
+  String homeCouponBody(String code);
+
+  /// No description provided for @homeCouponCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get homeCouponCopy;
+
+  /// No description provided for @homeCouponCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Code {code} copied'**
+  String homeCouponCopied(String code);
+
+  /// No description provided for @homeGiveTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Feel good'**
+  String get homeGiveTag;
+
+  /// No description provided for @homeGiveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Round up for good'**
+  String get homeGiveTitle;
+
+  /// No description provided for @homeGiveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Donate the change from your order when you check out.'**
+  String get homeGiveBody;
+
+  /// No description provided for @homeSlideLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer {page} of {count}'**
+  String homeSlideLabel(int page, int count);
+
+  /// No description provided for @shelfDealsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Deals worth grabbing'**
+  String get shelfDealsTitle;
+
+  /// No description provided for @shelfDealsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Biggest discounts first'**
+  String get shelfDealsNote;
+
+  /// No description provided for @shelfTopTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Loved by shoppers'**
+  String get shelfTopTitle;
+
+  /// No description provided for @shelfTopNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Rated 4.0 and above'**
+  String get shelfTopNote;
+
+  /// No description provided for @shelfAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything in orbit'**
+  String get shelfAllTitle;
+
+  /// No description provided for @couponTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Promo code'**
+  String get couponTitle;
+
+  /// No description provided for @couponHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a code'**
+  String get couponHint;
+
+  /// No description provided for @couponApply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get couponApply;
+
+  /// No description provided for @couponApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} applied'**
+  String couponApplied(String code);
+
+  /// No description provided for @couponRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove code'**
+  String get couponRemove;
+
+  /// No description provided for @couponUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'That code isn\'t valid. Try one below.'**
+  String get couponUnknown;
+
+  /// No description provided for @couponTooSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} needs {amount} more in your cart.'**
+  String couponTooSmall(String code, String amount);
+
+  /// No description provided for @couponAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Codes you can use'**
+  String get couponAvailable;
+
+  /// No description provided for @couponWelcomeNote.
+  ///
+  /// In en, this message translates to:
+  /// **'10% off everything'**
+  String get couponWelcomeNote;
+
+  /// No description provided for @couponSave5Note.
+  ///
+  /// In en, this message translates to:
+  /// **'\$5 off orders over \$25'**
+  String get couponSave5Note;
+
+  /// No description provided for @couponOrbit20Note.
+  ///
+  /// In en, this message translates to:
+  /// **'20% off orders over \$100, up to \$40'**
+  String get couponOrbit20Note;
+
+  /// No description provided for @couponLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Code {code}'**
+  String couponLine(String code);
+
+  /// No description provided for @giveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Give a little'**
+  String get giveTitle;
+
+  /// No description provided for @giveBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a donation to the Orbit Trees fund. This is a demo: nothing is really charged or donated.'**
+  String get giveBody;
+
+  /// No description provided for @giveNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get giveNone;
+
+  /// No description provided for @giveRoundUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Round up +{amount}'**
+  String giveRoundUp(String amount);
+
+  /// No description provided for @giveLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Donation'**
+  String get giveLine;
+
+  /// No description provided for @giveThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for giving {amount}.'**
+  String giveThanks(String amount);
+
+  /// No description provided for @loginRemember.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep me signed in'**
+  String get loginRemember;
+
+  /// No description provided for @loginRememberNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay signed in on this device. Untick it on a shared one.'**
+  String get loginRememberNote;
+
+  /// No description provided for @loginSecureNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your sign-in is kept in your device\'s secure storage.'**
+  String get loginSecureNote;
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything, in orbit.'**
+  String get splashTagline;
+
+  /// No description provided for @splashStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Warming up the shop'**
+  String get splashStatus;
 }
 
 class _AppLocalizationsDelegate

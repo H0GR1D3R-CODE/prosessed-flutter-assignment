@@ -737,4 +737,141 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageHintHindi => 'Always Hindi.';
+
+  @override
+  String get homeDealTag => 'Deal of the day';
+
+  @override
+  String get homeDealCta => 'Shop now';
+
+  @override
+  String get homeCouponTag => 'For you';
+
+  @override
+  String get homeCouponTitle => '10% off your first order';
+
+  @override
+  String homeCouponBody(String code) {
+    return 'Use code $code at checkout.';
+  }
+
+  @override
+  String get homeCouponCopy => 'Copy code';
+
+  @override
+  String homeCouponCopied(String code) {
+    return 'Code $code copied';
+  }
+
+  @override
+  String get homeGiveTag => 'Feel good';
+
+  @override
+  String get homeGiveTitle => 'Round up for good';
+
+  @override
+  String get homeGiveBody =>
+      'Donate the change from your order when you check out.';
+
+  @override
+  String homeSlideLabel(int page, int count) {
+    return 'Offer $page of $count';
+  }
+
+  @override
+  String get shelfDealsTitle => 'Deals worth grabbing';
+
+  @override
+  String get shelfDealsNote => 'Biggest discounts first';
+
+  @override
+  String get shelfTopTitle => 'Loved by shoppers';
+
+  @override
+  String get shelfTopNote => 'Rated 4.0 and above';
+
+  @override
+  String get shelfAllTitle => 'Everything in orbit';
+
+  @override
+  String get couponTitle => 'Promo code';
+
+  @override
+  String get couponHint => 'Enter a code';
+
+  @override
+  String get couponApply => 'Apply';
+
+  @override
+  String couponApplied(String code) {
+    return '$code applied';
+  }
+
+  @override
+  String get couponRemove => 'Remove code';
+
+  @override
+  String get couponUnknown => 'That code isn\'t valid. Try one below.';
+
+  @override
+  String couponTooSmall(String code, String amount) {
+    return '$code needs $amount more in your cart.';
+  }
+
+  @override
+  String get couponAvailable => 'Codes you can use';
+
+  @override
+  String get couponWelcomeNote => '10% off everything';
+
+  @override
+  String get couponSave5Note => '\$5 off orders over \$25';
+
+  @override
+  String get couponOrbit20Note => '20% off orders over \$100, up to \$40';
+
+  @override
+  String couponLine(String code) {
+    return 'Code $code';
+  }
+
+  @override
+  String get giveTitle => 'Give a little';
+
+  @override
+  String get giveBody =>
+      'Add a donation to the Orbit Trees fund. This is a demo: nothing is really charged or donated.';
+
+  @override
+  String get giveNone => 'Not now';
+
+  @override
+  String giveRoundUp(String amount) {
+    return 'Round up +$amount';
+  }
+
+  @override
+  String get giveLine => 'Donation';
+
+  @override
+  String giveThanks(String amount) {
+    return 'Thank you for giving $amount.';
+  }
+
+  @override
+  String get loginRemember => 'Keep me signed in';
+
+  @override
+  String get loginRememberNote =>
+      'Stay signed in on this device. Untick it on a shared one.';
+
+  @override
+  String get loginSecureNote =>
+      'Your sign-in is kept in your device\'s secure storage.';
+
+  @override
+  String get splashTagline => 'Everything, in orbit.';
+
+  @override
+  String get splashStatus => 'Warming up the shop';
 }
