@@ -492,7 +492,7 @@
   "couponAvailable": "Codes you can use",
   "couponWelcomeNote": "10% off everything",
   "couponSave5Note": "$5 off orders over $25",
-  "couponOrbit20Note": "20% off orders over $100, up to $40",
+  "couponOrbit20Note": "20% off orders over $100 (max $40)",
   "couponLine": "Code {code}",
   "@couponLine": {
     "placeholders": {
@@ -525,5 +525,16 @@
   "loginRememberNote": "Stay signed in on this device. Untick it on a shared one.",
   "loginSecureNote": "Your sign-in is kept in your device's secure storage.",
   "splashTagline": "Everything, in orbit.",
-  "splashStatus": "Warming up the shop"
+  "splashStatus": "Warming up the shop",
+  "cartSavings": "You're saving {amount} on this order.",
+  "@cartSavings": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "cartPromoTitle": "Have a promo code?",
+  "cartPromoBody": "Add it at checkout. Try WELCOME10 for 10% off.",
+  "couponTap": "Apply"
 }

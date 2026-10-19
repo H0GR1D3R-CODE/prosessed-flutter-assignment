@@ -828,7 +828,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get couponSave5Note => '\$5 off orders over \$25';
 
   @override
-  String get couponOrbit20Note => '20% off orders over \$100, up to \$40';
+  String get couponOrbit20Note => '20% off orders over \$100 (max \$40)';
 
   @override
   String couponLine(String code) {
@@ -874,4 +874,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get splashStatus => 'Warming up the shop';
+
+  @override
+  String cartSavings(String amount) {
+    return 'You\'re saving $amount on this order.';
+  }
+
+  @override
+  String get cartPromoTitle => 'Have a promo code?';
+
+  @override
+  String get cartPromoBody => 'Add it at checkout. Try WELCOME10 for 10% off.';
+
+  @override
+  String get couponTap => 'Apply';
 }

@@ -1475,7 +1475,7 @@ abstract class AppLocalizations {
   /// No description provided for @couponOrbit20Note.
   ///
   /// In en, this message translates to:
-  /// **'20% off orders over \$100, up to \$40'**
+  /// **'20% off orders over \$100 (max \$40)'**
   String get couponOrbit20Note;
 
   /// No description provided for @couponLine.
@@ -1549,6 +1549,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Warming up the shop'**
   String get splashStatus;
+
+  /// No description provided for @cartSavings.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re saving {amount} on this order.'**
+  String cartSavings(String amount);
+
+  /// No description provided for @cartPromoTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Have a promo code?'**
+  String get cartPromoTitle;
+
+  /// No description provided for @cartPromoBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add it at checkout. Try WELCOME10 for 10% off.'**
+  String get cartPromoBody;
+
+  /// No description provided for @couponTap.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get couponTap;
 }
 
 class _AppLocalizationsDelegate

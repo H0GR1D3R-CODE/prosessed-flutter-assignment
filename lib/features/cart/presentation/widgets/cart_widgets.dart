@@ -160,6 +160,99 @@ class CartItemTile extends StatelessWidget {
   }
 }
 
+/// A bright note under the cart lines: what the discounts are saving the shopper.
+class CartSavingsCard extends StatelessWidget {
+  const CartSavingsCard({required this.amount, super.key});
+
+  final double amount;
+
+  @override
+  Widget build(BuildContext context) {
+    final shop = context.shop;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: shop.volt.withValues(alpha: shop.isDark ? 0.16 : 0.5),
+        borderRadius: Radii.brL,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Gap.l, vertical: Gap.m),
+        child: Row(
+          children: [
+            Icon(Icons.savings_rounded, color: shop.success),
+            Gap.wm,
+            Expanded(
+              child: Text(
+                context.l10n.cartSavings(Formatters.money(amount)),
+                style: context.text.titleSmall,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A nudge towards the promo code box at checkout.
+class CartPromoCard extends StatelessWidget {
+  const CartPromoCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.colors;
+    return Semantics(
+      button: true,
+      label: '${l10n.cartPromoTitle} ${l10n.cartPromoBody}',
+      excludeSemantics: true,
+      child: Material(
+        color: colors.surfaceContainerLowest,
+        borderRadius: Radii.brL,
+        child: InkWell(
+          borderRadius: Radii.brL,
+          onTap: () => context.push(Routes.checkout),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 64),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: Gap.l,
+                vertical: Gap.m,
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.local_offer_outlined, color: colors.onSurface),
+                  Gap.wm,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.cartPromoTitle,
+                          style: context.text.titleSmall,
+                        ),
+                        Text(
+                          l10n.cartPromoBody,
+                          style: context.text.bodyMedium?.copyWith(
+                            color: colors.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: colors.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Subtotal, discount and total, as the cart and checkout both show them. At checkout and in
 /// order history it also lists the promo code and the donation, when there are any.
 class OrderTotals extends StatelessWidget {

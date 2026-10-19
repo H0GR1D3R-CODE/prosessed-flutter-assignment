@@ -56,9 +56,25 @@ class _CartPageState extends State<CartPage> {
           final wide = MediaQuery.sizeOf(context).width >= 840;
           final list = ListView.separated(
             padding: const EdgeInsets.fromLTRB(Gap.l, 0, Gap.l, Gap.xl),
-            itemCount: state.cart.items.length,
+            itemCount: state.cart.items.length + 1,
             separatorBuilder: (_, _) => Gap.hm,
             itemBuilder: (context, index) {
+              if (index == state.cart.items.length) {
+                // Under the lines: what is being saved, and where a promo code goes.
+                return Reveal(
+                  key: const ValueKey('cart-extras'),
+                  index: index,
+                  child: Column(
+                    children: [
+                      if (state.summary.discount > 0) ...[
+                        CartSavingsCard(amount: state.summary.discount),
+                        Gap.hm,
+                      ],
+                      const CartPromoCard(),
+                    ],
+                  ),
+                );
+              }
               final item = state.cart.items[index];
               return Reveal(
                 key: ValueKey('reveal-${item.productId}'),

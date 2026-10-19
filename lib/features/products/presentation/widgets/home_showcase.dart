@@ -601,27 +601,21 @@ class ProductShelf extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Gap.l),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.baseline,
-              textBaseline: TextBaseline.alphabetic,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Flexible(
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.text.titleLarge,
-                  ),
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.text.titleLarge,
                 ),
-                Gap.wm,
-                Flexible(
-                  child: Text(
-                    note,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.text.labelMedium?.copyWith(
-                      color: context.colors.onSurfaceVariant,
-                    ),
+                Text(
+                  note,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.text.labelMedium?.copyWith(
+                    color: context.colors.onSurfaceVariant,
                   ),
                 ),
               ],

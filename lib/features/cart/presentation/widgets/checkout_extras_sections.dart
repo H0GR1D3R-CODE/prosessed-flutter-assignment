@@ -186,23 +186,91 @@ class _CodeEntry extends StatelessWidget {
           ),
         ),
         const SizedBox(height: Gap.xs),
-        Wrap(
-          spacing: Gap.s,
-          runSpacing: Gap.xs,
-          children: [
-            for (final coupon in Coupons.all)
-              ActionChip(
-                key: ValueKey('coupon-${coupon.code}'),
-                avatar: const Icon(Icons.bolt_rounded, size: 18),
-                label: Text('${coupon.code} · ${couponNote(l10n, coupon)}'),
-                onPressed: () {
-                  controller.text = coupon.code;
-                  onApply(coupon.code);
-                },
-              ),
-          ],
-        ),
+        for (final coupon in Coupons.all)
+          _CodeRow(
+            key: ValueKey('coupon-${coupon.code}'),
+            coupon: coupon,
+            onTap: () {
+              controller.text = coupon.code;
+              onApply(coupon.code);
+            },
+          ),
       ],
+    );
+  }
+}
+
+/// One code the shopper can use, with what it does, as a tappable row.
+class _CodeRow extends StatelessWidget {
+  const _CodeRow({required this.coupon, required this.onTap, super.key});
+
+  final Coupon coupon;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final colors = context.colors;
+    return Semantics(
+      button: true,
+      label: '${coupon.code}, ${couponNote(l10n, coupon)}',
+      excludeSemantics: true,
+      child: InkWell(
+        borderRadius: Radii.brM,
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 56),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: Gap.xs),
+            child: Row(
+              children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: context.shop.volt,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.bolt_rounded,
+                      size: 18,
+                      color: context.shop.onVolt,
+                    ),
+                  ),
+                ),
+                Gap.wm,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        coupon.code,
+                        style: context.text.titleSmall?.copyWith(
+                          letterSpacing: 0.6,
+                        ),
+                      ),
+                      Text(
+                        couponNote(l10n, coupon),
+                        style: context.text.bodyMedium?.copyWith(
+                          color: colors.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Gap.wm,
+                Text(
+                  l10n.couponTap,
+                  style: context.text.labelLarge?.copyWith(
+                    color: colors.onSurface,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

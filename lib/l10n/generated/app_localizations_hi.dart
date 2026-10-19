@@ -827,7 +827,7 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get couponOrbit20Note =>
-      '\$100 से ऊपर के ऑर्डर पर 20% छूट, अधिकतम \$40';
+      '\$100 से ऊपर के ऑर्डर पर 20% छूट (अधिकतम \$40)';
 
   @override
   String couponLine(String code) {
@@ -873,4 +873,19 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get splashStatus => 'दुकान तैयार हो रही है';
+
+  @override
+  String cartSavings(String amount) {
+    return 'इस ऑर्डर पर आप $amount बचा रहे हैं।';
+  }
+
+  @override
+  String get cartPromoTitle => 'प्रोमो कोड है?';
+
+  @override
+  String get cartPromoBody =>
+      'चेकआउट पर जोड़ें। 10% छूट के लिए WELCOME10 आज़माएं।';
+
+  @override
+  String get couponTap => 'लागू करें';
 }
