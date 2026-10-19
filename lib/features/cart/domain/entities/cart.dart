@@ -181,6 +181,26 @@ class Cart extends Equatable {
           ]);
   }
 
+  /// Adds every line of an earlier order, merging with lines already here and never going past
+  /// what may be ordered. Lines keep the price they were bought at, like any other line.
+  Cart addLines(List<CartItem> lines) {
+    var cart = this;
+    for (final line in lines) {
+      final existing = cart.find(line.productId);
+      final wanted = (existing?.quantity ?? 0) + line.quantity;
+      final merged = (existing ?? line).withQuantity(
+        math.min(wanted, line.maxQuantity),
+      );
+      cart = existing == null
+          ? Cart([...cart.items, merged])
+          : Cart([
+              for (final item in cart.items)
+                item.productId == line.productId ? merged : item,
+            ]);
+    }
+    return cart;
+  }
+
   /// Sets a line's quantity, kept between 1 and the most that may be ordered.
   Cart setQuantity(int productId, int quantity) {
     final existing = find(productId);

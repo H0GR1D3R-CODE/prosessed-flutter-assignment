@@ -218,11 +218,13 @@ void _registerCart() {
     ..registerFactory(() => RestoreCartItemUseCase(sl<CartRepository>()))
     ..registerFactory(() => ClearCartUseCase(sl<CartRepository>()))
     ..registerFactory(() => PlaceOrderUseCase(sl<CartRepository>()))
+    ..registerFactory(() => AddLinesToCartUseCase(sl<CartRepository>()))
     ..registerFactory(CalculateCartTotalsUseCase.new)
     ..registerLazySingleton<CartCubit>(
       () => CartCubit(
         load: sl<LoadCartUseCase>(),
         add: sl<AddToCartUseCase>(),
+        addLines: sl<AddLinesToCartUseCase>(),
         updateQuantity: sl<UpdateCartQuantityUseCase>(),
         remove: sl<RemoveFromCartUseCase>(),
         restore: sl<RestoreCartItemUseCase>(),

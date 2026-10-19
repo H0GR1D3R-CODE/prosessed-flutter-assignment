@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shopsphere/core/di/injection.dart';
 import 'package:shopsphere/features/products/presentation/pages/product_details_page.dart';
 import 'package:shopsphere/features/products/presentation/widgets/home_showcase.dart';
+import 'package:shopsphere/features/products/presentation/widgets/product_card.dart';
 
 import '../helpers/app_harness.dart';
 import '../helpers/pump_app.dart';
@@ -243,6 +244,73 @@ void main() {
       await tester.tap(find.text(en.cartPromoTitle));
       await settle(tester);
       expect(find.text(en.couponTitle), findsOneWidget);
+    });
+  });
+
+  group('quick add and buy again', () {
+    testWidgets('the + on a product card adds it without opening it', (
+      tester,
+    ) async {
+      await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
+      await scrollToGrid(tester);
+
+      final card = find.ancestor(
+        of: inGrid(_mascara),
+        matching: find.byType(ProductCard),
+      );
+      await tester.tap(
+        find.descendant(of: card, matching: find.byType(QuickAddButton)),
+      );
+      await settle(tester, const Duration(milliseconds: 600));
+
+      expect(find.text(en.addedToCart(1, _mascara)), findsOneWidget);
+      expect(
+        find.byType(ProductDetailsPage),
+        findsNothing,
+        reason: 'stayed put',
+      );
+
+      await tester.tap(find.text(en.viewCart));
+      await settle(tester);
+      expect(find.text(en.cartTitle), findsOneWidget);
+      expect(find.text(_mascara), findsOneWidget);
+    });
+
+    testWidgets('every product in stock has a + on its card', (tester) async {
+      final api = FakeShopApi();
+      await pumpShopApp(tester, api, secure: signedInStorage);
+      await scrollToGrid(tester);
+
+      final cards = find.byType(ProductCard);
+      final quick = find.descendant(
+        of: cards,
+        matching: find.byType(QuickAddButton),
+      );
+      // Every card in the fixture is in stock, so each one has it.
+      expect(quick.evaluate().length, cards.evaluate().length);
+    });
+
+    testWidgets('an earlier order can be put back in the cart', (tester) async {
+      await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
+      await _toCheckout(tester);
+      await tester.tap(find.textContaining(en.checkoutPlaceOrder).last);
+      await settle(tester, const Duration(seconds: 2));
+      expect(find.text(en.orderPlacedTitle), findsOneWidget);
+
+      // The cart was emptied by the order; "Buy again" fills it.
+      await tester.tap(find.text(en.orderViewOrders));
+      await settle(tester);
+      await tester.tap(find.text(en.orderNumber(209)));
+      await settle(tester);
+      await _show(tester, find.text(en.orderBuyAgain));
+      await tester.tap(find.text(en.orderBuyAgain));
+      await settle(tester, const Duration(milliseconds: 600));
+
+      expect(find.text(en.reorderAdded(1)), findsOneWidget);
+      await tester.tap(find.text(en.viewCart));
+      await settle(tester);
+      expect(find.text(en.cartTitle), findsOneWidget);
+      expect(find.text(_mascara), findsOneWidget);
     });
   });
 

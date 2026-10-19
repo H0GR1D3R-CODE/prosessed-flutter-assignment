@@ -44,6 +44,14 @@ final class CartLimitReached extends CartEvent {
   final int limit;
 }
 
+/// The lines of an earlier order were put back. [added] is how many units that added, which is
+/// nothing when the cart already held all of them.
+final class CartReordered extends CartEvent {
+  const CartReordered(super.serial, {required this.added});
+
+  final int added;
+}
+
 /// A line was removed. Carries what is needed to put it back.
 final class CartItemRemoved extends CartEvent {
   const CartItemRemoved(
@@ -94,6 +102,7 @@ class CartCubit extends Cubit<CartState> {
   CartCubit({
     required this._load,
     required this._add,
+    required this._addLines,
     required this._updateQuantity,
     required this._remove,
     required this._restore,
@@ -102,6 +111,7 @@ class CartCubit extends Cubit<CartState> {
 
   final LoadCartUseCase _load;
   final AddToCartUseCase _add;
+  final AddLinesToCartUseCase _addLines;
   final UpdateCartQuantityUseCase _updateQuantity;
   final RemoveFromCartUseCase _remove;
   final RestoreCartItemUseCase _restore;
@@ -164,6 +174,31 @@ class CartCubit extends Cubit<CartState> {
           event: added <= 0
               ? CartLimitReached(++_serial, title: product.title, limit: before)
               : CartItemAdded(++_serial, title: product.title, quantity: added),
+        ),
+      );
+      _reportSaveFailure(change);
+    });
+  }
+
+  /// "Buy again": puts the lines of an earlier order back in the cart.
+  Future<void> reorder(List<CartItem> lines) {
+    return _enqueue(() async {
+      final userId = _userId;
+      if (userId == null || lines.isEmpty) return;
+      final before = state.cart.itemCount;
+      final change = await _addLines(
+        userId: userId,
+        cart: state.cart,
+        lines: lines,
+      );
+      emit(
+        state.copyWith(
+          cart: change.cart,
+          status: CartStatus.ready,
+          event: CartReordered(
+            ++_serial,
+            added: change.cart.itemCount - before,
+          ),
         ),
       );
       _reportSaveFailure(change);

@@ -8,7 +8,9 @@ import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/utils/formatters.dart';
 import 'package:shopsphere/core/widgets/badges.dart';
 import 'package:shopsphere/core/widgets/buttons.dart';
+import 'package:shopsphere/core/widgets/fly_to_cart.dart';
 import 'package:shopsphere/core/widgets/orb.dart';
+import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/features/products/domain/entities/product.dart';
 import 'package:shopsphere/features/wishlist/presentation/bloc/wishlist_cubit.dart';
 import 'package:shopsphere/l10n/l10n.dart';
@@ -87,6 +89,12 @@ class ProductCard extends StatelessWidget {
                       top: -Gap.xs,
                       child: WishlistHeart(product: product),
                     ),
+                    if (product.isAvailable)
+                      Positioned(
+                        right: -Gap.xs,
+                        bottom: -Gap.xs,
+                        child: QuickAddButton(product: product),
+                      ),
                     if (!product.isAvailable)
                       Positioned.fill(
                         child: _SoldOutVeil(label: context.l10n.outOfStock),
@@ -153,6 +161,64 @@ class ProductCard extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A round "+" on a product photo: puts one in the cart without opening the product. The photo
+/// flies to the cart tab, and the usual "Added" message follows.
+class QuickAddButton extends StatefulWidget {
+  const QuickAddButton({required this.product, super.key});
+
+  final Product product;
+
+  @override
+  State<QuickAddButton> createState() => _QuickAddButtonState();
+}
+
+class _QuickAddButtonState extends State<QuickAddButton> {
+  final GlobalKey _disc = GlobalKey(debugLabel: 'quick-add');
+
+  void _add() {
+    HapticFeedback.selectionClick();
+    context.read<CartCubit>().add(widget.product);
+    FlyToCart.play(context, from: _disc);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final shop = context.shop;
+    return Semantics(
+      button: true,
+      label: context.l10n.quickAdd(widget.product.title),
+      excludeSemantics: true,
+      child: InkResponse(
+        radius: 26,
+        onTap: _add,
+        child: SizedBox.square(
+          dimension: 48,
+          child: Center(
+            child: DecoratedBox(
+              key: _disc,
+              decoration: BoxDecoration(
+                color: shop.volt,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.18),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(7),
+                child: Icon(Icons.add_rounded, size: 22, color: shop.onVolt),
+              ),
             ),
           ),
         ),

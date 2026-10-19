@@ -888,4 +888,27 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get couponTap => 'Apply';
+
+  @override
+  String quickAdd(String title) {
+    return 'Add $title to cart';
+  }
+
+  @override
+  String get orderBuyAgain => 'Buy again';
+
+  @override
+  String reorderAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Added $count items to your cart',
+      one: 'Added 1 item to your cart',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reorderNothing =>
+      'Everything from this order is already in your cart.';
 }

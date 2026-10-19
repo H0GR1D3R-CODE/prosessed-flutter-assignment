@@ -15,6 +15,7 @@ import 'package:shopsphere/core/widgets/orb.dart';
 import 'package:shopsphere/core/widgets/reveal.dart';
 import 'package:shopsphere/features/cart/domain/entities/checkout_extras.dart';
 import 'package:shopsphere/features/products/domain/entities/product.dart';
+import 'package:shopsphere/features/products/presentation/widgets/product_card.dart';
 import 'package:shopsphere/l10n/l10n.dart';
 
 /// The top of the home page: a few offers that slide by on their own, and can be swiped.
@@ -690,6 +691,12 @@ class _ShelfTile extends StatelessWidget {
                         ? DiscountPill(percent: product.discountPercentage)
                         : _RatingChip(rating: product.rating),
                   ),
+                  if (product.isAvailable)
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: QuickAddButton(product: product),
+                    ),
                 ],
               ),
               const SizedBox(height: Gap.s),

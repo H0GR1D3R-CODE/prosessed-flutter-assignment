@@ -48,6 +48,21 @@ class AddToCartUseCase {
   }
 }
 
+/// Puts the lines of an earlier order back in the cart ("Buy again").
+class AddLinesToCartUseCase {
+  const AddLinesToCartUseCase(this._repository);
+
+  final CartRepository _repository;
+
+  Future<CartChange> call({
+    required int userId,
+    required Cart cart,
+    required List<CartItem> lines,
+  }) {
+    return _persist(_repository, userId, cart.addLines(lines));
+  }
+}
+
 class UpdateCartQuantityUseCase {
   const UpdateCartQuantityUseCase(this._repository);
 

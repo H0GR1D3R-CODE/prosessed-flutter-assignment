@@ -888,4 +888,26 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get couponTap => 'लागू करें';
+
+  @override
+  String quickAdd(String title) {
+    return '$title कार्ट में जोड़ें';
+  }
+
+  @override
+  String get orderBuyAgain => 'दोबारा खरीदें';
+
+  @override
+  String reorderAdded(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'कार्ट में $count आइटम जोड़े गए',
+      one: 'कार्ट में 1 आइटम जोड़ा गया',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reorderNothing => 'इस ऑर्डर का सब कुछ पहले से आपके कार्ट में है।';
 }

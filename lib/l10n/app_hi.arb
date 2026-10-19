@@ -245,5 +245,9 @@
   "cartSavings": "इस ऑर्डर पर आप {amount} बचा रहे हैं।",
   "cartPromoTitle": "प्रोमो कोड है?",
   "cartPromoBody": "चेकआउट पर जोड़ें। 10% छूट के लिए WELCOME10 आज़माएं।",
-  "couponTap": "लागू करें"
+  "couponTap": "लागू करें",
+  "quickAdd": "{title} कार्ट में जोड़ें",
+  "orderBuyAgain": "दोबारा खरीदें",
+  "reorderAdded": "{count, plural, =1{कार्ट में 1 आइटम जोड़ा गया} other{कार्ट में {count} आइटम जोड़े गए}}",
+  "reorderNothing": "इस ऑर्डर का सब कुछ पहले से आपके कार्ट में है।"
 }

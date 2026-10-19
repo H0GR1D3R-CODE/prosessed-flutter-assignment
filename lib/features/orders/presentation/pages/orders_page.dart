@@ -8,10 +8,12 @@ import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/orb_tints.dart';
 import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/utils/formatters.dart';
+import 'package:shopsphere/core/widgets/buttons.dart';
 import 'package:shopsphere/core/widgets/orb.dart';
 import 'package:shopsphere/core/widgets/reveal.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
 import 'package:shopsphere/features/cart/domain/entities/cart.dart';
+import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/features/cart/presentation/widgets/cart_widgets.dart';
 import 'package:shopsphere/features/orders/domain/orders.dart';
 import 'package:shopsphere/features/orders/presentation/bloc/orders_cubit.dart';
@@ -197,6 +199,15 @@ class _OrderCardState extends State<OrderCard> {
                                 couponCode: order.couponCode,
                                 couponDiscount: order.couponDiscount,
                                 donation: order.donation,
+                              ),
+                              Gap.hm,
+                              AppButton(
+                                kind: AppButtonKind.outline,
+                                icon: Icons.replay_rounded,
+                                label: l10n.orderBuyAgain,
+                                onPressed: () => context
+                                    .read<CartCubit>()
+                                    .reorder(order.items),
                               ),
                             ],
                           ),

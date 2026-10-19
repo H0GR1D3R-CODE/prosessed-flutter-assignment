@@ -128,6 +128,32 @@ void main() {
       },
     );
 
+    test(
+      'the lines of an earlier order are put back, merging with what is here',
+      () {
+        final cart = Cart([buildCartItem(productId: 1, quantity: 2)]);
+
+        final updated = cart.addLines([
+          buildCartItem(productId: 1, quantity: 1),
+          buildCartItem(productId: 2, quantity: 3),
+        ]);
+
+        expect(updated.find(1)?.quantity, 3, reason: 'merged into the line');
+        expect(updated.find(2)?.quantity, 3, reason: 'added as a new line');
+        expect(updated.items.map((i) => i.productId), [1, 2]);
+      },
+    );
+
+    test('putting lines back never goes past the stock', () {
+      final cart = Cart([buildCartItem(productId: 1, quantity: 4, stock: 5)]);
+
+      final updated = cart.addLines([
+        buildCartItem(productId: 1, quantity: 4, stock: 5),
+      ]);
+
+      expect(updated.find(1)?.quantity, 5);
+    });
+
     test('carts are immutable: changes return a new cart', () {
       const original = Cart();
       final changed = original.add(buildProduct());
@@ -159,6 +185,23 @@ void main() {
       expect(change.saveFailure, isNull);
       verify(() => repository.save(1, change.cart)).called(1);
     });
+
+    test(
+      'AddLinesToCartUseCase puts an order back and saves the cart',
+      () async {
+        when(() => repository.save(any(), any()))
+            .thenAnswer((_) async => const Result.success(null));
+
+        final change = await AddLinesToCartUseCase(repository)(
+          userId: 1,
+          cart: const Cart(),
+          lines: [buildCartItem(productId: 7, quantity: 2)],
+        );
+
+        expect(change.cart.find(7)?.quantity, 2);
+        verify(() => repository.save(1, change.cart)).called(1);
+      },
+    );
 
     test('a failed save still returns the updated cart, with the failure alongside', () async {
       when(() => repository.save(any(), any())).thenAnswer(

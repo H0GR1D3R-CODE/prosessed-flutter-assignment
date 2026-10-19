@@ -536,5 +536,23 @@
   },
   "cartPromoTitle": "Have a promo code?",
   "cartPromoBody": "Add it at checkout. Try WELCOME10 for 10% off.",
-  "couponTap": "Apply"
+  "couponTap": "Apply",
+  "quickAdd": "Add {title} to cart",
+  "@quickAdd": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "orderBuyAgain": "Buy again",
+  "reorderAdded": "{count, plural, =1{Added 1 item to your cart} other{Added {count} items to your cart}}",
+  "@reorderAdded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reorderNothing": "Everything from this order is already in your cart."
 }

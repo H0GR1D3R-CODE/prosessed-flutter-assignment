@@ -1573,6 +1573,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Apply'**
   String get couponTap;
+
+  /// No description provided for @quickAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {title} to cart'**
+  String quickAdd(String title);
+
+  /// No description provided for @orderBuyAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy again'**
+  String get orderBuyAgain;
+
+  /// No description provided for @reorderAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Added 1 item to your cart} other{Added {count} items to your cart}}'**
+  String reorderAdded(int count);
+
+  /// No description provided for @reorderNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything from this order is already in your cart.'**
+  String get reorderNothing;
 }
 
 class _AppLocalizationsDelegate

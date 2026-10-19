@@ -47,6 +47,7 @@ class _MemoryCartRepository extends Mock implements CartRepository {
 CartCubit _cubit(CartRepository repository) => CartCubit(
   load: LoadCartUseCase(repository),
   add: AddToCartUseCase(repository),
+  addLines: AddLinesToCartUseCase(repository),
   updateQuantity: UpdateCartQuantityUseCase(repository),
   remove: RemoveFromCartUseCase(repository),
   restore: RestoreCartItemUseCase(repository),
@@ -154,6 +155,40 @@ void main() {
       await cubit.undoRemove(removed);
       expect(cubit.state.cart.items.map((i) => i.productId), [1, 2, 3]);
       expect(repository.saved.items, hasLength(3));
+    });
+
+    test(
+      'reorder puts an earlier order back and says how much it added',
+      () async {
+        await cubit.load(1);
+        await cubit.add(buildProduct(id: 1, stock: 10));
+
+        await cubit.reorder([
+          buildCartItem(productId: 1, quantity: 2),
+          buildCartItem(productId: 2, quantity: 1),
+        ]);
+
+        expect(cubit.state.cart.find(1)?.quantity, 3);
+        expect(cubit.state.cart.find(2)?.quantity, 1);
+        expect(repository.saved.itemCount, 4, reason: 'persisted');
+        expect(
+          cubit.state.event,
+          isA<CartReordered>().having((e) => e.added, 'added', 3),
+        );
+      },
+    );
+
+    test('reorder says so when the cart already holds all of it', () async {
+      await cubit.load(1);
+      await cubit.add(buildProduct(id: 1, stock: 2), quantity: 2);
+
+      await cubit.reorder([buildCartItem(productId: 1, quantity: 2, stock: 2)]);
+
+      expect(cubit.state.cart.itemCount, 2);
+      expect(
+        cubit.state.event,
+        isA<CartReordered>().having((e) => e.added, 'added', 0),
+      );
     });
 
     test('clear empties the cart and the saved copy', () async {

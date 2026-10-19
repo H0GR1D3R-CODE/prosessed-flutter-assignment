@@ -40,6 +40,20 @@ class CartEventListener extends StatelessWidget {
                 ),
               ),
             );
+          case CartReordered(:final added):
+            messenger.showSnackBar(
+              SnackBar(
+                persist: false,
+                duration: const Duration(seconds: 3),
+                content: Text(
+                  added > 0 ? l10n.reorderAdded(added) : l10n.reorderNothing,
+                ),
+                action: SnackBarAction(
+                  label: l10n.viewCart,
+                  onPressed: () => router.go(Routes.cart),
+                ),
+              ),
+            );
           case CartLimitReached(:final title, :final limit):
             messenger.showSnackBar(
               SnackBar(content: Text(l10n.cartLimitReached(limit, title))),
