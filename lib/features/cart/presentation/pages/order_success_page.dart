@@ -158,6 +158,30 @@ class _OrderSuccessPageState extends State<OrderSuccessPage>
                                   color: context.colors.onSurfaceVariant,
                                 ),
                               ),
+                              if (receipt.couponCode != null &&
+                                  receipt.couponDiscount > 0) ...[
+                                const SizedBox(height: Gap.xs),
+                                Text(
+                                  '${l10n.couponLine(receipt.couponCode!)}: '
+                                  '−${Formatters.money(receipt.couponDiscount)}',
+                                  textAlign: TextAlign.center,
+                                  style: context.text.bodyMedium?.copyWith(
+                                    color: context.shop.success,
+                                  ),
+                                ),
+                              ],
+                              if (receipt.donation > 0) ...[
+                                const SizedBox(height: Gap.xs),
+                                Text(
+                                  l10n.giveThanks(
+                                    Formatters.money(receipt.donation),
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  style: context.text.bodyMedium?.copyWith(
+                                    color: context.shop.success,
+                                  ),
+                                ),
+                              ],
                               Gap.hl,
                               Text(
                                 l10n.orderPlacedDemoNote,

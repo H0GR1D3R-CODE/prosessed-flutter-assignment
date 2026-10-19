@@ -15,9 +15,12 @@ import 'package:shopsphere/core/widgets/orb.dart';
 import 'package:shopsphere/core/widgets/shimmer.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
+import 'package:shopsphere/features/cart/domain/entities/checkout_extras.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/checkout_cubit.dart';
+import 'package:shopsphere/features/cart/presentation/bloc/checkout_extras_cubit.dart';
 import 'package:shopsphere/features/cart/presentation/widgets/cart_widgets.dart';
+import 'package:shopsphere/features/cart/presentation/widgets/checkout_extras_sections.dart';
 import 'package:shopsphere/features/profile/presentation/bloc/profile_cubit.dart';
 import 'package:shopsphere/l10n/l10n.dart';
 
@@ -32,6 +35,8 @@ class CheckoutPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => sl<CheckoutCubit>()),
+        // The promo code and donation live only as long as this page.
+        BlocProvider(create: (_) => CheckoutExtrasCubit()),
         // The address comes from the profile, which may be fresher than what sign-in returned.
         BlocProvider(
           create: (_) => sl<ProfileCubit>(param1: knownUser)..load(),
@@ -89,13 +94,13 @@ class _CheckoutView extends StatelessWidget {
                     Gap.xxl,
                   ),
                   children: [
-                    _Section(
+                    CheckoutSection(
                       title: l10n.checkoutDeliverTo,
                       icon: Icons.place_outlined,
                       child: const _AddressBlock(),
                     ),
                     Gap.hm,
-                    _Section(
+                    CheckoutSection(
                       title: l10n.checkoutPayment,
                       icon: Icons.credit_card_off_outlined,
                       child: Text(
@@ -104,68 +109,49 @@ class _CheckoutView extends StatelessWidget {
                       ),
                     ),
                     Gap.hm,
-                    _Section(
+                    const PromoSection(),
+                    Gap.hm,
+                    const GivingSection(),
+                    Gap.hm,
+                    CheckoutSection(
                       title: l10n.checkoutSummary,
                       icon: Icons.receipt_long_outlined,
-                      child: Column(
-                        children: [
-                          for (final item in cart.cart.items)
-                            _SummaryLine(
-                              title: item.title,
-                              quantity: item.quantity,
-                              total: Formatters.money(item.total),
-                              imageUrl: item.thumbnail,
-                              category: item.category,
-                            ),
-                          Gap.hs,
-                          OrderTotals(summary: cart.summary),
-                        ],
-                      ),
+                      child:
+                          BlocBuilder<CheckoutExtrasCubit, CheckoutExtrasState>(
+                            builder: (context, extras) {
+                              final totals = CheckoutTotals.of(
+                                cart.summary,
+                                extras.extras,
+                              );
+                              return Column(
+                                children: [
+                                  for (final item in cart.cart.items)
+                                    _SummaryLine(
+                                      title: item.title,
+                                      quantity: item.quantity,
+                                      total: Formatters.money(item.total),
+                                      imageUrl: item.thumbnail,
+                                      category: item.category,
+                                    ),
+                                  Gap.hs,
+                                  OrderTotals(
+                                    summary: cart.summary,
+                                    couponCode: totals.hasCoupon
+                                        ? totals.coupon?.code
+                                        : null,
+                                    couponDiscount: totals.couponDiscount,
+                                    donation: totals.donation,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
                     ),
                   ],
                 ),
               ),
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class _Section extends StatelessWidget {
-  const _Section({
-    required this.title,
-    required this.icon,
-    required this.child,
-  });
-
-  final String title;
-  final IconData icon;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: context.colors.surfaceContainerLowest,
-        borderRadius: Radii.brXl,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(Gap.xl),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, size: 20, color: context.colors.onSurfaceVariant),
-                Gap.ws,
-                Text(title, style: context.text.titleMedium),
-              ],
-            ),
-            Gap.hm,
-            child,
-          ],
         ),
       ),
     );
@@ -249,7 +235,7 @@ class _SummaryLine extends StatelessWidget {
             child: ProductOrb(
               imageUrl: imageUrl,
               tint: OrbTints.forCategory(category),
-              imageScale: 0.98,
+              imageScale: 0.9,
             ),
           ),
           Gap.wm,
@@ -300,9 +286,13 @@ class _PlaceOrderBar extends StatelessWidget {
               constraints: const BoxConstraints(maxWidth: 640),
               child: BlocBuilder<CheckoutCubit, CheckoutState>(
                 builder: (context, state) {
-                  final total = context.select(
-                    (CartCubit cart) => cart.state.summary.total,
+                  final summary = context.select(
+                    (CartCubit cart) => cart.state.summary,
                   );
+                  final extras = context.select(
+                    (CheckoutExtrasCubit cubit) => cubit.state.extras,
+                  );
+                  final total = CheckoutTotals.of(summary, extras).total;
                   final failed = state is CheckoutFailed ? state : null;
                   return Column(
                     mainAxisSize: MainAxisSize.min,
@@ -327,7 +317,8 @@ class _PlaceOrderBar extends StatelessWidget {
                               )
                             : l10n.retry,
                         isLoading: state is CheckoutPlacing,
-                        onPressed: context.read<CheckoutCubit>().placeOrder,
+                        onPressed: () =>
+                            context.read<CheckoutCubit>().placeOrder(extras),
                       ),
                     ],
                   );

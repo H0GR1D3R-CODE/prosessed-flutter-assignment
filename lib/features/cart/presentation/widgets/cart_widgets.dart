@@ -13,6 +13,7 @@ import 'package:shopsphere/core/widgets/buttons.dart';
 import 'package:shopsphere/core/widgets/orb.dart';
 import 'package:shopsphere/core/widgets/quantity_stepper.dart';
 import 'package:shopsphere/features/cart/domain/entities/cart.dart';
+import 'package:shopsphere/features/cart/domain/entities/checkout_extras.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
 import 'package:shopsphere/l10n/l10n.dart';
 
@@ -69,7 +70,7 @@ class CartItemTile extends StatelessWidget {
                     child: ProductOrb(
                       imageUrl: item.thumbnail,
                       tint: OrbTints.forCategory(item.category),
-                      imageScale: 0.96,
+                      imageScale: 0.9,
                     ),
                   ),
                   Gap.wm,
@@ -159,16 +160,31 @@ class CartItemTile extends StatelessWidget {
   }
 }
 
-/// Subtotal, discount and total, as the cart and checkout both show them.
+/// Subtotal, discount and total, as the cart and checkout both show them. At checkout and in
+/// order history it also lists the promo code and the donation, when there are any.
 class OrderTotals extends StatelessWidget {
-  const OrderTotals({required this.summary, super.key});
+  const OrderTotals({
+    required this.summary,
+    this.couponCode,
+    this.couponDiscount = 0,
+    this.donation = 0,
+    super.key,
+  });
 
   final CartSummary summary;
+  final String? couponCode;
+  final double couponDiscount;
+  final double donation;
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final colors = context.colors;
+    final total = CheckoutTotals(
+      summary: summary,
+      couponDiscount: couponDiscount,
+      donation: donation,
+    ).total;
     return Column(
       children: [
         _TotalRow(label: l10n.cartSubtotal, amount: summary.subtotal),
@@ -181,6 +197,21 @@ class OrderTotals extends StatelessWidget {
             valueColor: context.shop.success,
           ),
         ],
+        if (couponDiscount > 0) ...[
+          Gap.hs,
+          _TotalRow(
+            label: couponCode == null
+                ? l10n.cartDiscount
+                : l10n.couponLine(couponCode!),
+            amount: couponDiscount,
+            prefix: '−',
+            valueColor: context.shop.success,
+          ),
+        ],
+        if (donation > 0) ...[
+          Gap.hs,
+          _TotalRow(label: l10n.giveLine, amount: donation, prefix: '+'),
+        ],
         Padding(
           padding: const EdgeInsets.symmetric(vertical: Gap.m),
           child: Divider(color: colors.outlineVariant),
@@ -192,7 +223,7 @@ class OrderTotals extends StatelessWidget {
               child: Text(l10n.cartTotal, style: context.text.titleLarge),
             ),
             AnimatedMoney(
-              value: summary.total,
+              value: total,
               style: AppTypography.price(
                 colors.onSurface,
                 size: 26,

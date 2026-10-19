@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:shopsphere/features/cart/domain/entities/cart.dart';
+import 'package:shopsphere/features/cart/domain/entities/checkout_extras.dart';
 
 /// An order the shopper placed: what was in the cart, at the prices it had, and when.
 ///
@@ -9,19 +10,41 @@ class PlacedOrder extends Equatable {
     required this.id,
     required this.placedAt,
     required this.items,
+    this.couponCode,
+    this.couponDiscount = 0,
+    this.donation = 0,
   });
 
   final int id;
   final DateTime placedAt;
   final List<CartItem> items;
 
-  /// Subtotal, discount and total worked out the same way the cart does.
+  /// The promo code used, what it took off, and what was donated at checkout.
+  final String? couponCode;
+  final double couponDiscount;
+  final double donation;
+
+  /// Subtotal, discount and total of the products, worked out the same way the cart does.
   CartSummary get summary => Cart(items).summary;
 
   int get itemCount => summary.itemCount;
 
+  /// What was paid: the products, less the code, plus the donation.
+  double get total => CheckoutTotals(
+    summary: summary,
+    couponDiscount: couponDiscount,
+    donation: donation,
+  ).total;
+
   @override
-  List<Object?> get props => [id, placedAt, items];
+  List<Object?> get props => [
+    id,
+    placedAt,
+    items,
+    couponCode,
+    couponDiscount,
+    donation,
+  ];
 }
 
 /// Placed orders on the device, newest first. Kept per signed-in user.

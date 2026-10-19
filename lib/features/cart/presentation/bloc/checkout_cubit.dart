@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopsphere/core/error/failures.dart';
+import 'package:shopsphere/features/cart/domain/entities/checkout_extras.dart';
 import 'package:shopsphere/features/cart/domain/entities/order_receipt.dart';
 import 'package:shopsphere/features/cart/domain/usecases/cart_usecases.dart';
 import 'package:shopsphere/features/cart/presentation/bloc/cart_cubit.dart';
@@ -53,12 +54,14 @@ class CheckoutCubit extends Cubit<CheckoutState> {
   final CartCubit _cartCubit;
   final OrdersCubit _ordersCubit;
 
-  Future<void> placeOrder() async {
+  /// Places the order. [extras] are the promo code and donation chosen on the checkout page.
+  Future<void> placeOrder([CheckoutExtras extras = CheckoutExtras.none]) async {
     if (state is CheckoutPlacing || state is CheckoutPlaced) return;
     final userId = _cartCubit.userId;
     final cart = _cartCubit.state.cart;
     if (userId == null || cart.isEmpty) return;
 
+    final totals = CheckoutTotals.of(cart.summary, extras);
     emit(const CheckoutPlacing());
     final result = await _placeOrder(userId: userId, cart: cart);
     await result.fold(
@@ -70,10 +73,13 @@ class CheckoutCubit extends Cubit<CheckoutState> {
             id: receipt.orderId,
             placedAt: receipt.placedAt,
             items: cart.items,
+            couponCode: totals.hasCoupon ? totals.coupon?.code : null,
+            couponDiscount: totals.couponDiscount,
+            donation: totals.donation,
           ),
         );
         await _cartCubit.clear();
-        emit(CheckoutPlaced(receipt));
+        emit(CheckoutPlaced(receipt.withTotals(totals)));
       },
     );
   }

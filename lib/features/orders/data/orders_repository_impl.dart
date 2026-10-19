@@ -49,6 +49,9 @@ class PrefsOrdersRepository implements OrdersRepository {
     'items': [
       for (final item in order.items) CartItemModel.fromEntity(item).toJson(),
     ],
+    if (order.couponCode != null) 'couponCode': order.couponCode,
+    if (order.couponDiscount > 0) 'couponDiscount': order.couponDiscount,
+    if (order.donation > 0) 'donation': order.donation,
   };
 
   static PlacedOrder _fromJson(Map<String, dynamic> json) => PlacedOrder(
@@ -59,5 +62,9 @@ class PrefsOrdersRepository implements OrdersRepository {
         CartItemModel.fromJson(asJsonMap(item, context: 'order line'))
             .toEntity(),
     ],
+    // Orders saved before codes and donations existed have neither.
+    couponCode: json.stringOrNull('couponCode'),
+    couponDiscount: json.decimalOr('couponDiscount', 0),
+    donation: json.decimalOr('donation', 0),
   );
 }

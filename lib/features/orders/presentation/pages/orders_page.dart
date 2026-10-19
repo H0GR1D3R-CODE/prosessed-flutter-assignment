@@ -158,7 +158,7 @@ class _OrderCardState extends State<OrderCard> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          Formatters.money(summary.total),
+                          Formatters.money(order.total),
                           style: context.text.titleMedium,
                         ),
                         Tooltip(
@@ -192,7 +192,12 @@ class _OrderCardState extends State<OrderCard> {
                               Gap.hm,
                               for (final item in order.items) _Line(item: item),
                               Gap.hs,
-                              OrderTotals(summary: summary),
+                              OrderTotals(
+                                summary: summary,
+                                couponCode: order.couponCode,
+                                couponDiscount: order.couponDiscount,
+                                donation: order.donation,
+                              ),
                             ],
                           ),
                         )
