@@ -10,7 +10,7 @@ Sign in, browse a live catalogue with search, categories and sorting, open a pro
 | Demo video (3 min 51 s: all features, 6 error scenarios, tablet and landscape) | `<ADD GOOGLE DRIVE LINK>` |
 | Submission folder (APK, video, 24 screenshots) | `<ADD GOOGLE DRIVE FOLDER LINK>` |
 
-> Built and checked with Flutter 3.47.7 / Dart 3.13.5. 262 tests pass, `flutter analyze` reports no issues, and line coverage over all of `lib/` is 94.0%.
+> Built and checked with Flutter 3.47.7 / Dart 3.13.5. 312 tests pass, `flutter analyze` reports no issues, and line coverage over all of `lib/` is 94.8%.
 
 ## 1. Screenshots
 
@@ -79,6 +79,12 @@ All 24 screenshots are in [`docs/screenshots`](docs/screenshots).
 
 - [x] Responsive on three tiers (see [Architecture](#5-architecture))
 - [x] An in-app **Error lab** (Profile → Developer tools) that triggers a server error, a 404, a slow response, a timeout, an expired token and a rejected refresh token, so every failure path can be shown on demand
+- [x] **A livelier home page**: an offers carousel that slides on its own (today's best deal, a promo code you can copy, a giving nudge), then "Deals worth grabbing" and "Loved by shoppers" shelves, then the full grid. The shelves are built from products already on screen, so they cost no extra requests, and they give way to plain results when you search or pick a category
+- [x] **Product photos on a studio backdrop**: a softly lit, barely tinted paper backdrop with a contact shadow, instead of a saturated shape behind each photo
+- [x] **Promo codes at checkout** (`WELCOME10`, `SAVE5`, `ORBIT20`), with minimum spends and a cap, suggestions you can tap, and clear messages for a wrong code or one the order is too small for
+- [x] **A donation at checkout**: round up to the next dollar, or add $1, $2 or $5. Demo only: nothing is really charged or donated
+- [x] **Keep me signed in** on the sign-in form, with the last username filled in. Unticking it ends the session when the app is closed, which is what you want on a shared device
+- [x] A splash with a progress bar and tagline, skeletons shaped like the page that replaces them, and the cart showing what you are saving
 - [x] **Order history** (Profile → Your orders): every placed order with its items, total and date, kept across restarts
 - [x] **Smart search**: recent searches and matching categories as you type, a "Search for …" row so Enter always searches what you typed, and a **/** shortcut on web and desktop that jumps to the box
 - [x] **Recently viewed** shelf on the shop page, clearable
@@ -130,7 +136,7 @@ Useful commands:
 ```bash
 dart format .                 # format
 flutter analyze               # static analysis (strict mode, no issues)
-flutter test                  # all 262 tests
+flutter test                  # all 312 tests
 bash tool/coverage.sh         # honest coverage, see Testing
 flutter gen-l10n              # only after editing lib/l10n/*.arb (output is committed)
 ```
@@ -178,9 +184,9 @@ lib/
 ├── features/
 │   ├── auth/        data/ domain/ presentation/    # login, session, logout
 │   ├── products/    data/ domain/ presentation/    # list, search, details
-│   ├── cart/        data/ domain/ presentation/    # cart, checkout, order
+│   ├── cart/        data/ domain/ presentation/    # cart, checkout (promo codes, donation), order
 │   ├── wishlist/    data/ domain/ presentation/
-│   ├── orders/      data/ domain/ presentation/    # local order history
+│   ├── orders/      data/ domain/ presentation/    # local order history (with code and donation)
 │   ├── discover/    data/ domain/ presentation/    # recent searches, recently viewed
 │   ├── settings/    data/ domain/ presentation/    # theme and language
 │   ├── profile/     presentation/
@@ -214,7 +220,7 @@ tool/                                 # coverage scripts and the icon generator
 - A Cubit is a small class that holds a state and exposes methods that emit new states, with no event classes to write for these "do X, get a new state" screens.
 - States are **sealed classes** (and `Equatable`), so the compiler forces every screen to handle loading, success, empty and error, and identical states don't rebuild the UI.
 - State transitions are plain data, so `bloc_test` can assert the exact **sequence** of states each action produces.
-- App-wide state (`AuthCubit`, `CartCubit`, `WishlistCubit`, `SettingsCubit`, `OrdersCubit`, `SearchHistoryCubit`, `RecentlyViewedCubit`) is provided once at the top; screen state is created per screen from `get_it`.
+- App-wide state (`AuthCubit`, `CartCubit`, `WishlistCubit`, `SettingsCubit`, `OrdersCubit`, `SearchHistoryCubit`, `RecentlyViewedCubit`). The checkout page also has its own short-lived `CheckoutExtrasCubit` for the code and donation is provided once at the top; screen state is created per screen from `get_it`.
 - Only this one solution is used, so there is a single way to read and test state across the app.
 
 ## 7. Error handling
@@ -229,7 +235,7 @@ tool/                                 # coverage scripts and the icon generator
 
 ## 8. Testing
 
-**262 tests, all passing.** Honest line coverage is **94.0%** (5,040 of 5,361 lines in `lib/`, generated localisation code excluded).
+**312 tests, all passing.** Honest line coverage is **94.8%** (6,000 of 6,332 lines in `lib/`, generated localisation code excluded).
 
 ```bash
 flutter test
@@ -240,13 +246,13 @@ Flutter's own `--coverage` only lists files that some test imports, which hides 
 
 | Area | What is covered |
 | --- | --- |
-| Domain and use cases | cart maths (whole cents, no float drift), merging, stock caps, wishlist and settings rules, validators |
+| Domain and use cases | cart maths (whole cents, no float drift), merging, stock caps, wishlist and settings rules, validators, promo-code and round-up maths, which products make the home shelves, the remember-me rules |
 | Repositories | success, server failure and network failure for auth, products (including offline fallback), cart |
 | Cubits (`bloc_test`) | exact state sequences for login, session, product list (search debounce, stale answers, pagination, refresh), details, categories, cart, checkout |
 | JSON parsing | models parsed from **real saved API responses** in `test/fixtures` |
 | Network | the auth interceptor (refresh once, replay, forced expiry) and the Dio error mapper |
 | Widgets | error and empty views, quantity stepper limits, buttons, badges, the login form, photo retry and fallback, the resizable split, motion helpers |
-| App-level flows | the **real app** (router and DI) against a scripted API: sign in and buy, order history, search suggestions, recently viewed, search/sort/category, errors and retry, offline, wishlist, theme, language, profile, session expiry, every Error-lab scenario, tablet, landscape and 1.3× text |
+| App-level flows | the **real app** (router and DI) against a scripted API: sign in and buy, the home carousel and shelves, promo codes and donations at checkout, staying signed in (or not), order history, search suggestions, recently viewed, search/sort/category, errors and retry, offline, wishlist, theme, language, profile, session expiry, every Error-lab scenario, tablet, landscape and 1.3× text |
 
 Mocks use `mocktail`. The app-level tests swap only the network (a fake HTTP adapter) and storage; everything else is the production code.
 
@@ -271,6 +277,9 @@ password: emilyspass
 - **Release signing and shrinking.** The release APK uses the debug key (no keystore is committed) and R8 shrinking is switched off because it broke `shared_preferences` on a device. The APK is larger as a result (60 MB, all ABIs).
 - **Tested on emulators** (Android 16, phone and tablet), not on a physical device, and not on an API 26 device. iOS scaffolding exists but was not built or tested.
 - **Hindi strings should be reviewed by a native speaker.** They render correctly, but wording has not had a native review.
+- **Currency is US dollars.** DummyJSON prices are dollars and the brief does not ask for another currency, so the app shows them as they come instead of inventing an exchange rate.
+- **Promo codes and the donation are the app's own.** DummyJSON has no coupons and no payments. The three codes and the "Orbit Trees" donation are demo features: the discount and the donation are worked out on the device and kept with the order, but nothing is charged, donated or sent to the API.
+- **"Keep me signed in" is applied at launch.** Unticked, the session is cleared the next time the app starts; it does not time out while the app is open.
 - Wishlist, cart, settings, order history, recent searches and recently viewed products live on the device, per signed-in user. Nothing is synced to a server, because DummyJSON stores nothing.
 - **Order history is local.** An order is saved on the device when `POST /carts/add` succeeds (the latest 50 are kept). It is a record of what this app placed, not data read back from the API.
 
