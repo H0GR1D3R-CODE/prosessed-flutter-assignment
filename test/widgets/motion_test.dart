@@ -15,6 +15,17 @@ Widget _reducedMotion(Widget child) => Builder(
   ),
 );
 
+/// How visible each [Reveal] is right now, in the order they appear.
+List<double> _opacities(WidgetTester tester) => tester
+    .widgetList<FadeTransition>(
+      find.descendant(
+        of: find.byType(Reveal),
+        matching: find.byType(FadeTransition),
+      ),
+    )
+    .map((fade) => fade.opacity.value)
+    .toList();
+
 void main() {
   group('FlyToCart', () {
     final from = GlobalKey();
@@ -113,17 +124,11 @@ void main() {
     testWidgets('fades its child in', (tester) async {
       // Index 5 waits about 175 ms, so the start is still visible after the first frame.
       await pumpApp(tester, const Reveal(index: 5, child: Text('card')));
-      expect(
-        tester.widget<AnimatedOpacity>(find.byType(AnimatedOpacity)).opacity,
-        0,
-      );
+      expect(_opacities(tester), [0]);
 
       await tester.pump(const Duration(milliseconds: 600));
 
-      expect(
-        tester.widget<AnimatedOpacity>(find.byType(AnimatedOpacity)).opacity,
-        1,
-      );
+      expect(_opacities(tester), [1]);
       expect(find.text('card'), findsOneWidget);
     });
 
@@ -139,19 +144,12 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 100));
 
-      final opacities = tester
-          .widgetList<AnimatedOpacity>(find.byType(AnimatedOpacity))
-          .map((w) => w.opacity)
-          .toList();
-      expect(opacities, [1, 0]);
+      final started = _opacities(tester);
+      expect(started.first, greaterThan(0), reason: 'the first has begun');
+      expect(started.last, 0, reason: 'the seventh is still waiting');
 
       await tester.pump(const Duration(milliseconds: 600));
-      expect(
-        tester
-            .widgetList<AnimatedOpacity>(find.byType(AnimatedOpacity))
-            .every((w) => w.opacity == 1),
-        isTrue,
-      );
+      expect(_opacities(tester).every((opacity) => opacity == 1), isTrue);
     });
 
     testWidgets('shows at once with reduced motion', (tester) async {
@@ -160,10 +158,7 @@ void main() {
         _reducedMotion(const Reveal(index: 5, child: Text('card'))),
       );
 
-      expect(
-        tester.widget<AnimatedOpacity>(find.byType(AnimatedOpacity)).opacity,
-        1,
-      );
+      expect(_opacities(tester), [1]);
     });
   });
 
