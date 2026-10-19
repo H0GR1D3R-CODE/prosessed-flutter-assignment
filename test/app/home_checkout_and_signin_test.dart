@@ -247,6 +247,27 @@ void main() {
     });
   });
 
+  group('the search box', () {
+    testWidgets('lets go of the keyboard when a category is chosen', (
+      tester,
+    ) async {
+      await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
+      bool searchHasFocus() => tester
+          .widget<EditableText>(find.byType(EditableText))
+          .focusNode
+          .hasFocus;
+
+      await tester.tap(find.byType(TextField));
+      await settle(tester, const Duration(milliseconds: 300));
+      expect(searchHasFocus(), isTrue);
+
+      await tester.tap(find.bySemanticsLabel('Beauty'));
+      await settle(tester);
+
+      expect(searchHasFocus(), isFalse);
+    });
+  });
+
   group('quick add and buy again', () {
     testWidgets('the + on a product card adds it without opening it', (
       tester,

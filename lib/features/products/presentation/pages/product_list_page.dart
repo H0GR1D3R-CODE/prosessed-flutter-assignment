@@ -523,7 +523,11 @@ class _FiltersHeader extends SliverPersistentHeaderDelegate {
                   builder: (context, slug) => CategoryChips(
                     state: categories,
                     selectedSlug: slug,
-                    onSelected: cubit.selectCategory,
+                    onSelected: (slug) {
+                      // Choosing a category is the end of typing: put the keyboard away.
+                      FocusScope.of(context).unfocus();
+                      cubit.selectCategory(slug);
+                    },
                     onRetry: context.read<CategoriesCubit>().load,
                   ),
                 ),
