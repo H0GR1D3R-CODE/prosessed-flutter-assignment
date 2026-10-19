@@ -664,82 +664,91 @@ class _ShelfTile extends StatelessWidget {
     final price = Formatters.money(
       product.hasDiscount ? product.discountedPrice : product.price,
     );
+    final tile = PressableScale(
+      onTap: onTap,
+      semanticLabel: '${product.title}, $price',
+      borderRadius: Radii.brL,
+      child: ExcludeSemantics(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                SizedBox.square(
+                  dimension: ProductShelf._photo,
+                  child: ProductOrb(
+                    imageUrl: product.thumbnail,
+                    tint: OrbTints.forCategory(product.category),
+                    fallbackIcon: CategoryIcons.of(product.category),
+                  ),
+                ),
+                Positioned(
+                  left: Gap.s,
+                  top: Gap.s,
+                  child: showDiscount && product.hasDiscount
+                      ? DiscountPill(percent: product.discountPercentage)
+                      : _RatingChip(rating: product.rating),
+                ),
+              ],
+            ),
+            const SizedBox(height: Gap.s),
+            Text(
+              product.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.text.labelLarge,
+            ),
+            const SizedBox(height: Gap.xs),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      price,
+                      style: AppTypography.price(colors.onSurface, size: 16),
+                    ),
+                  ),
+                ),
+                if (product.hasDiscount) ...[
+                  Gap.ws,
+                  Flexible(
+                    child: Text(
+                      Formatters.money(product.price),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.text.labelSmall?.copyWith(
+                        color: colors.onSurfaceVariant,
+                        decoration: TextDecoration.lineThrough,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+
+    // The + is a button in its own right, so it sits above the tile rather than inside the part
+    // the tile hides from screen readers.
     return SizedBox(
       width: ProductShelf._photo,
-      child: PressableScale(
-        onTap: onTap,
-        semanticLabel: '${product.title}, $price',
-        borderRadius: Radii.brL,
-        child: ExcludeSemantics(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  SizedBox.square(
-                    dimension: ProductShelf._photo,
-                    child: ProductOrb(
-                      imageUrl: product.thumbnail,
-                      tint: OrbTints.forCategory(product.category),
-                      fallbackIcon: CategoryIcons.of(product.category),
-                    ),
-                  ),
-                  Positioned(
-                    left: Gap.s,
-                    top: Gap.s,
-                    child: showDiscount && product.hasDiscount
-                        ? DiscountPill(percent: product.discountPercentage)
-                        : _RatingChip(rating: product.rating),
-                  ),
-                  if (product.isAvailable)
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: QuickAddButton(product: product),
-                    ),
-                ],
-              ),
-              const SizedBox(height: Gap.s),
-              Text(
-                product.title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.text.labelLarge,
-              ),
-              const SizedBox(height: Gap.xs),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: [
-                  Flexible(
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        price,
-                        style: AppTypography.price(colors.onSurface, size: 16),
-                      ),
-                    ),
-                  ),
-                  if (product.hasDiscount) ...[
-                    Gap.ws,
-                    Flexible(
-                      child: Text(
-                        Formatters.money(product.price),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.text.labelSmall?.copyWith(
-                          color: colors.onSurfaceVariant,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ],
-          ),
-        ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          tile,
+          if (product.isAvailable)
+            Positioned(
+              left: ProductShelf._photo - 48,
+              top: ProductShelf._photo - 48,
+              child: QuickAddButton(product: product),
+            ),
+        ],
       ),
     );
   }

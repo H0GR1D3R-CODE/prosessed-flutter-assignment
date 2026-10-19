@@ -276,6 +276,18 @@ void main() {
       expect(find.text(_mascara), findsOneWidget);
     });
 
+    testWidgets('screen readers can reach the heart and the + on a card', (
+      tester,
+    ) async {
+      final semantics = tester.ensureSemantics();
+      await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
+      await scrollToGrid(tester);
+
+      expect(find.bySemanticsLabel(en.quickAdd(_mascara)), findsWidgets);
+      expect(find.bySemanticsLabel(en.wishlistAdd(_mascara)), findsWidgets);
+      semantics.dispose();
+    });
+
     testWidgets('every product in stock has a + on its card', (tester) async {
       final api = FakeShopApi();
       await pumpShopApp(tester, api, secure: signedInStorage);

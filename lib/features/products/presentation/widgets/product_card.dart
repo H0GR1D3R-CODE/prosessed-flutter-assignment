@@ -47,7 +47,7 @@ class ProductCard extends StatelessWidget {
       product.hasDiscount ? product.discountedPrice : product.price,
     );
 
-    return Semantics(
+    final card = Semantics(
       label: '${product.title}, $price',
       child: PressableScale(
         onTap: onTap,
@@ -83,17 +83,6 @@ class ProductCard extends StatelessWidget {
                         child: DiscountPill(
                           percent: product.discountPercentage,
                         ),
-                      ),
-                    Positioned(
-                      right: -Gap.xs,
-                      top: -Gap.xs,
-                      child: WishlistHeart(product: product),
-                    ),
-                    if (product.isAvailable)
-                      Positioned(
-                        right: -Gap.xs,
-                        bottom: -Gap.xs,
-                        child: QuickAddButton(product: product),
                       ),
                     if (!product.isAvailable)
                       Positioned.fill(
@@ -166,6 +155,29 @@ class ProductCard extends StatelessWidget {
         ),
       ),
     );
+
+    // The heart and the + are buttons in their own right, so they sit above the card instead of
+    // inside it: the card hides its contents from screen readers, and these must not be hidden.
+    return LayoutBuilder(
+      builder: (context, constraints) => Stack(
+        clipBehavior: Clip.none,
+        children: [
+          card,
+          Positioned(
+            right: Gap.xs,
+            top: Gap.xs,
+            child: WishlistHeart(product: product),
+          ),
+          if (product.isAvailable)
+            Positioned(
+              right: Gap.xs,
+              // The photo is square, so its bottom edge is one card width down, less the padding.
+              top: constraints.maxWidth - 52,
+              child: QuickAddButton(product: product),
+            ),
+        ],
+      ),
+    );
   }
 }
 
@@ -193,6 +205,7 @@ class _QuickAddButtonState extends State<QuickAddButton> {
   Widget build(BuildContext context) {
     final shop = context.shop;
     return Semantics(
+      container: true,
       button: true,
       label: context.l10n.quickAdd(widget.product.title),
       excludeSemantics: true,
@@ -286,6 +299,7 @@ class WishlistHeart extends StatelessWidget {
             ? context.l10n.wishlistRemove(product.title)
             : context.l10n.wishlistAdd(product.title);
         return Semantics(
+          container: true,
           button: true,
           toggled: saved,
           label: label,
