@@ -266,6 +266,30 @@ void main() {
 
       expect(searchHasFocus(), isFalse);
     });
+
+    testWidgets('does not bring the keyboard back after the sort sheet', (
+      tester,
+    ) async {
+      await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
+      bool searchHasFocus() => tester
+          .widget<EditableText>(find.byType(EditableText))
+          .focusNode
+          .hasFocus;
+
+      // Typing, then choosing a category, leaves the box with nothing focused...
+      await tester.tap(find.byType(TextField));
+      await settle(tester, const Duration(milliseconds: 300));
+      await tester.tap(find.bySemanticsLabel('Beauty'));
+      await settle(tester);
+
+      // ...and picking a sort order must not hand focus back to it.
+      await tester.tap(find.text(en.sortRelevance));
+      await settle(tester);
+      await tester.tap(find.text(en.sortPriceLow));
+      await settle(tester, const Duration(seconds: 1));
+
+      expect(searchHasFocus(), isFalse);
+    });
   });
 
   group('quick add and buy again', () {

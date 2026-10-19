@@ -63,6 +63,14 @@ class _ShopViewState extends State<_ShopView> {
   final ScrollController _scroll = ScrollController();
   final TextEditingController _search = TextEditingController();
   final FocusNode _searchFocus = FocusNode(debugLabel: 'shop-search');
+
+  /// Where focus rests when the shopper is done typing. Taking focus off the search box alone
+  /// is not enough: a closing sheet or page hands focus back to whatever had it last, which
+  /// brings the keyboard back. Parking focus here leaves nothing to hand it back to.
+  final FocusNode _park = FocusNode(
+    debugLabel: 'shop-park',
+    skipTraversal: true,
+  );
   bool _detailCollapsed = false;
 
   @override
@@ -80,6 +88,7 @@ class _ShopViewState extends State<_ShopView> {
       ..dispose();
     _search.dispose();
     _searchFocus.dispose();
+    _park.dispose();
     super.dispose();
   }
 
@@ -110,7 +119,7 @@ class _ShopViewState extends State<_ShopView> {
 
   void _openProduct(Product product, {required bool split}) {
     // Otherwise the search box keeps focus and the keyboard returns with this page.
-    FocusScope.of(context).unfocus();
+    _park.requestFocus();
     // Opening a result means the search did its job: remember it.
     final typed = _search.text.trim();
     if (typed.isNotEmpty) context.read<SearchHistoryCubit>().record(typed);
@@ -129,7 +138,7 @@ class _ShopViewState extends State<_ShopView> {
 
   Future<void> _pickSort(ProductSort current) async {
     final cubit = context.read<ProductListCubit>();
-    FocusScope.of(context).unfocus();
+    _park.requestFocus();
     final picked = await showSortSheet(context, current);
     if (picked != null) cubit.selectSort(picked);
   }
@@ -137,14 +146,17 @@ class _ShopViewState extends State<_ShopView> {
   @override
   Widget build(BuildContext context) {
     final split = context.windowSize.isExpanded;
-    final list = _ShopList(
+    final shopList = _ShopList(
       scroll: _scroll,
       search: _search,
       searchFocus: _searchFocus,
+      parkFocus: _park.requestFocus,
       split: split,
       onOpen: (product) => _openProduct(product, split: split),
       onPickSort: _pickSort,
     );
+    // The parking node has to be in the tree for focus to rest on it.
+    final list = Focus(focusNode: _park, child: shopList);
 
     return MultiBlocListener(
       listeners: [
@@ -210,6 +222,7 @@ class _ShopList extends StatelessWidget {
     required this.scroll,
     required this.search,
     required this.searchFocus,
+    required this.parkFocus,
     required this.split,
     required this.onOpen,
     required this.onPickSort,
@@ -218,6 +231,9 @@ class _ShopList extends StatelessWidget {
   final ScrollController scroll;
   final TextEditingController search;
   final FocusNode searchFocus;
+
+  /// Puts the keyboard away for good: see `_ShopViewState._park`.
+  final VoidCallback parkFocus;
   final bool split;
   final ValueChanged<Product> onOpen;
   final ValueChanged<ProductSort> onPickSort;
@@ -248,6 +264,7 @@ class _ShopList extends StatelessWidget {
                 search: search,
                 searchFocus: searchFocus,
                 searchHeight: searchHeight,
+                parkFocus: parkFocus,
               ),
             ),
             BlocBuilder<ProductListCubit, ProductListState>(builder: _body),
@@ -473,8 +490,10 @@ class _FiltersHeader extends SliverPersistentHeaderDelegate {
     required this.search,
     required this.searchFocus,
     required this.searchHeight,
+    required this.parkFocus,
   });
 
+  final VoidCallback parkFocus;
   final double height;
   final TextEditingController search;
   final FocusNode searchFocus;
@@ -525,7 +544,7 @@ class _FiltersHeader extends SliverPersistentHeaderDelegate {
                     selectedSlug: slug,
                     onSelected: (slug) {
                       // Choosing a category is the end of typing: put the keyboard away.
-                      FocusScope.of(context).unfocus();
+                      parkFocus();
                       cubit.selectCategory(slug);
                     },
                     onRetry: context.read<CategoriesCubit>().load,
