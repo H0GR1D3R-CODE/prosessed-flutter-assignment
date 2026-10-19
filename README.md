@@ -7,46 +7,56 @@ Sign in, browse a live catalogue with search, categories and sorting, open a pro
 | Download | Link |
 | --- | --- |
 | Release APK (`ShopSphere_NebinStanly_v1.0.0.apk`, 60 MB, Android 8.0+) | `<ADD GITHUB RELEASE LINK>` |
-| Demo video (3 min 51 s: all features, 6 error scenarios, tablet and landscape) | `<ADD GOOGLE DRIVE LINK>` |
-| Submission folder (APK, video, 24 screenshots) | `<ADD GOOGLE DRIVE FOLDER LINK>` |
+| Demo video (3 min 43 s: all features, 6 error scenarios, tablet and landscape) | `<ADD GOOGLE DRIVE LINK>` |
+| Submission folder (APK, video, 27 screenshots) | `<ADD GOOGLE DRIVE FOLDER LINK>` |
 
-> Built and checked with Flutter 3.47.7 / Dart 3.13.5. 312 tests pass, `flutter analyze` reports no issues, and line coverage over all of `lib/` is 94.8%.
+> Built and checked with Flutter 3.47.7 / Dart 3.13.5. 324 tests pass, `flutter analyze` reports no issues, and line coverage over all of `lib/` is 94.9%.
 
 ## 1. Screenshots
 
 **Phone** (release build on an Android 16 emulator, live DummyJSON data)
 
-| Login | Validation | Wrong password | Shop |
+| Splash | Validation | Wrong password | Home: deal of the day |
 | --- | --- | --- | --- |
-| <img src="docs/screenshots/01-login.jpg" width="180"> | <img src="docs/screenshots/02-login-validation.jpg" width="180"> | <img src="docs/screenshots/03-login-wrong-password.jpg" width="180"> | <img src="docs/screenshots/04-shop.jpg" width="180"> |
+| <img src="docs/screenshots/a01-splash.jpg" width="180"> | <img src="docs/screenshots/a02-validation.jpg" width="180"> | <img src="docs/screenshots/a03-wrong-password.jpg" width="180"> | <img src="docs/screenshots/a04-home-deal.jpg" width="180"> |
 
-| Sort | Product details | Cart | Checkout |
+| Shelves and grid | Search suggestions | Category and sort | Quick add |
 | --- | --- | --- | --- |
-| <img src="docs/screenshots/05-sort.jpg" width="180"> | <img src="docs/screenshots/06-product-details.jpg" width="180"> | <img src="docs/screenshots/07-cart.jpg" width="180"> | <img src="docs/screenshots/08-checkout.jpg" width="180"> |
+| <img src="docs/screenshots/a05-shelves.jpg" width="180"> | <img src="docs/screenshots/a06-search.jpg" width="180"> | <img src="docs/screenshots/a07-category.jpg" width="180"> | <img src="docs/screenshots/a08-quick-add.jpg" width="180"> |
 
-| Order confirmed | Profile | Dark and Hindi | Offline banner |
+| Details | Cart | Checkout | Order placed |
 | --- | --- | --- | --- |
-| <img src="docs/screenshots/09-order-confirmed.jpg" width="180"> | <img src="docs/screenshots/10-profile.jpg" width="180"> | <img src="docs/screenshots/12-profile-hindi.jpg" width="180"> | <img src="docs/screenshots/13-offline-banner.jpg" width="180"> |
+| <img src="docs/screenshots/a09-details.jpg" width="180"> | <img src="docs/screenshots/a10-cart.jpg" width="180"> | <img src="docs/screenshots/a11-checkout.jpg" width="180"> | <img src="docs/screenshots/a12-order-placed.jpg" width="180"> |
 
-| Token refreshed | Timeout | Slow network | Server error |
+| Order history | Offline | Profile (dark, Hindi) | Error lab |
 | --- | --- | --- | --- |
-| <img src="docs/screenshots/14-error-lab-token-refreshed.jpg" width="180"> | <img src="docs/screenshots/15-error-lab-timeout.jpg" width="180"> | <img src="docs/screenshots/16-error-lab-slow-network.jpg" width="180"> | <img src="docs/screenshots/17-error-lab-server-error.jpg" width="180"> |
+| <img src="docs/screenshots/a13-orders-buy-again.jpg" width="180"> | <img src="docs/screenshots/b01-offline.jpg" width="180"> | <img src="docs/screenshots/b03-hindi.jpg" width="180"> | <img src="docs/screenshots/b04-error-lab.jpg" width="180"> |
 
-**Tablet and landscape** (2560 × 1600 and 1600 × 2560 emulator)
-
-| Landscape: pick a product | Landscape: details beside the list |
+| Slow network handled | Session ended |
 | --- | --- |
-| <img src="docs/screenshots/T1-tablet-landscape-pick-a-product.jpg" width="420"> | <img src="docs/screenshots/T2-tablet-landscape-details.jpg" width="420"> |
+| <img src="docs/screenshots/b05-error-result.jpg" width="180"> | <img src="docs/screenshots/b06-session-ended.jpg" width="180"> |
 
-| Landscape: cart | Landscape: error lab |
+**Tablet, landscape** (master–detail, resizable and collapsible panels)
+
+| Home with a details pane | Product details beside the list |
 | --- | --- |
-| <img src="docs/screenshots/T3-tablet-landscape-cart.jpg" width="420"> | <img src="docs/screenshots/T4-tablet-landscape-error-lab.jpg" width="420"> |
+| <img src="docs/screenshots/t01-landscape-home.jpg" width="420"> | <img src="docs/screenshots/t02-landscape-details.jpg" width="420"> |
 
-| Portrait: four-column grid | Portrait: profile |
+| Details pane collapsed | Cart with its summary |
 | --- | --- |
-| <img src="docs/screenshots/T5-tablet-portrait-shop.jpg" width="260"> | <img src="docs/screenshots/T6-tablet-portrait-profile.jpg" width="260"> |
+| <img src="docs/screenshots/t03-landscape-collapsed.jpg" width="420"> | <img src="docs/screenshots/t04-landscape-cart.jpg" width="420"> |
 
-All 24 screenshots are in [`docs/screenshots`](docs/screenshots).
+| Summary tucked away | Profile |
+| --- | --- |
+| <img src="docs/screenshots/t05-landscape-cart-collapsed.jpg" width="420"> | <img src="docs/screenshots/t06-landscape-profile.jpg" width="420"> |
+
+**Tablet, portrait**
+
+| Shop: navigation rail, wider grid | Profile |
+| --- | --- |
+| <img src="docs/screenshots/t07-portrait-shop.jpg" width="260"> | <img src="docs/screenshots/t08-portrait-profile.jpg" width="260"> |
+
+All 27 screenshots are in [`docs/screenshots`](docs/screenshots).
 
 ## 2. Features
 
@@ -81,6 +91,8 @@ All 24 screenshots are in [`docs/screenshots`](docs/screenshots).
 - [x] An in-app **Error lab** (Profile → Developer tools) that triggers a server error, a 404, a slow response, a timeout, an expired token and a rejected refresh token, so every failure path can be shown on demand
 - [x] **A livelier home page**: an offers carousel that slides on its own (today's best deal, a promo code you can copy, a giving nudge), then "Deals worth grabbing" and "Loved by shoppers" shelves, then the full grid. The shelves are built from products already on screen, so they cost no extra requests, and they give way to plain results when you search or pick a category
 - [x] **Product photos on a studio backdrop**: a softly lit, barely tinted paper backdrop with a contact shadow, instead of a saturated shape behind each photo
+- [x] **Quick add**: a round + on every in-stock photo (cards and shelves) adds one without opening the product, and the photo flies to the cart tab
+- [x] **Buy again**: an order in the history goes back into the cart in one tap
 - [x] **Promo codes at checkout** (`WELCOME10`, `SAVE5`, `ORBIT20`), with minimum spends and a cap, suggestions you can tap, and clear messages for a wrong code or one the order is too small for
 - [x] **A donation at checkout**: round up to the next dollar, or add $1, $2 or $5. Demo only: nothing is really charged or donated
 - [x] **Keep me signed in** on the sign-in form, with the last username filled in. Unticking it ends the session when the app is closed, which is what you want on a shared device
@@ -131,12 +143,15 @@ flutter build apk --release
 # build/app/outputs/flutter-apk/app-release.apk
 ```
 
+No API key, token or `.env` file is needed: DummyJSON is public. The app calls these endpoints (all of them checked live):
+`POST /auth/login`, `GET /auth/me`, `POST /auth/refresh`, `GET /products` (with `limit`, `skip`, `sortBy`, `order`), `GET /products/search`, `GET /products/categories`, `GET /products/category/{slug}`, `GET /products/{id}`, `POST /carts/add`, plus `GET /http/500` and `GET /http/404` for the Error lab.
+
 Useful commands:
 
 ```bash
 dart format .                 # format
 flutter analyze               # static analysis (strict mode, no issues)
-flutter test                  # all 312 tests
+flutter test                  # all 324 tests
 bash tool/coverage.sh         # honest coverage, see Testing
 flutter gen-l10n              # only after editing lib/l10n/*.arb (output is committed)
 ```
@@ -235,7 +250,7 @@ tool/                                 # coverage scripts and the icon generator
 
 ## 8. Testing
 
-**312 tests, all passing.** Honest line coverage is **94.8%** (6,000 of 6,332 lines in `lib/`, generated localisation code excluded).
+**324 tests, all passing.** Honest line coverage is **94.9%** (6,090 of 6,417 lines in `lib/`, generated localisation code excluded).
 
 ```bash
 flutter test
