@@ -134,11 +134,11 @@
   "profilePhone": "फ़ोन",
   "profileAddress": "पता",
   "profileAppearance": "दिखावट",
-  "themeSystem": "सिस्टम",
+  "themeSystem": "ऑटो",
   "themeLight": "लाइट",
   "themeDark": "डार्क",
   "profileLanguage": "भाषा",
-  "languageSystem": "डिवाइस",
+  "languageSystem": "ऑटो",
   "languageEnglish": "English",
   "languageHindi": "हिन्दी",
   "profileDevTools": "डेवलपर टूल्स",
@@ -195,5 +195,12 @@
   "viewedTitle": "हाल ही में देखे गए",
   "viewedClear": "हटाएँ",
   "searchShortcutHint": "खोजने के लिए / दबाएँ",
-  "searchFor": "“{query}” खोजें"
+  "searchFor": "“{query}” खोजें",
+  "themeHintSystemLight": "आपके डिवाइस के अनुसार। अभी लाइट है।",
+  "themeHintSystemDark": "आपके डिवाइस के अनुसार। अभी डार्क है।",
+  "themeHintLight": "हमेशा लाइट, डिवाइस कुछ भी करे।",
+  "themeHintDark": "हमेशा डार्क, डिवाइस कुछ भी करे।",
+  "languageHintSystem": "आपके डिवाइस की भाषा के अनुसार।",
+  "languageHintEnglish": "हमेशा अंग्रेज़ी।",
+  "languageHintHindi": "हमेशा हिन्दी।"
 }

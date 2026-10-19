@@ -354,6 +354,14 @@ class _AppearanceCard extends StatelessWidget {
                       settings.setTheme(choice.first),
                 ),
               ),
+              _Hint(switch (state.theme) {
+                ThemeChoice.system =>
+                  MediaQuery.platformBrightnessOf(context) == Brightness.dark
+                      ? l10n.themeHintSystemDark
+                      : l10n.themeHintSystemLight,
+                ThemeChoice.light => l10n.themeHintLight,
+                ThemeChoice.dark => l10n.themeHintDark,
+              }),
               Gap.hxl,
               Text(l10n.profileLanguage, style: context.text.titleMedium),
               Gap.hm,
@@ -379,10 +387,35 @@ class _AppearanceCard extends StatelessWidget {
                   ),
                 ),
               ),
+              _Hint(switch (state.languageCode) {
+                'en' => l10n.languageHintEnglish,
+                'hi' => l10n.languageHintHindi,
+                _ => l10n.languageHintSystem,
+              }),
             ],
           ),
         );
       },
+    );
+  }
+}
+
+/// One line under a switch saying what the current choice does.
+class _Hint extends StatelessWidget {
+  const _Hint(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: Gap.s),
+      child: Text(
+        text,
+        style: context.text.bodyMedium?.copyWith(
+          color: context.colors.onSurfaceVariant,
+        ),
+      ),
     );
   }
 }

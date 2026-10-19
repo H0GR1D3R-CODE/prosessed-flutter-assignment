@@ -502,7 +502,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get profileAppearance => 'दिखावट';
 
   @override
-  String get themeSystem => 'सिस्टम';
+  String get themeSystem => 'ऑटो';
 
   @override
   String get themeLight => 'लाइट';
@@ -514,7 +514,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get profileLanguage => 'भाषा';
 
   @override
-  String get languageSystem => 'डिवाइस';
+  String get languageSystem => 'ऑटो';
 
   @override
   String get languageEnglish => 'English';
@@ -715,4 +715,25 @@ class AppLocalizationsHi extends AppLocalizations {
   String searchFor(String query) {
     return '“$query” खोजें';
   }
+
+  @override
+  String get themeHintSystemLight => 'आपके डिवाइस के अनुसार। अभी लाइट है।';
+
+  @override
+  String get themeHintSystemDark => 'आपके डिवाइस के अनुसार। अभी डार्क है।';
+
+  @override
+  String get themeHintLight => 'हमेशा लाइट, डिवाइस कुछ भी करे।';
+
+  @override
+  String get themeHintDark => 'हमेशा डार्क, डिवाइस कुछ भी करे।';
+
+  @override
+  String get languageHintSystem => 'आपके डिवाइस की भाषा के अनुसार।';
+
+  @override
+  String get languageHintEnglish => 'हमेशा अंग्रेज़ी।';
+
+  @override
+  String get languageHintHindi => 'हमेशा हिन्दी।';
 }

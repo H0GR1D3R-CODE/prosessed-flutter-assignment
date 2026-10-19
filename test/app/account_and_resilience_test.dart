@@ -81,6 +81,32 @@ void main() {
       expect(find.text(en.navCart), findsNothing);
     });
 
+    testWidgets('each switch says what the current choice means', (
+      tester,
+    ) async {
+      await pumpShopApp(tester, FakeShopApi(), secure: signedInStorage);
+      await _openProfile(tester);
+
+      // Auto is a real choice that follows the device, and it says so.
+      expect(
+        find.text(en.themeSystem),
+        findsNWidgets(2),
+        reason: 'theme + language',
+      );
+      expect(find.text(en.themeHintSystemLight), findsOneWidget);
+      expect(find.text(en.languageHintSystem), findsOneWidget);
+
+      await tester.tap(find.text(en.themeDark));
+      await settle(tester);
+      expect(find.text(en.themeHintDark), findsOneWidget);
+      expect(find.text(en.themeHintSystemLight), findsNothing);
+
+      await _scrollTo(tester, find.text(en.languageHindi));
+      await tester.tap(find.text(en.languageEnglish));
+      await settle(tester);
+      expect(find.text(en.languageHintEnglish), findsOneWidget);
+    });
+
     testWidgets('the app starts in a remembered language', (tester) async {
       await pumpShopApp(
         tester,

@@ -905,7 +905,7 @@ abstract class AppLocalizations {
   /// No description provided for @themeSystem.
   ///
   /// In en, this message translates to:
-  /// **'System'**
+  /// **'Auto'**
   String get themeSystem;
 
   /// No description provided for @themeLight.
@@ -929,7 +929,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageSystem.
   ///
   /// In en, this message translates to:
-  /// **'Device'**
+  /// **'Auto'**
   String get languageSystem;
 
   /// No description provided for @languageEnglish.
@@ -1273,6 +1273,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search for “{query}”'**
   String searchFor(String query);
+
+  /// No description provided for @themeHintSystemLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows your device. It is light right now.'**
+  String get themeHintSystemLight;
+
+  /// No description provided for @themeHintSystemDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows your device. It is dark right now.'**
+  String get themeHintSystemDark;
+
+  /// No description provided for @themeHintLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Always light, whatever your device does.'**
+  String get themeHintLight;
+
+  /// No description provided for @themeHintDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Always dark, whatever your device does.'**
+  String get themeHintDark;
+
+  /// No description provided for @languageHintSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Follows your device language.'**
+  String get languageHintSystem;
+
+  /// No description provided for @languageHintEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Always English.'**
+  String get languageHintEnglish;
+
+  /// No description provided for @languageHintHindi.
+  ///
+  /// In en, this message translates to:
+  /// **'Always Hindi.'**
+  String get languageHintHindi;
 }
 
 class _AppLocalizationsDelegate

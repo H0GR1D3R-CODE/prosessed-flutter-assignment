@@ -297,11 +297,11 @@
   "profilePhone": "Phone",
   "profileAddress": "Address",
   "profileAppearance": "Appearance",
-  "themeSystem": "System",
+  "themeSystem": "Auto",
   "themeLight": "Light",
   "themeDark": "Dark",
   "profileLanguage": "Language",
-  "languageSystem": "Device",
+  "languageSystem": "Auto",
   "languageEnglish": "English",
   "languageHindi": "हिन्दी",
   "profileDevTools": "Developer tools",
@@ -417,5 +417,12 @@
         "type": "String"
       }
     }
-  }
+  },
+  "themeHintSystemLight": "Follows your device. It is light right now.",
+  "themeHintSystemDark": "Follows your device. It is dark right now.",
+  "themeHintLight": "Always light, whatever your device does.",
+  "themeHintDark": "Always dark, whatever your device does.",
+  "languageHintSystem": "Follows your device language.",
+  "languageHintEnglish": "Always English.",
+  "languageHintHindi": "Always Hindi."
 }
