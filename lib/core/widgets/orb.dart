@@ -198,7 +198,7 @@ class ProductOrb extends StatelessWidget {
   }
 }
 
-/// The skeleton of a [ProductOrb]: a bare circle, to be wrapped in a [Shimmer].
+/// The skeleton of a [ProductOrb]: a bare rounded tile, to be wrapped in a [Shimmer].
 class OrbSkeleton extends StatelessWidget {
   const OrbSkeleton({super.key});
 
@@ -207,8 +207,8 @@ class OrbSkeleton extends StatelessWidget {
     return const AspectRatio(
       aspectRatio: 1,
       child: Padding(
-        padding: EdgeInsets.all(8),
-        child: SkeletonBox(circle: true),
+        padding: EdgeInsets.all(4),
+        child: SkeletonBox(radius: 28),
       ),
     );
   }

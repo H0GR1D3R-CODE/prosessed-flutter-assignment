@@ -162,7 +162,9 @@ void main() {
 
       await _show(tester, find.byType(TextField));
       await tester.enterText(find.byType(TextField), 'NOPE');
-      await tester.testTextInput.receiveAction(TextInputAction.done);
+      // The field scrolls itself into view; taps are ignored for that moment, as for a real user.
+      await settle(tester, const Duration(milliseconds: 500));
+      await tester.tap(find.widgetWithText(FilledButton, en.couponApply));
       await settle(tester);
       expect(find.text(en.couponUnknown), findsOneWidget);
 

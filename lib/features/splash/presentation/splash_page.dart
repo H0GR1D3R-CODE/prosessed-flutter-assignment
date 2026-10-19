@@ -230,7 +230,7 @@ class _RingsPainter extends CustomPainter {
     if (progress <= 0) return;
     final centre = Offset(size.width / 2, size.height / 2 - 24);
     final reach = size.shortestSide;
-    for (final (factor, alpha) in const [(0.62, 0.07), (0.92, 0.045)]) {
+    for (final (factor, alpha) in const [(0.62, 0.13), (0.92, 0.08)]) {
       canvas.drawCircle(
         centre,
         reach * factor * progress,

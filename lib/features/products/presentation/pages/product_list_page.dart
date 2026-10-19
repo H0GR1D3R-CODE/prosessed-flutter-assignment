@@ -11,6 +11,7 @@ import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/utils/breakpoints.dart';
 import 'package:shopsphere/core/widgets/inline_banner.dart';
 import 'package:shopsphere/core/widgets/resizable_split.dart';
+import 'package:shopsphere/core/widgets/shimmer.dart';
 import 'package:shopsphere/core/widgets/state_views.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:shopsphere/features/discover/presentation/bloc/discover_cubits.dart';
@@ -269,6 +270,8 @@ class _ShopList extends StatelessWidget {
         return switch (state) {
           ProductListInitial() || ProductListLoading() => SliverMainAxisGroup(
             slivers: [
+              // The shape of the offers that arrive, so the page does not jump.
+              const SliverToBoxAdapter(child: _HeroSkeleton()),
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(Gap.l, 0, Gap.l, Gap.xxl),
                 sliver: ProductGridSkeleton(columns: columns),
@@ -585,6 +588,25 @@ class _ResultsBar extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// A shimmering stand-in for the offers carousel while the first products load.
+class _HeroSkeleton extends StatelessWidget {
+  const _HeroSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    final scaler = MediaQuery.textScalerOf(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(Gap.l, Gap.xs, Gap.l, Gap.l),
+      child: Shimmer(
+        child: SkeletonBox(
+          height: 226 + (scaler.scale(16) - 16) * 7,
+          radius: Radii.xl,
+        ),
       ),
     );
   }
