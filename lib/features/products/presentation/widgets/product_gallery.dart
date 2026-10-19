@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/orb_tints.dart';
 import 'package:shopsphere/core/widgets/network_photo.dart';
-import 'package:shopsphere/core/widgets/orb.dart';
+import 'package:shopsphere/core/widgets/studio_backdrop.dart';
 import 'package:shopsphere/features/products/domain/entities/product.dart';
 import 'package:shopsphere/l10n/l10n.dart';
 
@@ -64,7 +64,7 @@ class _ProductGalleryState extends State<ProductGallery> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        tint.light.withValues(alpha: 0.7),
+                        tint.light.withValues(alpha: 0.42),
                         context.colors.surface,
                       ],
                     ),
@@ -81,13 +81,12 @@ class _ProductGalleryState extends State<ProductGallery> {
                   label: context.l10n.productGallery(_page + 1, photos.length),
                   child: Stack(
                     children: [
-                      Align(
-                        alignment: const Alignment(0, -0.04),
-                        child: SizedBox.square(
-                          dimension: height * 0.82,
-                          child: Orb(
-                            tint: OrbTints.forCategory(product.category),
-                          ),
+                      Positioned.fill(
+                        child: StudioBackdrop(
+                          tint: OrbTints.forCategory(product.category),
+                          paintBackground: false,
+                          floorY: 0.84,
+                          floorWidth: 0.46,
                         ),
                       ),
                       PageView.builder(

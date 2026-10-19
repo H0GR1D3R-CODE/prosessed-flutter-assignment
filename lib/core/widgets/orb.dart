@@ -5,6 +5,7 @@ import 'package:shopsphere/core/theme/app_theme.dart';
 import 'package:shopsphere/core/theme/orb_tints.dart';
 import 'package:shopsphere/core/widgets/network_photo.dart';
 import 'package:shopsphere/core/widgets/shimmer.dart';
+import 'package:shopsphere/core/widgets/studio_backdrop.dart';
 
 /// Paints a softly lit sphere with a contact shadow underneath: the visual signature of the app.
 ///
@@ -137,16 +138,16 @@ class Orb extends StatelessWidget {
   }
 }
 
-/// A product photo floating over its category's orb.
+/// A product photo standing on a soft studio backdrop, with a contact shadow on the floor.
 ///
-/// The photo is a cutout, so it can overhang the orb slightly: that overlap is what makes the
-/// product look like it is sitting in front of the sphere.
+/// The backdrop is tinted by the product's category, but only a trace, so a screen of mixed
+/// products reads as one calm catalogue instead of a wall of colour.
 class ProductOrb extends StatelessWidget {
   const ProductOrb({
     required this.imageUrl,
     required this.tint,
     this.heroTag,
-    this.imageScale = 1.0,
+    this.imageScale = 0.88,
     this.semanticLabel,
     this.fallbackIcon = Icons.image_outlined,
     super.key,
@@ -181,11 +182,14 @@ class ProductOrb extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Orb(tint: tint),
-            FractionallySizedBox(
-              widthFactor: imageScale,
-              heightFactor: imageScale,
-              child: image,
+            StudioBackdrop(tint: tint),
+            Align(
+              alignment: const Alignment(0, -0.1),
+              child: FractionallySizedBox(
+                widthFactor: imageScale,
+                heightFactor: imageScale,
+                child: image,
+              ),
             ),
           ],
         ),
