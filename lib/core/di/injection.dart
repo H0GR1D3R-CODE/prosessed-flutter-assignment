@@ -10,8 +10,10 @@ import 'package:shopsphere/core/network/session.dart';
 import 'package:shopsphere/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:shopsphere/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:shopsphere/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:shopsphere/features/auth/data/sign_in_preference_repository_impl.dart';
 import 'package:shopsphere/features/auth/domain/entities/user.dart';
 import 'package:shopsphere/features/auth/domain/repositories/auth_repository.dart';
+import 'package:shopsphere/features/auth/domain/sign_in_preference.dart';
 import 'package:shopsphere/features/auth/domain/usecases/auth_usecases.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/login_cubit.dart';
@@ -134,7 +136,21 @@ void _registerAuth() {
     ..registerFactory(() => LoginUseCase(sl<AuthRepository>()))
     ..registerFactory(() => LogoutUseCase(sl<AuthRepository>()))
     ..registerFactory(() => GetCurrentUserUseCase(sl<AuthRepository>()))
-    ..registerFactory(() => RestoreSessionUseCase(sl<AuthRepository>()))
+    ..registerLazySingleton<SignInPreferenceRepository>(
+      () => PrefsSignInPreferenceRepository(sl<SharedPreferences>()),
+    )
+    ..registerFactory(
+      () => LoadSignInPreferenceUseCase(sl<SignInPreferenceRepository>()),
+    )
+    ..registerFactory(
+      () => SaveSignInPreferenceUseCase(sl<SignInPreferenceRepository>()),
+    )
+    ..registerFactory(
+      () => RestoreSessionUseCase(
+        sl<AuthRepository>(),
+        sl<SignInPreferenceRepository>(),
+      ),
+    )
     ..registerLazySingleton<AuthCubit>(
       () => AuthCubit(
         restoreSession: sl<RestoreSessionUseCase>(),
@@ -143,7 +159,13 @@ void _registerAuth() {
         events: sl<SessionEvents>(),
       ),
     )
-    ..registerFactory(() => LoginCubit(sl<LoginUseCase>()));
+    ..registerFactory(
+      () => LoginCubit(
+        sl<LoginUseCase>(),
+        sl<LoadSignInPreferenceUseCase>(),
+        sl<SaveSignInPreferenceUseCase>(),
+      ),
+    );
 }
 
 void _registerProducts() {

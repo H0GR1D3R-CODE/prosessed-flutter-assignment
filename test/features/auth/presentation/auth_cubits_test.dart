@@ -5,27 +5,31 @@ import 'package:shopsphere/core/error/failures.dart';
 import 'package:shopsphere/core/network/session.dart';
 import 'package:shopsphere/core/result/result.dart';
 import 'package:shopsphere/features/auth/domain/repositories/auth_repository.dart';
+import 'package:shopsphere/features/auth/domain/sign_in_preference.dart';
 import 'package:shopsphere/features/auth/domain/usecases/auth_usecases.dart';
 import 'package:shopsphere/features/auth/domain/validation/credential_validator.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/login_cubit.dart';
 
 import '../../../helpers/builders.dart';
+import '../../../helpers/memory_sign_in_preference.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
 void main() {
   late MockAuthRepository repository;
   late SessionEvents events;
+  late MemorySignInPreference preference;
 
   setUp(() {
     repository = MockAuthRepository();
     events = SessionEvents();
+    preference = MemorySignInPreference();
     when(() => repository.logout()).thenAnswer((_) async {});
   });
 
   AuthCubit buildAuth() => AuthCubit(
-    restoreSession: RestoreSessionUseCase(repository),
+    restoreSession: RestoreSessionUseCase(repository, preference),
     getCurrentUser: GetCurrentUserUseCase(repository),
     logout: LogoutUseCase(repository),
     events: events,
@@ -100,7 +104,11 @@ void main() {
   });
 
   group('LoginCubit', () {
-    LoginCubit buildLogin() => LoginCubit(LoginUseCase(repository));
+    LoginCubit buildLogin() => LoginCubit(
+      LoginUseCase(repository),
+      LoadSignInPreferenceUseCase(preference),
+      SaveSignInPreferenceUseCase(preference),
+    );
 
     blocTest<LoginCubit, LoginState>(
       'invalid fields never reach the network',

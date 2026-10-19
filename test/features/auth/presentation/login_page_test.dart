@@ -7,12 +7,14 @@ import 'package:shopsphere/core/error/failures.dart';
 import 'package:shopsphere/core/network/session.dart';
 import 'package:shopsphere/core/result/result.dart';
 import 'package:shopsphere/features/auth/domain/repositories/auth_repository.dart';
+import 'package:shopsphere/features/auth/domain/sign_in_preference.dart';
 import 'package:shopsphere/features/auth/domain/usecases/auth_usecases.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/login_cubit.dart';
 import 'package:shopsphere/features/auth/presentation/pages/login_page.dart';
 
 import '../../../helpers/builders.dart';
+import '../../../helpers/memory_sign_in_preference.dart';
 import '../../../helpers/pump_app.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
@@ -20,12 +22,14 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 void main() {
   late MockAuthRepository repository;
   late AuthCubit auth;
+  late MemorySignInPreference preference;
 
   setUp(() async {
     repository = MockAuthRepository();
+    preference = MemorySignInPreference();
     when(() => repository.logout()).thenAnswer((_) async {});
     auth = AuthCubit(
-      restoreSession: RestoreSessionUseCase(repository),
+      restoreSession: RestoreSessionUseCase(repository, preference),
       getCurrentUser: GetCurrentUserUseCase(repository),
       logout: LogoutUseCase(repository),
       events: SessionEvents(),
@@ -33,7 +37,13 @@ void main() {
 
     // The page asks the service locator for its cubit; give it one backed by the mock.
     await sl.reset();
-    sl.registerFactory<LoginCubit>(() => LoginCubit(LoginUseCase(repository)));
+    sl.registerFactory<LoginCubit>(
+      () => LoginCubit(
+        LoginUseCase(repository),
+        LoadSignInPreferenceUseCase(preference),
+        SaveSignInPreferenceUseCase(preference),
+      ),
+    );
   });
 
   tearDown(() async {

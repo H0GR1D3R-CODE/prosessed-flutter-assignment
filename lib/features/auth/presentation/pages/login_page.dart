@@ -8,6 +8,7 @@ import 'package:shopsphere/core/theme/spacing.dart';
 import 'package:shopsphere/core/widgets/buttons.dart';
 import 'package:shopsphere/core/widgets/inline_banner.dart';
 import 'package:shopsphere/core/widgets/orb_backdrop.dart';
+import 'package:shopsphere/core/widgets/reveal.dart';
 import 'package:shopsphere/core/widgets/wordmark.dart';
 import 'package:shopsphere/features/auth/domain/validation/credential_validator.dart';
 import 'package:shopsphere/features/auth/presentation/bloc/auth_cubit.dart';
@@ -38,6 +39,23 @@ class _LoginViewState extends State<_LoginView> {
   final _password = TextEditingController();
   final _passwordFocus = FocusNode();
   bool _obscure = true;
+  bool _remember = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Last time's choice: whether to stay signed in, and who it was.
+    context.read<LoginCubit>().loadPreference().then((preference) {
+      if (!mounted) return;
+      setState(() {
+        _remember = preference.remember;
+        final username = preference.username;
+        if (username != null && _username.text.isEmpty) {
+          _username.text = username;
+        }
+      });
+    });
+  }
 
   @override
   void dispose() {
@@ -52,6 +70,7 @@ class _LoginViewState extends State<_LoginView> {
     context.read<LoginCubit>().submit(
       username: _username.text,
       password: _password.text,
+      remember: _remember,
     );
   }
 
@@ -96,6 +115,8 @@ class _LoginViewState extends State<_LoginView> {
               password: _password,
               passwordFocus: _passwordFocus,
               obscure: _obscure,
+              remember: _remember,
+              onRememberChanged: (value) => setState(() => _remember = value),
               sessionExpired: expired,
               onToggleObscure: () => setState(() => _obscure = !_obscure),
               onSubmit: _submit,
@@ -182,6 +203,8 @@ class _FormPanel extends StatelessWidget {
     required this.password,
     required this.passwordFocus,
     required this.obscure,
+    required this.remember,
+    required this.onRememberChanged,
     required this.sessionExpired,
     required this.onToggleObscure,
     required this.onSubmit,
@@ -193,6 +216,8 @@ class _FormPanel extends StatelessWidget {
   final TextEditingController password;
   final FocusNode passwordFocus;
   final bool obscure;
+  final bool remember;
+  final ValueChanged<bool> onRememberChanged;
   final bool sessionExpired;
   final VoidCallback onToggleObscure;
   final VoidCallback onSubmit;
@@ -215,12 +240,20 @@ class _FormPanel extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l10n.loginHeadline, style: context.text.displaySmall),
-              Gap.hs,
-              Text(
-                l10n.loginSubhead,
-                style: context.text.bodyLarge?.copyWith(
-                  color: context.colors.onSurfaceVariant,
+              Reveal(
+                index: 0,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.loginHeadline, style: context.text.displaySmall),
+                    Gap.hs,
+                    Text(
+                      l10n.loginSubhead,
+                      style: context.text.bodyLarge?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               if (sessionExpired && failure == null) ...[
@@ -279,6 +312,29 @@ class _FormPanel extends StatelessWidget {
                   ),
                 ),
               ),
+              Gap.hs,
+              Reveal(
+                index: 3,
+                child: CheckboxListTile(
+                  key: const ValueKey('remember-me'),
+                  value: remember,
+                  onChanged: submitting
+                      ? null
+                      : (value) => onRememberChanged(value ?? false),
+                  contentPadding: EdgeInsets.zero,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: Text(
+                    l10n.loginRemember,
+                    style: context.text.titleSmall,
+                  ),
+                  subtitle: Text(
+                    l10n.loginRememberNote,
+                    style: context.text.bodySmall?.copyWith(
+                      color: context.colors.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              ),
               AnimatedSize(
                 duration: const Duration(milliseconds: 220),
                 curve: Curves.easeOut,
@@ -316,6 +372,27 @@ class _FormPanel extends StatelessWidget {
                     color: context.colors.onSurfaceVariant,
                   ),
                 ),
+              ),
+              Gap.hl,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.lock_outline_rounded,
+                    size: 14,
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                  Gap.ws,
+                  Flexible(
+                    child: Text(
+                      l10n.loginSecureNote,
+                      textAlign: TextAlign.center,
+                      style: context.text.labelSmall?.copyWith(
+                        color: context.colors.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

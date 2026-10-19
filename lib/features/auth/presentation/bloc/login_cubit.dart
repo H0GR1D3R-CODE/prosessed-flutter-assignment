@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopsphere/core/error/failures.dart';
+import 'package:shopsphere/core/result/result.dart';
 import 'package:shopsphere/features/auth/domain/entities/user.dart';
+import 'package:shopsphere/features/auth/domain/sign_in_preference.dart';
 import 'package:shopsphere/features/auth/domain/usecases/auth_usecases.dart';
 import 'package:shopsphere/features/auth/domain/validation/credential_validator.dart';
 
@@ -52,13 +54,20 @@ final class LoginFailure extends LoginState {
 
 /// The sign-in form's brain: validates, submits, reports.
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit(this._login) : super(const LoginInitial());
+  LoginCubit(this._login, this._loadPreference, this._savePreference)
+    : super(const LoginInitial());
 
   final LoginUseCase _login;
+  final LoadSignInPreferenceUseCase _loadPreference;
+  final SaveSignInPreferenceUseCase _savePreference;
+
+  /// What the shopper chose last time, to fill the form with.
+  Future<SignInPreference> loadPreference() => _loadPreference();
 
   Future<void> submit({
     required String username,
     required String password,
+    bool remember = true,
   }) async {
     if (state is LoginSubmitting) return;
 
@@ -76,10 +85,15 @@ class LoginCubit extends Cubit<LoginState> {
 
     emit(const LoginSubmitting());
     final result = await _login(username: username, password: password);
-    result.fold(
-      onFailure: (failure) => emit(LoginFailure(failure)),
-      onSuccess: (user) => emit(LoginSuccess(user)),
-    );
+    switch (result) {
+      case Fail(:final failure):
+        emit(LoginFailure(failure));
+      case Success(:final value):
+        await _savePreference(
+          SignInPreference.afterSignIn(remember: remember, username: username),
+        );
+        emit(LoginSuccess(value));
+    }
   }
 
   /// Clears an error as soon as the user starts correcting it.

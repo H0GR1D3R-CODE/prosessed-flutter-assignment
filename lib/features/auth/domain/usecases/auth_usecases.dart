@@ -2,6 +2,7 @@ import 'package:shopsphere/core/error/failures.dart';
 import 'package:shopsphere/core/result/result.dart';
 import 'package:shopsphere/features/auth/domain/entities/user.dart';
 import 'package:shopsphere/features/auth/domain/repositories/auth_repository.dart';
+import 'package:shopsphere/features/auth/domain/sign_in_preference.dart';
 
 /// Signs a shopper in with a username and password.
 class LoginUseCase {
@@ -62,13 +63,21 @@ final class ExpiredSession extends SessionRestore {
 ///
 /// A stored token is trusted when the network is down, so an offline launch still reaches the
 /// cached catalogue. A token the server rejects ends the session.
+///
+/// A shopper who unticked "keep me signed in" is signed out here: the session was meant to end
+/// with the app.
 class RestoreSessionUseCase {
-  const RestoreSessionUseCase(this._repository);
+  const RestoreSessionUseCase(this._repository, this._preference);
 
   final AuthRepository _repository;
+  final SignInPreferenceRepository _preference;
 
   Future<SessionRestore> call() async {
     if (!await _repository.hasSession()) return const NoSession();
+    if (!(await _preference.load()).remember) {
+      await _repository.logout();
+      return const NoSession();
+    }
 
     final result = await _repository.fetchCurrentUser();
     return switch (result) {

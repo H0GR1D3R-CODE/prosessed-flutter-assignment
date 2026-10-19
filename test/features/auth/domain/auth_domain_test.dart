@@ -3,10 +3,12 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shopsphere/core/error/failures.dart';
 import 'package:shopsphere/core/result/result.dart';
 import 'package:shopsphere/features/auth/domain/repositories/auth_repository.dart';
+import 'package:shopsphere/features/auth/domain/sign_in_preference.dart';
 import 'package:shopsphere/features/auth/domain/usecases/auth_usecases.dart';
 import 'package:shopsphere/features/auth/domain/validation/credential_validator.dart';
 
 import '../../../helpers/builders.dart';
+import '../../../helpers/memory_sign_in_preference.dart';
 
 class MockAuthRepository extends Mock implements AuthRepository {}
 
@@ -48,14 +50,50 @@ void main() {
     });
   });
 
+  group('SignInPreference', () {
+    test(
+      'the username is only kept when the shopper asked to be remembered',
+      () {
+        expect(
+          SignInPreference.afterSignIn(remember: true, username: ' emilys '),
+          const SignInPreference(username: 'emilys'),
+        );
+        expect(
+          SignInPreference.afterSignIn(remember: false, username: 'emilys'),
+          const SignInPreference(remember: false),
+        );
+      },
+    );
+
+    test('before anything is chosen, the default is to remember', () {
+      expect(SignInPreference.initial.remember, isTrue);
+      expect(SignInPreference.initial.username, isNull);
+    });
+  });
+
   group('RestoreSessionUseCase', () {
     late MockAuthRepository repository;
+    late MemorySignInPreference preference;
     late RestoreSessionUseCase restore;
 
     setUp(() {
       repository = MockAuthRepository();
-      restore = RestoreSessionUseCase(repository);
+      preference = MemorySignInPreference();
+      restore = RestoreSessionUseCase(repository, preference);
     });
+
+    test(
+      'a shopper who did not ask to be remembered is signed out at launch',
+      () async {
+        preference.saved = const SignInPreference(remember: false);
+        when(() => repository.hasSession()).thenAnswer((_) async => true);
+        when(() => repository.logout()).thenAnswer((_) async {});
+
+        expect(await restore(), isA<NoSession>());
+        verify(() => repository.logout()).called(1);
+        verifyNever(() => repository.fetchCurrentUser());
+      },
+    );
 
     test('no stored session means NoSession and no network call', () async {
       when(() => repository.hasSession()).thenAnswer((_) async => false);
