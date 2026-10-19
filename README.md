@@ -7,8 +7,8 @@ Sign in, browse a live catalogue with search, categories and sorting, open a pro
 | Download | Link |
 | --- | --- |
 | Release APK (`ShopSphere_NebinStanly_v1.0.0.apk`, 61 MB, Android 8.0+) | `https://github.com/H0GR1D3R-CODE/prosessed-flutter-assignment/releases/tag/v1.0.0` |
-| Demo video (3 min 43 s: all features, 6 error scenarios, tablet and landscape) | `<ADD GOOGLE DRIVE LINK>` |
-| Submission folder (APK, video, 27 screenshots) | `<ADD GOOGLE DRIVE FOLDER LINK>` |
+| Demo video (3 min 43 s: all features, 6 error scenarios, tablet and landscape) | https://drive.google.com/drive/folders/11fTuresz8Ejz5OQujNPs5Vx0k8mTznlO?usp=sharing |
+| Submission folder (APK, video, 27 screenshots) | https://drive.google.com/drive/folders/11fTuresz8Ejz5OQujNPs5Vx0k8mTznlO?usp=sharing |
 
 > Built and checked with Flutter 3.47.7 / Dart 3.13.5. 324 tests pass, `flutter analyze` reports no issues, and line coverage over all of `lib/` is 94.9%.
 
@@ -303,7 +303,7 @@ password: emilyspass
 **Nebin Stanly**
 
 - Email: nebinstanly12@gmail.com
-- LinkedIn: `<ADD LINKEDIN URL>`
+- LinkedIn: https://www.linkedin.com/in/nebin-stanly-379404231/
 
 ## 12. AI tools used
 
