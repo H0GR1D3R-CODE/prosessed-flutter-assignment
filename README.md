@@ -6,7 +6,7 @@ Sign in, browse a live catalogue with search, categories and sorting, open a pro
 
 | Download | Link |
 | --- | --- |
-| Release APK (`ShopSphere_NebinStanly_v1.0.0.apk`, 60 MB, Android 8.0+) | `<ADD GITHUB RELEASE LINK>` |
+| Release APK (`ShopSphere_NebinStanly_v1.0.0.apk`, 61 MB, Android 8.0+) | `https://github.com/H0GR1D3R-CODE/prosessed-flutter-assignment/releases/tag/v1.0.0` |
 | Demo video (3 min 43 s: all features, 6 error scenarios, tablet and landscape) | `<ADD GOOGLE DRIVE LINK>` |
 | Submission folder (APK, video, 27 screenshots) | `<ADD GOOGLE DRIVE FOLDER LINK>` |
 
