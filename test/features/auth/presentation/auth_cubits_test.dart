@@ -142,6 +142,65 @@ void main() {
     );
 
     blocTest<LoginCubit, LoginState>(
+      'signing in remembers the shopper and the username by default',
+      setUp: () => when(
+        () => repository.login(
+          username: any(named: 'username'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((_) async => const Result.success(testUser)),
+      build: buildLogin,
+      act: (cubit) => cubit.submit(username: 'emilys', password: 'emilyspass'),
+      verify: (_) =>
+          expect(preference.saved, const SignInPreference(username: 'emilys')),
+    );
+
+    blocTest<LoginCubit, LoginState>(
+      'unticking keep-me-signed-in is saved, and the username is not kept',
+      setUp: () => when(
+        () => repository.login(
+          username: any(named: 'username'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((_) async => const Result.success(testUser)),
+      build: buildLogin,
+      act: (cubit) => cubit.submit(
+        username: 'emilys',
+        password: 'emilyspass',
+        remember: false,
+      ),
+      verify: (_) =>
+          expect(preference.saved, const SignInPreference(remember: false)),
+    );
+
+    blocTest<LoginCubit, LoginState>(
+      'a failed sign-in changes nothing that was saved',
+      setUp: () {
+        preference.saved = const SignInPreference(username: 'old');
+        when(
+          () => repository.login(
+            username: any(named: 'username'),
+            password: any(named: 'password'),
+          ),
+        ).thenAnswer(
+          (_) async => const Result.failure(InvalidCredentialsFailure()),
+        );
+      },
+      build: buildLogin,
+      act: (cubit) => cubit.submit(username: 'emilys', password: 'wrongpass'),
+      verify: (_) =>
+          expect(preference.saved, const SignInPreference(username: 'old')),
+    );
+
+    test('the form can ask what was chosen last time', () async {
+      preference.saved = const SignInPreference(username: 'emilys');
+      final cubit = buildLogin();
+
+      expect(await cubit.loadPreference(), preference.saved);
+      await cubit.close();
+    });
+
+    blocTest<LoginCubit, LoginState>(
       'wrong credentials end in a failure the form can show inline',
       setUp: () =>
           when(

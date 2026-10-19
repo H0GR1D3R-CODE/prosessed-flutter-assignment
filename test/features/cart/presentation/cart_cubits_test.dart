@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shopsphere/core/error/failures.dart';
 import 'package:shopsphere/core/result/result.dart';
 import 'package:shopsphere/features/cart/domain/entities/cart.dart';
+import 'package:shopsphere/features/cart/domain/entities/checkout_extras.dart';
 import 'package:shopsphere/features/cart/domain/entities/order_receipt.dart';
 import 'package:shopsphere/features/cart/domain/repositories/cart_repository.dart';
 import 'package:shopsphere/features/cart/domain/usecases/cart_usecases.dart';
@@ -264,6 +265,36 @@ void main() {
         expect(order.placedAt, DateTime(2026, 10, 18));
         verify(() => repository.placeOrder(userId: 1, cart: any(named: 'cart')))
             .called(1);
+      },
+    );
+
+    blocTest<CheckoutCubit, CheckoutState>(
+      'a promo code and a donation are worked in and remembered',
+      setUp: () => when(
+        () => repository.placeOrder(
+          userId: any(named: 'userId'),
+          cart: any(named: 'cart'),
+        ),
+      ).thenAnswer((_) async => Result.success(receipt)),
+      build: buildCheckout,
+      // The cart holds 2 x 10.00 = 20.00 after the product discount.
+      act: (cubit) => cubit.placeOrder(
+        const CheckoutExtras(
+          coupon: Coupons.welcome,
+          donation: DonationChoice.two,
+        ),
+      ),
+      verify: (cubit) {
+        final order = orders.state.orders.single;
+        expect(order.couponCode, 'WELCOME10');
+        expect(order.couponDiscount, 2);
+        expect(order.donation, 2);
+        expect(order.total, 20, reason: '20.00 - 2.00 + 2.00');
+
+        final placed = cubit.state as CheckoutPlaced;
+        expect(placed.receipt.total, 20);
+        expect(placed.receipt.couponCode, 'WELCOME10');
+        expect(placed.receipt.donation, 2);
       },
     );
 

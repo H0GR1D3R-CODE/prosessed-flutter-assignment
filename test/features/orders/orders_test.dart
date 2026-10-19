@@ -31,6 +31,21 @@ void main() {
       expect(summary.discount, 20);
       expect(_order(1).itemCount, 3);
     });
+
+    test('what was paid takes the promo code off and adds the donation', () {
+      final order = PlacedOrder(
+        id: 1,
+        placedAt: DateTime.utc(2026, 10, 18),
+        items: _order(1).items,
+        couponCode: 'WELCOME10',
+        couponDiscount: 3,
+        donation: 0.5,
+      );
+
+      // 30.00 for the products, less 3.00, plus 0.50.
+      expect(order.total, 27.5);
+      expect(order.summary.total, 30, reason: 'the products alone');
+    });
   });
 
   group('OrderHistory rules', () {
@@ -75,6 +90,43 @@ void main() {
 
         expect(loaded, [order]);
         expect(loaded.single.summary.total, order.summary.total);
+      },
+    );
+
+    test('a promo code and a donation come back with the order', () async {
+      final order = PlacedOrder(
+        id: 5,
+        placedAt: DateTime.utc(2026, 10, 18, 9),
+        items: _order(5).items,
+        couponCode: 'SAVE5',
+        couponDiscount: 5,
+        donation: 1,
+      );
+      await PrefsOrdersRepository(prefs).save(1, [order]);
+
+      final loaded = await PrefsOrdersRepository(prefs).load(1);
+
+      expect(loaded.single.couponCode, 'SAVE5');
+      expect(loaded.single.couponDiscount, 5);
+      expect(loaded.single.donation, 1);
+      expect(loaded.single, order);
+    });
+
+    test(
+      'an order saved before codes and donations existed still loads',
+      () async {
+        SharedPreferences.setMockInitialValues({
+          'orders.1': '[{"id":7,"placedAt":"2026-10-01T09:00:00.000Z","items":[{"productId":1,"title":"Lamp","thumbnail":"","category":"beauty","unitPrice":10,"discountPercentage":0,"quantity":1,"stock":5}]}]',
+        });
+        prefs = await SharedPreferences.getInstance();
+
+        final loaded = await PrefsOrdersRepository(prefs).load(1);
+
+        expect(loaded.single.id, 7);
+        expect(loaded.single.couponCode, isNull);
+        expect(loaded.single.couponDiscount, 0);
+        expect(loaded.single.donation, 0);
+        expect(loaded.single.total, 10);
       },
     );
 
